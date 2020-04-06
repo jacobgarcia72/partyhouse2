@@ -8,4 +8,4 @@ export const games = [
     maxPlayers: 30,
     component: Potato
   }
-]
+];

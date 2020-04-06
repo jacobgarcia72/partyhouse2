@@ -14,7 +14,9 @@ class App extends Component {
       <BrowserRouter>
         <ScrollToTop>
           <Route exact path="/" component={ Landing } />
-          {games.map(game => <Route path={`/${game.url}`} component={game.component} />)}
+          {games.map(game => <Route exact path={`/${game.url}/:roomCode`} key={game.url} render={props => <game.component {...props} 
+            gameUrl={game.url}
+          />}/>)}
         </ScrollToTop>
       </BrowserRouter>
     )

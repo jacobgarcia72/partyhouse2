@@ -5,10 +5,20 @@
   background-color: #091588
   background-image: radial-gradient(lighten(#091588, 15%), darken(#091588, 15%))
   color: white
-  font-size: 2rem
-  line-height: 2
+  .connect
+    font-size: 2rem
+    padding-top: 0.5em
+    padding-bottom: .25em
   input
     font-size: 2rem
-    width: 120px
-    text-transform: uppercase
     text-align: center
+    &.input-name
+      width: 140px
+    &.input-code
+      width: 110px
+    &[type="submit"]
+      width: 60px
+      cursor: pointer
+  .error
+    height: 28px
+    line-height: 28px
