@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import {Route, BrowserRouter} from 'react-router-dom';
 
-import Landing from './components/Landing';
+import Landing from './components/landing';
 
 import ScrollToTop from './components/ScrollToTop';
+
+import { games } from './config/games';
 
 class App extends Component {
 
@@ -12,6 +14,7 @@ class App extends Component {
       <BrowserRouter>
         <ScrollToTop>
           <Route exact path="/" component={ Landing } />
+          {games.map(game => <Route path={`/${game.url}`} component={game.component} />)}
         </ScrollToTop>
       </BrowserRouter>
     )
