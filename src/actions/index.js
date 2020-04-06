@@ -1,34 +1,35 @@
 import { database } from '../Firebase';
 import { games } from '../config/games';
 
-export function createNewRoom(gameUrl, roomCode) {
+export function createNewRoom(gameUrl, roomCode, playerName, callback) {
   roomCode = roomCode.toLowerCase();
   const game = games.find(game => game.url === gameUrl);
   const { minPlayers, maxPlayers } = game;
   database.ref(`rooms/${roomCode}`).set({
-    players: [], game: { minPlayers, maxPlayers }, totalPlayers: 0, nextIndex: 0
-  });
+    players: {0: {name: playerName, playerIndex: 0}},
+    game: { minPlayers, maxPlayers, url: gameUrl },
+    totalPlayers: 1,
+    nextIndex: 1
+  }).then(callback);
   database.ref(`rooms/${roomCode}`).onDisconnect().remove();
 }
 
 export function joinRoom(roomCode, name, callback) {
   roomCode = roomCode.toLowerCase();
   database.ref(`rooms/${roomCode}`).once('value', snapshot => {
-    let room = snapshot.val();
+    const room = snapshot.val();
     const roomExists = room !== null;
     const roomIsFull = roomExists && room.totalPlayers === room.game.maxPlayers;
     let playerIndex = null;
     if (roomExists && !roomIsFull) {
       playerIndex = room.nextIndex;
       const newPlayer = {name, index: playerIndex};
-      const nextIndex = room.nextIndex + 1;
-      const totalPlayers = room.totalPlayers + 1;
-      database.ref(`rooms/${roomCode}`).update({
-         totalPlayers, nextIndex
-      });
-      database.ref(`rooms/${roomCode}/players/${playerIndex}`).set(newPlayer);
+      room.nextIndex++;
+      room.totalPlayers++;
+      room.players[playerIndex] = newPlayer;
+      database.ref(`rooms/${roomCode}`).update(room);
     }
-    callback(roomExists, roomIsFull, playerIndex);
+    callback(roomExists, roomIsFull, room, playerIndex);
   });     
 };
 

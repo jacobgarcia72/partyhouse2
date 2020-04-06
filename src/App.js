@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {Route, BrowserRouter} from 'react-router-dom';
-
 import Landing from './components/landing';
-
 import ScrollToTop from './components/ScrollToTop';
-
 import { games } from './config/games';
+import NewGame from './components/game/other/new-game';
 
 class App extends Component {
 
@@ -14,14 +12,19 @@ class App extends Component {
       <BrowserRouter>
         <ScrollToTop>
           <Route exact path="/" component={ Landing } />
-          {games.map(game => <Route exact path={`/${game.url}/:roomCode`} key={game.url} render={props => <game.component {...props} 
-            gameUrl={game.url}
-          />}/>)}
+          {games.map(game => {
+            const { url, displayName } = game;
+            return <Fragment key={game.url}>
+              <Route exact path={`/${game.url}`}
+                render={props => <NewGame {...props} game={{ url, displayName }} />}/>
+              <Route exact path={`/${game.url}/:roomCode`}
+                render={props => <game.component {...props} gameUrl={url}/>}/>
+            </Fragment> 
+          })}
         </ScrollToTop>
       </BrowserRouter>
     )
   }
-
 }
 
 export default App;

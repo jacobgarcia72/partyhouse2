@@ -23,24 +23,6 @@ class Landing extends Component {
     });
   }
 
-  getRoomCode = ()=> {
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      return "test";
-    }
-    let code = "";
-    const possible = "abcdefghijklmnpqrstuvwxyz123456789";
-    const censored = ['test','fuck','shit','dick','d1ck','cock','cunt','boob','slut','twat','nigg'];
-  
-    while (true) {
-      code = "";
-      for (let i = 0; i < 4; i++) {
-        code += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      if (!censored.includes(code)) break;
-    } 
-    return code;
-  }
-
   connectRoom = event => {
     event.preventDefault();
     const { roomCode, playerName } = this.state;
@@ -49,13 +31,13 @@ class Landing extends Component {
     if (error) {
       return;
     }
-    joinRoom(roomCode, playerName, (roomExists, roomIsFull, playerIndex) => {
+    joinRoom(roomCode, playerName, (roomExists, roomIsFull, room, playerIndex) => {
       if (!roomExists) {
         error = `Couldn't find room code ${roomCode.toUpperCase()}.`;
       } else if (roomIsFull) {
         error = `Sorry. Room ${roomCode.toUpperCase()} is full.`;
       } else {
-        this.props.history.push(`/connect/${roomCode.toLowerCase()}`);
+        this.props.history.push(`/${room.game.url}/${roomCode.toLowerCase()}`);
         return;
       }
       this.setState({error});
@@ -102,7 +84,7 @@ class Landing extends Component {
         </div>
       </div>
       <div>
-        {games.map(game => <Link to={`${game.url}/${this.getRoomCode()}`} key={game.url}>
+        {games.map(game => <Link to={game.url} key={game.url}>
           {game.displayName}
         </Link>)}
       </div>
