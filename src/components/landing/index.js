@@ -50,7 +50,7 @@ class Landing extends Component {
       <div className="row top-banner">
         <div className="column">
           <img src="assets/img/logo.png" alt="Party House Games"></img>
-          <div className="connect">Connect!</div>
+          <h1>Connect!</h1>
           <form onSubmit={this.connectRoom}>
             <input
               className="input-name"
@@ -83,10 +83,13 @@ class Landing extends Component {
           <div className="error">{error}</div>
         </div>
       </div>
-      <div>
-        {games.map(game => <Link to={game.url} key={game.url}>
-          {game.displayName}
-        </Link>)}
+      <h1>Create Room:</h1>
+      <div className="thumbnails row">
+        {games.map(game => <div>
+          <Link to={game.url} key={game.url}>
+            <img alt={game.displayName} src={`assets/img/thumbnails/${game.url}.png`} />
+          </Link>
+        </div>)}
       </div>
     </div>;
   }

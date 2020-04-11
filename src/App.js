@@ -19,7 +19,7 @@ class App extends Component {
                 render={props => <NewGame {...props} game={{ url, displayName }} />}/>
               <Route exact path={`/${game.url}/:roomCode`}
                 render={props => <game.component {...props} gameUrl={url}/>}/>
-            </Fragment> 
+            </Fragment>
           })}
         </ScrollToTop>
       </BrowserRouter>

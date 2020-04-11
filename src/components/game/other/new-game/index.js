@@ -47,26 +47,27 @@ export default class NewGame extends Component {
 
   render() {
     const { playerName } = this.state;
+    const { displayName, url } = this.props.game;
     return <div className="column">
-      {this.props.game.displayName}
-          <form onSubmit={this.createRoom} className="column">
-            <input
-              className="input-name"
-              placeholder="Name"
-              type="text"
-              maxLength="10"
-              onChange={this.handleInputChange}
-              autoComplete="off"
-              spellCheck={false}
-              name="playerName"
-              value={playerName}
-            ></input>
-            <input
-              type="submit"
-              value="Create Room"
-              disabled={playerName === ''}
-            ></input>
-          </form>
+      <img alt={displayName} src={`assets/img/thumbnails/${url}.png`} className="thumbnail" />
+      <form onSubmit={this.createRoom} className="column">
+        <input
+          className="input-name"
+          placeholder="Name"
+          type="text"
+          maxLength="10"
+          onChange={this.handleInputChange}
+          autoComplete="off"
+          spellCheck={false}
+          name="playerName"
+          value={playerName}
+        ></input>
+        <input
+          type="submit"
+          value="Create Room"
+          disabled={playerName === ''}
+        ></input>
+      </form>
     </div>;
   }
 }
