@@ -1,7 +1,7 @@
 import { actions } from '../actions';
 
 const initialState = {
-  room: {}
+  room: null
 } 
 
 export default (state = initialState, action) => {
