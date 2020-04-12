@@ -9,12 +9,14 @@ class NewGame extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      playerName: ''
+      playerName: '',
+      loading: false
     }
   }
 
   createRoom = (event) => {
     event.preventDefault();
+    this.setState({loading: true});
     const roomCode = this.getRoomCode();
     const { url } = this.props.game;
     createNewRoom(url, roomCode, this.state.playerName, newRoom => {
@@ -49,7 +51,7 @@ class NewGame extends Component {
   }
 
   render() {
-    const { playerName } = this.state;
+    const { playerName, loading } = this.state;
     const { displayName, url } = this.props.game;
     return <div className="column">
       <img alt={displayName} src={`assets/img/thumbnails/${url}.png`} className="thumbnail" />
@@ -68,7 +70,7 @@ class NewGame extends Component {
         <input
           type="submit"
           value="Create Room"
-          disabled={playerName === ''}
+          disabled={playerName === '' || loading}
         ></input>
       </form>
     </div>;

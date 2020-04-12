@@ -30,7 +30,7 @@ export function joinRoom(roomCode, name, callback) {
       room.players[playerIndex] = newPlayer;
       database.ref(`rooms/${roomCode}`).update(room);
     }
-    callback(roomExists, roomIsFull, room, playerIndex);
+    callback(roomExists, roomIsFull, room);
   });     
 };
 

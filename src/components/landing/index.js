@@ -12,7 +12,8 @@ class Landing extends Component {
     this.state = {
       roomCode: '',
       playerName: '',
-      error: ''
+      error: '',
+      loading: false
     }
   }
 
@@ -31,21 +32,22 @@ class Landing extends Component {
     if (error) {
       return;
     }
-    joinRoom(roomCode, playerName, (roomExists, roomIsFull, room, playerIndex) => {
+    this.setState({loading: true});
+    joinRoom(roomCode, playerName, (roomExists, roomIsFull, room) => {
       if (!roomExists) {
         error = `Couldn't find room code ${roomCode.toUpperCase()}.`;
       } else if (roomIsFull) {
         error = `Sorry. Room ${roomCode.toUpperCase()} is full.`;
       } else {
-        this.props.history.push(`/${room.game.url}/${roomCode.toLowerCase()}`);
+        this.props.history.push(`/${room.url}/${roomCode.toLowerCase()}`);
         return;
       }
-      this.setState({error});
+      this.setState({error, loading: false});
     })
   }
 
   render() {
-    const { roomCode, playerName, error } = this.state;
+    const { roomCode, playerName, error, loading } = this.state;
     return <div>
       <div className="row top-banner">
         <div className="column">
@@ -77,7 +79,7 @@ class Landing extends Component {
             <input
               type="submit"
               value="Go"
-              disabled={roomCode === '' || playerName === ''}
+              disabled={roomCode === '' || playerName === '' || loading}
             ></input>
           </form>
           <div className="error">{error}</div>
@@ -85,8 +87,8 @@ class Landing extends Component {
       </div>
       <h1>Create Room:</h1>
       <div className="thumbnails row">
-        {games.map(game => <div>
-          <Link to={game.url} key={game.url}>
+        {games.map(game => <div key={game.url}>
+          <Link to={game.url}>
             <img alt={game.displayName} src={`assets/img/thumbnails/${game.url}.png`} />
           </Link>
         </div>)}
