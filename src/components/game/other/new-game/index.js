@@ -78,7 +78,7 @@ class NewGame extends Component {
 }
 
 const mapDispatchToProps = {
-  setRoom: setRoom
+  setRoom
 }
 
 export default connect(null, mapDispatchToProps)(NewGame);

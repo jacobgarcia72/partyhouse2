@@ -11,7 +11,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <ScrollToTop>
-          <Route exact path="/" component={ Landing } />
+          <Route exact path="/" render={props => <Landing  {...props}/> } />
           {games.map(game => {
             const { url, displayName } = game;
             return <Fragment key={game.url}>

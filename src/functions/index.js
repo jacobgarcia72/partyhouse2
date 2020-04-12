@@ -31,6 +31,7 @@ export function joinRoom(roomCode, name, callback) {
       database.ref(`rooms/${roomCode}`).update(room);
     }
     callback(roomExists, roomIsFull, room);
+    database.ref(`rooms/${roomCode}/players/${playerIndex}`).onDisconnect().remove();
   });     
 };
 
