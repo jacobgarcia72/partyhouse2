@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import { createNewRoom } from "../../../../actions/index";
+import { createNewRoom } from "../../../../functions/index";
 import './style.sass';
+import { connect } from 'react-redux';
+import { setRoom } from '../../../../actions';
 
-export default class NewGame extends Component {
+class NewGame extends Component {
 
   constructor(props) {
     super(props);
@@ -15,8 +17,9 @@ export default class NewGame extends Component {
     event.preventDefault();
     const roomCode = this.getRoomCode();
     const { url } = this.props.game;
-    createNewRoom(url, roomCode, this.state.playerName, ()=> {
+    createNewRoom(url, roomCode, this.state.playerName, newRoom => {
       this.props.history.push(`/${url}/${roomCode.toLowerCase()}`);
+      this.props.setRoom(newRoom);
     });
   }
 
@@ -71,3 +74,9 @@ export default class NewGame extends Component {
     </div>;
   }
 }
+
+const mapDispatchToProps = {
+  setRoom: setRoom
+}
+
+export default connect(null, mapDispatchToProps)(NewGame);

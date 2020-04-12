@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import "./style.sass";
 
-import { joinRoom } from '../../actions';
+import { joinRoom } from '../../functions';
 import { games } from '../../config/games';
 
 class Landing extends Component {
