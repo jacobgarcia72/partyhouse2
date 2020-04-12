@@ -1,7 +1,8 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { setRoom } from '../../../../actions';
 import { rejoinRoom } from "../../../../functions/index";
+import Loader from '../../../loader';
 
 class Rejoin extends Component {
 
@@ -18,7 +19,7 @@ class Rejoin extends Component {
   }
 
   render() {
-    return null;
+    return <div className="center-screen"><Loader /></div>;
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import "./style.sass";
+import './style.sass';
 
 import { joinRoom } from '../../functions';
 import { games } from '../../config/games';
