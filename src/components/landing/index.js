@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './style.sass';
 
 import { joinRoom } from '../../functions';
 import { games } from '../../config/games';
-import { setRoom } from '../../actions';
 
 class Landing extends Component {
 
@@ -42,7 +40,6 @@ class Landing extends Component {
         error = `Sorry. Room ${roomCode.toUpperCase()} is full.`;
       } else {
         this.props.history.push(`/${room.game.url}/${roomCode.toLowerCase()}`);
-        this.props.setRoom(room);
         return;
       }
       this.setState({error, loading: false});
@@ -102,8 +99,4 @@ class Landing extends Component {
   }
 };
 
-const mapDispatchToProps = {
-  setRoom
-};
-
-export default connect(null, mapDispatchToProps)(Landing);
+export default Landing;

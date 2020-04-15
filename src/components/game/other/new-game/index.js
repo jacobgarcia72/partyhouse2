@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import { createNewRoom } from "../../../../functions/index";
 import './style.sass';
-import { connect } from 'react-redux';
-import { setRoom } from '../../../../actions';
 
 class NewGame extends Component {
 
@@ -21,7 +19,6 @@ class NewGame extends Component {
     const { url } = this.props.game;
     createNewRoom(url, roomCode, this.state.playerName, newRoom => {
       this.props.history.push(`/${url}/${roomCode.toLowerCase()}`);
-      this.props.setRoom(newRoom);
     });
   }
 
@@ -77,8 +74,4 @@ class NewGame extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  setRoom
-}
-
-export default connect(null, mapDispatchToProps)(NewGame);
+export default NewGame;

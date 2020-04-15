@@ -1,7 +1,8 @@
 import { actions } from '../actions';
 
 const initialState = {
-  room: null
+  room: null,
+  players: []
 } 
 
 export default (state = initialState, action) => {
@@ -9,6 +10,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actions.SET_ROOM: 
       return setState({room: action.payload});
+    case actions.SET_ACTIVE_PLAYERS: 
+      return setState({players: action.payload});
     default:
       return state
   }

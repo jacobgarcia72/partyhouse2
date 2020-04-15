@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import RoomCode from '../../other/room-code';
+import PlayerList from '../../other/player-list';
 
 export default class MemeGame extends Component {
 
@@ -8,6 +9,7 @@ export default class MemeGame extends Component {
   render() {
     return <div>
       <RoomCode roomCode={this.roomCode}/>
+      <PlayerList />
     </div>;
   }
 }

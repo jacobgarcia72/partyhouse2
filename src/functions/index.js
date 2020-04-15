@@ -1,5 +1,7 @@
 import { database } from '../Firebase';
 import { games } from '../config/games';
+import { setRoom, setActivePlayers } from '../actions';
+import store from '../config/store';
 
 class Player {
   constructor(name, index) {
@@ -24,6 +26,7 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
     nextIndex: 1
   };
   setLocalStorage(0, roomCode);
+  setRoomListener(roomCode);
   database.ref(`rooms/${roomCode}`).set(newRoom).then(() => callback(newRoom));
   database.ref(`rooms/${roomCode}`).onDisconnect().remove();
 }
@@ -41,6 +44,7 @@ export function joinRoom(roomCode, name, callback) {
       room.nextIndex++;
       room.players[playerIndex] = newPlayer;
       setLocalStorage(playerIndex, roomCode);
+      setRoomListener(roomCode)
       database.ref(`rooms/${roomCode}`).update(room);
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
     }
@@ -58,9 +62,19 @@ export function rejoinRoom(roomCode, callback) {
     if (roomExists && !roomIsFull && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
       success = true;
       room.players[playerIndex].active = true;
+      setRoomListener(roomCode)
       database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true});
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
     }
     callback(success ? room : null);
   });    
-}
+};
+
+function setRoomListener(roomCode) {
+  database.ref(`rooms/${roomCode}`).on('value', snapshot => {
+    const room = snapshot.val();
+    const activePlayers = room && room.players ? Object.values(room.players).filter(player => player.active) : [];
+    store.dispatch(setRoom(room));
+    store.dispatch(setActivePlayers(activePlayers));
+  });
+};
