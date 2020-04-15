@@ -1,6 +1,5 @@
 import { database } from '../Firebase';
-import { games } from '../config/games';
-import { setRoom, setActivePlayers } from '../actions';
+import { setRoom } from '../actions';
 import store from '../config/store';
 
 class Player {
@@ -18,11 +17,9 @@ function setLocalStorage(playerIndex, roomCode) {
 
 export function createNewRoom(gameUrl, roomCode, playerName, callback) {
   roomCode = roomCode.toLowerCase();
-  const game = games.find(game => game.url === gameUrl);
-  const { minPlayers, maxPlayers } = game;
   const newRoom = {
     players: { 0: new Player(playerName, 0) },
-    game: { minPlayers, maxPlayers, url: gameUrl },
+    url: gameUrl,
     nextIndex: 1,
     code: roomCode
   };
@@ -74,8 +71,6 @@ export function rejoinRoom(roomCode, callback) {
 function setRoomListener(roomCode) {
   database.ref(`rooms/${roomCode}`).on('value', snapshot => {
     const room = snapshot.val();
-    const activePlayers = room && room.players ? Object.values(room.players).filter(player => player.active) : [];
     store.dispatch(setRoom(room));
-    store.dispatch(setActivePlayers(activePlayers));
   });
 };

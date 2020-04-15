@@ -14,8 +14,8 @@ class Lobby extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const { room, players } = this.props;
-    const { minPlayers, maxPlayers } = room.game;
+    const { players, game } = this.props;
+    const { minPlayers, maxPlayers } = game;
     let error = '';
     if (minPlayers > players.length) {
       error = `This game requires at least ${minPlayers} players.`;
@@ -31,6 +31,7 @@ class Lobby extends Component {
   render() {
     return <div className="column">
       <RoomCode roomCode={this.props.room.code}/>
+      {this.props.game.displayName}
       <PlayerList />
       <form onSubmit={this.onSubmit}>
         <input type="submit"
@@ -42,8 +43,8 @@ class Lobby extends Component {
   }
 }
 
-function mapStateToProps({ room, players }) {
-  return { room, players };
+function mapStateToProps({ room, players, game }) {
+  return { room, players, game };
 }
 
 export default connect(mapStateToProps, null)(Lobby);
