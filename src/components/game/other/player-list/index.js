@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 class PlayerList extends Component {
   render() {
     return <div>
+      Players:
       <div style={{fontSize: '2rem'}}>
         {this.props.players.map(player => <div key={player.index}>{player.name}</div>)}
       </div>
