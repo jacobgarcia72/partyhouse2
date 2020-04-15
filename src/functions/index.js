@@ -23,7 +23,8 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
   const newRoom = {
     players: { 0: new Player(playerName, 0) },
     game: { minPlayers, maxPlayers, url: gameUrl },
-    nextIndex: 1
+    nextIndex: 1,
+    code: roomCode
   };
   setLocalStorage(0, roomCode);
   setRoomListener(roomCode);
