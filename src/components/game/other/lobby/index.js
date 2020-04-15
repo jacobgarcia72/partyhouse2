@@ -29,7 +29,7 @@ class Lobby extends Component {
   }
 
   render() {
-    return <div>
+    return <div className="column">
       <RoomCode roomCode={this.props.room.code}/>
       <PlayerList />
       <form onSubmit={this.onSubmit}>
