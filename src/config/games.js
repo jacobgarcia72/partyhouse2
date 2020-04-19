@@ -1,6 +1,14 @@
 import MemeGame from '../components/game/games/meme';
+import HonestAnswers from '../components/game/games/answers';
 
 export const games = [
+  {
+    displayName: 'Honest Answers',
+    url: 'answers',
+    minPlayers: 2,
+    maxPlayers: 30,
+    component: HonestAnswers
+  },
   {
     displayName: 'Dank U',
     url: 'meme',
@@ -37,3 +45,5 @@ export const games = [
     component: null
   }
 ];
+
+export const getGameByUrl = url => games.find(game => game.url === url);

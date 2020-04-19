@@ -31,7 +31,9 @@ class Lobby extends Component {
   render() {
     return <div className="column">
       <RoomCode roomCode={this.props.room.code}/>
-      {this.props.game.displayName}
+      <div style={{fontSize: '1.2em', marginBottom: '1em'}}>
+        {this.props.game.displayName}
+      </div>
       <PlayerList />
       <form onSubmit={this.onSubmit}>
         <input type="submit"

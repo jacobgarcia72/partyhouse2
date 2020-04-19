@@ -39,7 +39,7 @@ class Landing extends Component {
       } else if (roomIsFull) {
         error = `Sorry. Room ${roomCode.toUpperCase()} is full.`;
       } else {
-        this.props.history.push(`/${room.game.url}/${roomCode.toLowerCase()}`);
+        this.props.history.push(`/${room.url}/${roomCode.toLowerCase()}`);
         return;
       }
       this.setState({error, loading: false});

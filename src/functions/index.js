@@ -1,6 +1,7 @@
 import { database } from '../Firebase';
 import { setRoom } from '../actions';
 import store from '../config/store';
+import { getGameByUrl } from '../config/games';
 
 class Player {
   constructor(name, index) {
@@ -21,7 +22,8 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
     players: { 0: new Player(playerName, 0) },
     url: gameUrl,
     nextIndex: 1,
-    code: roomCode
+    code: roomCode,
+    screen: 'lobby'
   };
   setLocalStorage(0, roomCode);
   setRoomListener(roomCode);
@@ -34,7 +36,8 @@ export function joinRoom(roomCode, name, callback) {
   database.ref(`rooms/${roomCode}`).once('value', snapshot => {
     const room = snapshot.val();
     const roomExists = room !== null;
-    const roomIsFull = roomExists && room.players.filter(player => player.active).length === room.game.maxPlayers;
+    const game = roomExists ? getGameByUrl(room.url) : null;
+    const roomIsFull = roomExists && room.players.filter(player => player.active).length === game.maxPlayers;
     let playerIndex = null;
     if (roomExists && !roomIsFull) {
       playerIndex = room.nextIndex;
@@ -55,7 +58,8 @@ export function rejoinRoom(roomCode, callback) {
     const room = snapshot.val();
     let success = false;
     const roomExists = room !== null;
-    const roomIsFull = roomExists && room.players.filter(player => player.active).length === room.game.maxPlayers;
+    const game = roomExists ? getGameByUrl(room.url) : null;
+    const roomIsFull = roomExists && room.players.filter(player => player.active).length === game.maxPlayers;
     let playerIndex = localStorage.getItem('player-index');
     if (roomExists && !roomIsFull && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
       success = true;
@@ -74,3 +78,7 @@ function setRoomListener(roomCode) {
     store.dispatch(setRoom(room));
   });
 };
+
+export function setScreen(roomCode, screen) {
+  database.ref(`rooms/${roomCode}/screen`).set(screen);
+}
