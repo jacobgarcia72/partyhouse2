@@ -35,18 +35,18 @@ class Lobby extends Component {
         {this.props.game.displayName}
       </div>
       <PlayerList />
-      <form onSubmit={this.onSubmit}>
+      {this.props.isHost ? <form onSubmit={this.onSubmit}>
         <input type="submit"
           value="Start Game!"
         ></input>
         <div className="error">{this.state.error}</div>
-      </form>
+      </form> : null}
     </div>;
   }
 }
 
-function mapStateToProps({ room, players, game }) {
-  return { room, players, game };
+function mapStateToProps({ room, players, game, isHost }) {
+  return { room, players, game, isHost };
 }
 
 export default connect(mapStateToProps, null)(Lobby);

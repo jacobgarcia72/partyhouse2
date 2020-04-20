@@ -1,5 +1,5 @@
 import { database } from '../Firebase';
-import { setRoom } from '../actions';
+import { setRoom, setPlayerIndex } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
@@ -23,9 +23,12 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
     url: gameUrl,
     nextIndex: 1,
     code: roomCode,
-    screen: 'lobby'
+    gameState: {
+      screen: 'lobby'
+    }
   };
   setLocalStorage(0, roomCode);
+  store.dispatch(setPlayerIndex(0));
   setRoomListener(roomCode);
   database.ref(`rooms/${roomCode}`).set(newRoom).then(() => callback(newRoom));
   database.ref(`rooms/${roomCode}`).onDisconnect().remove();
@@ -45,6 +48,7 @@ export function joinRoom(roomCode, name, callback) {
       room.nextIndex++;
       room.players[playerIndex] = newPlayer;
       setLocalStorage(playerIndex, roomCode);
+      store.dispatch(setPlayerIndex(playerIndex));
       setRoomListener(roomCode)
       database.ref(`rooms/${roomCode}`).update(room);
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
@@ -64,6 +68,7 @@ export function rejoinRoom(roomCode, callback) {
     if (roomExists && !roomIsFull && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
       success = true;
       room.players[playerIndex].active = true;
+      store.dispatch(setPlayerIndex(playerIndex));
       setRoomListener(roomCode)
       database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true});
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
@@ -79,6 +84,6 @@ function setRoomListener(roomCode) {
   });
 };
 
-export function setScreen(roomCode, screen) {
-  database.ref(`rooms/${roomCode}/screen`).set(screen);
+export function setGameState(roomCode, gameState) {
+  database.ref(`rooms/${roomCode}/gameState`).update(gameState);
 }
