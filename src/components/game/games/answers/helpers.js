@@ -1,3 +1,5 @@
+import questionBank from './questionBank';
+
 export const screens = {
   lobby: 'lobby',
   intro: 'intro',
@@ -9,6 +11,8 @@ export const screens = {
 
 const getRandomElement = array => array[Math.floor(Math.random() * array.length)];
 const removeElement = (array, el) => array.indexOf(el) > -1 ? array.splice(array.indexOf(el), 1) : null;
+
+export const formatText = (text, round, players) => text.split('Jacob').join(players.find(player => player.index === round.askingIndex).name);
 
 export function setRounds(players) {
   console.log(players)
@@ -35,4 +39,29 @@ export function setRounds(players) {
     rounds.push({askingIndex, answeringIndex});
   });
   return rounds;
+}
+
+export function getCategories() {
+  let questions = [];
+  questionBank.forEach(entry => {
+    questions = questions.concat(
+      entry.questions.map(q => {
+        return {
+          text: q,
+          category: entry.category
+        }
+      })
+    );
+  });
+  const question1 = getRandomElement(questions);
+  removeElement(questions, question1);
+  let question2;
+  do {
+    question2 = getRandomElement(questions);
+    removeElement(questions, question2);
+  } while (question1.category === question2.category);
+  return [
+    question1.category,
+    question2.category
+  ]
 }
