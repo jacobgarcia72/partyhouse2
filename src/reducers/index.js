@@ -2,9 +2,10 @@ import { actions } from '../actions';
 import { games } from '../config/games';
 
 const initialState = {
-  room: null,
+  code: null,
   players: [],
   game: {},
+  gameState: null,
   playerIndex: null,
   isHost: null
 } 
@@ -17,7 +18,8 @@ export default (state = initialState, action) => {
       if (room) {
         const players = room && room.players ? Object.values(room.players).filter(player => player.active) : [];
         const game = games.find(game => game.url === room.url);
-        return setState({room, players, game});
+        const { gameState, code } = room;
+        return setState({code, players, game, gameState});
       } else {
         return setState(initialState);
       }

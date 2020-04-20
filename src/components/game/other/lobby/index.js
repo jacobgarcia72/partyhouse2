@@ -30,7 +30,7 @@ class Lobby extends Component {
 
   render() {
     return <div className="column">
-      <RoomCode roomCode={this.props.room.code}/>
+      <RoomCode roomCode={this.props.code}/>
       <div style={{fontSize: '1.2em', marginBottom: '1em'}}>
         {this.props.game.displayName}
       </div>
@@ -45,8 +45,8 @@ class Lobby extends Component {
   }
 }
 
-function mapStateToProps({ room, players, game, isHost }) {
-  return { room, players, game, isHost };
+function mapStateToProps({ code, players, game, isHost }) {
+  return { code, players, game, isHost };
 }
 
 export default connect(mapStateToProps, null)(Lobby);

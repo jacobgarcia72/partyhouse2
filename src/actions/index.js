@@ -8,5 +8,5 @@ export function setRoom(room) {
 }
 
 export function setPlayerIndex(index) {
-  return { type: actions.SET_PLAYER_INDEX, payload: index };
+  return { type: actions.SET_PLAYER_INDEX, payload: Number(index) };
 }

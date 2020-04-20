@@ -1,22 +1,23 @@
 import React, {Component} from 'react';
-import Lobby from '../../other/lobby';
-import { screens } from './helpers';
-import { setScreen } from '../../../../functions/index';
 import { connect } from 'react-redux';
 
 class ChooseCategory extends Component {
 
-  nextScreen = screen => {
-    setScreen(this.props.room.code, screen);
-  }
-
   render() {
-    return <div>Choose Category</div>
+    const { playerIndex, gameState, players } = this.props;
+    const { round, rounds } = gameState;
+    if (!rounds || !rounds[round]) {
+      return <div>Loading...</div>;
+    } else if (rounds[round].answeringIndex === playerIndex) {
+      return <div>Choose a category:</div>
+    } else {
+      return <div>{players.find(player => player.index === rounds[round].answeringIndex).name} is choosing a category...</div>
+    }
   }
 }
 
-function mapStateToProps({ room }) {
-  return { room };
+function mapStateToProps({ gameState, playerIndex, players }) {
+  return { gameState, playerIndex, players };
 }
 
 export default connect(mapStateToProps, null)(ChooseCategory);

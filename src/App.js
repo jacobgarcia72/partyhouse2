@@ -16,7 +16,7 @@ class App extends Component {
           <Route exact path="/" render={props => <Landing  {...props}/> } />
           {games.map(game => {
             const { url, displayName } = game;
-            const getComponent = props => this.props.room ? <game.component {...props} gameUrl={url}/> : <Rejoin {...props} />;
+            const getComponent = props => this.props.code ? <game.component {...props} gameUrl={url}/> : <Rejoin {...props} />;
             return <Fragment key={game.url}>
               <Route exact path={`/${game.url}`}
                 render={props => <NewGame {...props} game={{ url, displayName }} />}/>
@@ -30,8 +30,8 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({room}) {
-  return { room };
+function mapStateToProps({code}) {
+  return { code };
 }
 
 export default connect(mapStateToProps, null)(App);

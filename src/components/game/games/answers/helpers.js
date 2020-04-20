@@ -34,5 +34,5 @@ export function setRounds(players) {
     removeElement(playerIndicesForAnswering, answeringIndex);
     rounds.push({askingIndex, answeringIndex});
   });
-  console.log(rounds);
+  return rounds;
 }
