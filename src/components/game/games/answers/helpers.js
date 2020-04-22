@@ -4,7 +4,7 @@ export const screens = {
   lobby: 'lobby',
   intro: 'intro',
   chooseCategory: 'choose-category',
-  chooseQuestions: 'choose-question',
+  chooseQuestion: 'choose-question',
   readQuestion: 'read-question',
   final: 'final'
 }
@@ -15,7 +15,6 @@ const removeElement = (array, el) => array.indexOf(el) > -1 ? array.splice(array
 export const formatText = (text, round, players) => text.split('Jacob').join(players.find(player => player.index === round.askingIndex).name);
 
 export function setRounds(players) {
-  console.log(players)
   const playerIndicesForAsking = players.map(player => player.index);
   const playerIndicesForAnswering = players.map(player => player.index);
   const rounds = [];
@@ -25,10 +24,6 @@ export function setRounds(players) {
     do {
       askingIndex = getRandomElement(playerIndicesForAsking);
       answeringIndex = getRandomElement(playerIndicesForAnswering);
-      console.log(askingIndex)
-      console.log(answeringIndex)
-      console.log(playerIndicesForAsking)
-      console.log(playerIndicesForAnswering)
       if (askingIndex === answeringIndex && playerIndicesForAnswering.length === 1) {
         askingIndex = rounds[0].askingIndex;
         rounds[0].askingIndex = answeringIndex;
@@ -64,4 +59,16 @@ export function getCategories() {
     question1.category,
     question2.category
   ]
+}
+
+export function getQuestions(category) {
+  const questions = questionBank.find(entry => entry.category === category).questions.slice();
+  if (questions.length === 2) {
+    return questions;
+  }
+  const randomQuestions = [];
+  randomQuestions[0] = getRandomElement(questions);
+  removeElement(questions, randomQuestions[0]);
+  randomQuestions[1] = getRandomElement(questions);
+  return randomQuestions;
 }

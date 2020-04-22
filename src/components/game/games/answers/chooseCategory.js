@@ -15,7 +15,7 @@ class ChooseCategory extends Component {
 
   submitCategoryChoice = (category) => {
     setGameState(this.props.code, {
-      screen: screens.chooseQuestions,
+      screen: screens.chooseQuestion,
       category
     });
   }

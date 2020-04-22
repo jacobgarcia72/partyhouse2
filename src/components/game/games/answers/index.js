@@ -5,6 +5,8 @@ import { setGameState } from '../../../../functions/index';
 import { connect } from 'react-redux';
 import Intro from './intro';
 import ChooseCategory from './chooseCategory';
+import ChooseQuestion from './chooseQuestion';
+import ReadQuestion from './readQuestion';
 
 class HonestAnswers extends Component {
 
@@ -17,7 +19,6 @@ class HonestAnswers extends Component {
   }
 
   nextScreen = screen => {
-    console.log(screen);
     let { round, rounds } = this.props.gameState;
     if (screen === screens.intro) {
       round = 0;
@@ -34,6 +35,10 @@ class HonestAnswers extends Component {
         return <Intro nextScreen={() => this.nextScreen(screens.chooseCategory)}/>;
       case screens.chooseCategory:
         return <ChooseCategory />;
+      case screens.readQuestion:
+        return <ReadQuestion />;
+      case screens.chooseQuestion:
+    return <ChooseQuestion />;
       default:
         return null;
     }

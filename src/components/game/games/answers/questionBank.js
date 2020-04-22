@@ -234,7 +234,7 @@ export default [
     questions: [
       'What are you most looking forward to right now?',
       'Five years from now, how do you envision your life?',
-      'When you think about the future, what do you imagine?'
+      'When you think about you future, what do you imagine?'
     ]
   },
   {
