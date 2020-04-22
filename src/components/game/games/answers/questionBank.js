@@ -246,7 +246,7 @@ export default [
     ]
   },
   {
-    category: 'Feeling Lately',
+    category: 'Recent Feelings',
     questions: [
       'Who has been inspiring you lately?',
       'What has overwhelmed you recently?',

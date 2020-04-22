@@ -4,7 +4,7 @@ export const screens = {
   lobby: 'lobby',
   intro: 'intro',
   chooseCategory: 'choose-category',
-  choosQuestions: 'choose-question',
+  chooseQuestions: 'choose-question',
   readQuestion: 'read-question',
   final: 'final'
 }
