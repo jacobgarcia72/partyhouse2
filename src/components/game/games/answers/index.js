@@ -29,7 +29,6 @@ class HonestAnswers extends Component {
 
   updatePlayers = update => {
     const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
-    console.log(update);
     if (update.newTotal < minPlayers) {
       setGameState(this.props.code, null)
       this.props.history.push('/');

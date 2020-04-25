@@ -84,9 +84,7 @@ export function rejoinRoom(roomCode, callback) {
 function setRoomListener(roomCode) {
   database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
     const players = snapshot.val();
-    console.log('players', players)
-    console.log('store:', store.getState());
-
+    
     const prevPlayers = store.getState().players;
     const newPlayers = players ? players.filter(p => p.active) : [];
     if (!newPlayers.length) {

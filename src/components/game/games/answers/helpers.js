@@ -91,9 +91,6 @@ export function handlePlayersGone(playersGone, props) {
       removeElement(rounds, answeringRound);
     }
     const askingRound = rounds.find(round => round.askingIndex === playerIndex);
-    console.log(askingRound)
-    console.log(rounds)
-    console.log(players)
     if (rounds.indexOf(askingRound) >= round) {
       askingRound.askingIndex = getRandomElement(players.map(p => p.index), [askingRound.answeringIndex, playerIndex]);
     }
@@ -101,7 +98,6 @@ export function handlePlayersGone(playersGone, props) {
   if (round >= rounds.length) {
     round = 0;
   }
-  console.log({round, rounds});
   setGameState(code, {round, rounds});
 }
 
