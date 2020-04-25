@@ -88,7 +88,11 @@ function setRoomListener(roomCode) {
     console.log('store:', store.getState());
 
     const prevPlayers = store.getState().players;
-    const newPlayers = players.filter(p => p.active);
+    const newPlayers = players ? players.filter(p => p.active) : [];
+    if (!newPlayers.length) {
+      database.ref(`rooms/${roomCode}/`).remove();
+      return;
+    }
     const playerIndices = players => players.map(player => player.index);
     if (newPlayers.length !== prevPlayers.length) {
       const playersJoined = playerIndices(newPlayers)
@@ -97,7 +101,7 @@ function setRoomListener(roomCode) {
         .filter(index => !playerIndices(newPlayers).includes(index));
       ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length });
     }
-  })
+  });
   database.ref(`rooms/${roomCode}`).on('value', snapshot => {
     const room = snapshot.val();
     store.dispatch(setRoom(room));
@@ -105,5 +109,9 @@ function setRoomListener(roomCode) {
 };
 
 export function setGameState(roomCode, gameState) {
-  database.ref(`rooms/${roomCode}/gameState`).update(gameState);
+  if (gameState) {
+    database.ref(`rooms/${roomCode}/gameState`).update(gameState);
+  } else {
+    database.ref(`rooms/${roomCode}/`).remove();
+  }
 }

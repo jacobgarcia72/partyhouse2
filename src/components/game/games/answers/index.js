@@ -29,10 +29,10 @@ class HonestAnswers extends Component {
 
   updatePlayers = update => {
     const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
-    const { code } = this.props;
     console.log(update);
     if (update.newTotal < minPlayers) {
-      setGameState(code, null);
+      setGameState(this.props.code, null)
+      this.props.history.push('/');
       return;
     }
     if (update.playersGone.length) {
@@ -63,7 +63,7 @@ class HonestAnswers extends Component {
       case screens.readQuestion:
         return <ReadQuestion />;
       case screens.chooseQuestion:
-    return <ChooseQuestion />;
+        return <ChooseQuestion />;
       default:
         return null;
     }
