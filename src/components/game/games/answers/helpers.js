@@ -105,5 +105,10 @@ export function handlePlayersGone(playersGone, props) {
 }
 
 export function handlePlayersJoined(playersJoined, props) {
-  
+  const { gameState, code, players } = props;
+  const { rounds, round } = gameState;
+  playersJoined.forEach(playerIndex => {
+    rounds.push({askingIndex: players[0].index, answeringIndex: playerIndex});
+  });
+  setGameState(code, {round, rounds});
 }
