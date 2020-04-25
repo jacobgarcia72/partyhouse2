@@ -193,7 +193,7 @@ export default [
     category: 'Your Ex',
     questions: [
       'Do you know how your ex feels about you now? Describe how they feel about you, or how you think they probably feel about you.',
-      'How did your last breakup go?',
+      'Describe the details of your last breakup.',
       'How do you feel about your most recent ex?',
       'Are you still friends with your most recent ex? Why or why not?'
     ]
