@@ -11,10 +11,11 @@ export const screens = {
 }
 
 const getRandomElement = (array, exclude) => {
+  exclude = Array.isArray(exclude) ? exclude : [exclude];
   let randomEl;
   do {
     randomEl = array[Math.floor(Math.random() * array.length)];
-  } while (randomEl === exclude);
+  } while (exclude.includes(randomEl));
   return randomEl;
 }
 const removeElement = (array, el) => array.indexOf(el) > -1 ? array.splice(array.indexOf(el), 1) : null;
@@ -94,7 +95,7 @@ export function handlePlayersGone(playersGone, props) {
     console.log(rounds)
     console.log(players)
     if (rounds.indexOf(askingRound) >= round) {
-      askingRound.askingIndex = getRandomElement(players.map(p => p.index), askingRound.answeringIndex);
+      askingRound.askingIndex = getRandomElement(players.map(p => p.index), [askingRound.answeringIndex, playerIndex]);
     }
   });
   if (round >= rounds.length) {
