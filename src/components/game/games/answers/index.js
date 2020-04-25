@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Lobby from '../../other/lobby';
-import { screens, setRounds } from './helpers';
+import { screens, setRounds, handlePlayersGone, handlePlayersJoined } from './helpers';
 import { setGameState } from '../../../../functions/index';
 import { connect } from 'react-redux';
 import Intro from './intro';
@@ -8,15 +8,38 @@ import ChooseCategory from './chooseCategory';
 import ChooseQuestion from './chooseQuestion';
 import ReadQuestion from './readQuestion';
 
+import NotificationService, { PLAYERS_CHANGED } from '../../../../services/notif-service';
+import { getGameByUrl } from '../../../../config/games';
+let ns = new NotificationService();
+
 class HonestAnswers extends Component {
 
-  componentDidMount() {
-    if (this.props.isHost) {
-      setGameState(this.props.code, {
-        screen: screens.lobby,
-        round: -1,
-        rounds: []
-      });
+  componentWillUnmount() {
+    ns.removeObserver(this, PLAYERS_CHANGED);
+  }
+  
+  startGame = () => {
+    setGameState(this.props.code, {
+      screen: screens.intro,
+      round: 0,
+      rounds: setRounds(this.props.players)
+    });
+    ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
+  }
+
+  updatePlayers = update => {
+    const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
+    const { code } = this.props;
+    console.log(update);
+    if (update.newTotal < minPlayers) {
+      setGameState(code, null);
+      return;
+    }
+    if (update.playersGone.length) {
+      handlePlayersGone(update.playersGone, this.props);
+    }
+    if (update.playersJoined.length) {
+      handlePlayersJoined(update.playersJoined, this.props);
     }
   }
 
@@ -32,7 +55,7 @@ class HonestAnswers extends Component {
   render() {
     switch (this.props.gameState.screen) {
       case screens.lobby:
-        return <Lobby onContinue={() => this.nextScreen(screens.intro)}/>;
+        return <Lobby onContinue={this.startGame}/>;
       case screens.intro:
         return <Intro nextScreen={() => this.nextScreen(screens.chooseCategory)}/>;
       case screens.chooseCategory:

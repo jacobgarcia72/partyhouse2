@@ -3,6 +3,10 @@ import { setRoom, setPlayerIndex } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
+import NotificatinService, {PLAYERS_CHANGED} from '../services/notif-service';
+
+let ns = new NotificatinService();
+
 class Player {
   constructor(name, index) {
     this.name = name;
@@ -78,6 +82,22 @@ export function rejoinRoom(roomCode, callback) {
 };
 
 function setRoomListener(roomCode) {
+  database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
+    const players = snapshot.val();
+    console.log('players', players)
+    console.log('store:', store.getState());
+
+    const prevPlayers = store.getState().players;
+    const newPlayers = players.filter(p => p.active);
+    const playerIndices = players => players.map(player => player.index);
+    if (newPlayers.length !== prevPlayers.length) {
+      const playersJoined = playerIndices(newPlayers)
+        .filter(index => !playerIndices(prevPlayers).includes(index));
+      const playersGone = playerIndices(prevPlayers)
+        .filter(index => !playerIndices(newPlayers).includes(index));
+      ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length });
+    }
+  })
   database.ref(`rooms/${roomCode}`).on('value', snapshot => {
     const room = snapshot.val();
     store.dispatch(setRoom(room));

@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
         const players = room && room.players ? Object.values(room.players).filter(player => player.active) : [];
         const game = games.find(game => game.url === room.url);
         const { gameState, code } = room;
-        return setState({code, players, game, gameState});
+        return setState({ code, players, game, gameState });
       } else {
         return setState(initialState);
       }

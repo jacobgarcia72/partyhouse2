@@ -24,8 +24,9 @@ class ChooseCategory extends Component {
     const { playerIndex, gameState, players } = this.props;
     const { round, rounds } = gameState;
     const { categories } = this.state;
+    const loading = <div>Loading...</div>;
     if (!rounds || !rounds[round]) {
-      return <div>Loading...</div>;
+      return loading;
     } else if (rounds[round].answeringIndex === playerIndex) {
       return <div className="column">
           <div>Choose a category:</div>
@@ -34,7 +35,8 @@ class ChooseCategory extends Component {
           </form>
         </div>
     } else {
-      return <div>{players.find(player => player.index === rounds[round].answeringIndex).name} is choosing a category...</div>
+      const player = players.find(player => player.index === rounds[round].answeringIndex);
+      return player ? <div>{player.name} is choosing a category...</div> : loading;
     }
   }
 }
