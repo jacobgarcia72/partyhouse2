@@ -11,11 +11,13 @@ import ReadQuestion from './readQuestion';
 class HonestAnswers extends Component {
 
   componentDidMount() {
-    setGameState(this.props.code, {
-      screen: screens.lobby,
-      round: -1,
-      rounds: []
-    });
+    if (this.props.isHost) {
+      setGameState(this.props.code, {
+        screen: screens.lobby,
+        round: -1,
+        rounds: []
+      });
+    }
   }
 
   nextScreen = screen => {
@@ -45,8 +47,8 @@ class HonestAnswers extends Component {
   }
 }
 
-function mapStateToProps({ gameState, players, code }) {
-  return { gameState, players, code };
+function mapStateToProps({ gameState, players, code, isHost }) {
+  return { gameState, players, code, isHost };
 }
 
 export default connect(mapStateToProps, null)(HonestAnswers);
