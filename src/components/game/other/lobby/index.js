@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import RoomCode from '../room-code';
 import PlayerList from '../player-list';
 import {connect} from 'react-redux';
 
@@ -30,7 +29,6 @@ class Lobby extends Component {
 
   render() {
     return <div className="column">
-      <RoomCode roomCode={this.props.code}/>
       <div style={{fontSize: '1.2em', marginBottom: '1em'}}>
         {this.props.game.displayName}
       </div>
@@ -45,8 +43,8 @@ class Lobby extends Component {
   }
 }
 
-function mapStateToProps({ code, players, game, isHost }) {
-  return { code, players, game, isHost };
+function mapStateToProps({ players, game, isHost }) {
+  return { players, game, isHost };
 }
 
 export default connect(mapStateToProps, null)(Lobby);

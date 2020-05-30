@@ -51,7 +51,7 @@ class HonestAnswers extends Component {
     setGameState(this.props.code, {screen, round, rounds});
   }
 
-  render() {
+  renderContent() {
     switch (this.props.gameState.screen) {
       case screens.lobby:
         return <Lobby onContinue={this.startGame}/>;
@@ -66,6 +66,10 @@ class HonestAnswers extends Component {
       default:
         return null;
     }
+  }
+
+  render() {
+    return <div className="HonestAnswers">{this.renderContent()}</div>
   }
 }
 

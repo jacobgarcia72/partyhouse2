@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { getCategories, formatText, screens } from './helpers';
 import { setGameState } from '../../../../functions/index';
+import './style.sass';
 
 class ChooseCategory extends Component {
 
@@ -29,14 +30,14 @@ class ChooseCategory extends Component {
       return loading;
     } else if (rounds[round].answeringIndex === playerIndex) {
       return <div className="column">
-          <div>Choose a category:</div>
-          <form  onSubmit={e => e.preventDefault()}>
+          <h2>Choose a category:</h2>
+          <form  onSubmit={e => e.preventDefault()} className="column options">
             {categories.map((cat, i) => <button type="submit" key={i} onClick={() => this.submitCategoryChoice(cat)}>{formatText(cat, rounds[round], players)}</button>)}
           </form>
         </div>
     } else {
       const player = players.find(player => player.index === rounds[round].answeringIndex);
-      return player ? <div>{player.name} is choosing a category...</div> : loading;
+      return player ? <h2>{player.name} is choosing a category...</h2> : loading;
     }
   }
 }

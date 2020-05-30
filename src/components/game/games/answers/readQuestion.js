@@ -33,8 +33,8 @@ class ReadQuestion extends Component {
         </form>
       );
       return <div className="column">
-          <div>{answeringIndex === playerIndex ? 'Your' : `${answeringPlayer}'s`} question:</div>
-          <div>{question}</div>
+          <h2>{answeringIndex === playerIndex ? 'Your' : `${answeringPlayer}'s`} question:</h2>
+          <div className="question-text">{question}</div>
           {answeringIndex === playerIndex ? submitButton : null}
         </div>
     }

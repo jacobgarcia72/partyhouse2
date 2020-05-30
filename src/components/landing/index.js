@@ -50,7 +50,7 @@ class Landing extends Component {
     const { roomCode, playerName, error, loading } = this.state;
     return (
       <div>
-        <div className="row top-banner">
+        <div className="row top-banner blue-back">
           <div className="column">
             <img src="assets/img/logo.png" alt="Party House Games"></img>
             <h1>Connect!</h1>

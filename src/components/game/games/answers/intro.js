@@ -13,12 +13,11 @@ class Intro extends Component {
 
   render() {
     return <div>
-      <div>
+      <h1>
         Welcome to
-      </div>
-      <div>
+        <br />
         Honest Answers
-      </div>
+      </h1>
     </div>
   }
 }

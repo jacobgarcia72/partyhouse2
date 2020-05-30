@@ -38,13 +38,13 @@ class ChooseQuestion extends Component {
       return <div>Loading...</div>;
     } else if (askingIndex === playerIndex) {
       return <div className="column">
-          <div>Choose a question for {answeringPlayer}:</div>
-          <form  onSubmit={e => e.preventDefault()}>
+          <h2>Choose a question for {answeringPlayer}:</h2>
+          <form onSubmit={e => e.preventDefault()} className="column options">
             {questions.map((question, i) => <button type="submit" key={i} onClick={() => this.submitQuestionChoice(question)}>{formatText(question, rounds[round], players)}</button>)}
           </form>
         </div>
     } else {
-      return <div>{askingPlayer} is choosing a question for {answeringPlayer}...</div>
+      return <h2>{askingPlayer} is choosing a question for {answeringPlayer}...</h2>
     }
   }
 }
