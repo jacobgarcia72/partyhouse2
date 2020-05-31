@@ -29,7 +29,7 @@ class Intro extends Component {
       className2 = className1 = 'cross-zoom-out';
     }
     const style = {display: animate === 0 ? 'none' : 'block'};
-    return <div className="impact no-scroll">
+    return <div className="impact no-scroll center-screen">
       <h1>
         <div className={className1}>Welcome to</div>
         <div style={style} className={className2}>Dank U</div>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Lobby from '../../other/lobby';
 import Intro from './intro';
+import Upload from './upload';
 import { screens } from './helpers';
 import { setGameState } from '../../../../functions/index';
 import './style.sass';
@@ -22,6 +23,8 @@ class MemeGame extends Component {
         return <Lobby onContinue={() => this.nextScreen(screens.intro)}/>;
       case screens.intro:
         return <Intro nextScreen={() => this.nextScreen(screens.upload)}/>;
+      case screens.upload:
+        return <Upload />;
       default:
         return null;
     }
