@@ -50,7 +50,7 @@ class NewGame extends Component {
   render() {
     const { playerName, loading } = this.state;
     const { displayName, url } = this.props.game;
-    return <div className="column">
+    return <div className="column NewGame">
       <img alt={displayName} src={`assets/img/thumbnails/${url}.png`} className="thumbnail" />
       <form onSubmit={this.createRoom} className="column">
         <input

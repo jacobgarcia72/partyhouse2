@@ -67,13 +67,6 @@ export default [
     ]
   },
   {
-    category: 'Gratitude',
-    questions: [
-      'What does gratitude mean to you?',
-      'Name 5 things you\'re grateful for.'
-    ]
-  },
-  {
     category: 'Books',
     questions: [
       'What is a really good book you\'ve read recently?',
@@ -187,7 +180,7 @@ export default [
     ]
   },
   {
-    category: 'Dress',
+    category: 'Dress/Clothing',
     questions: [
       'How many pairs of shoes do you own?',
       'How would you describe your style of dress?',
@@ -247,7 +240,6 @@ export default [
   {
     category: 'Your Ex',
     questions: [
-      'Do you know how your ex feels about you now? Describe how they feel about you, or how you think they probably feel about you.',
       'Describe the details of your last breakup.',
       'How do you feel about your most recent ex?',
       'Are you still friends with your most recent ex? Why or why not?'
@@ -370,8 +362,7 @@ export default [
     questions: [
       'What are you like when you\'re drunk? If you\'ve never been drunk, what do you think you would be like?',
       'What is your current relationship with drinking?',
-      'What is the drunkest you\'ve ever been?',
-      'What is your number one reason for drinking? If you don\'t drink, why not?'
+      'What is the drunkest you\'ve ever been?'
     ]
   },
   {
@@ -403,9 +394,9 @@ export default [
   {
     category: 'Holidays',
     questions: [
-      'What is your favorite holiday?',
+      'What is your favorite holiday? Why?',
       'Is there a holiday you don\'t like? Why?',
-      'What is your favorite family holiday tradition?'
+      'What is your favorite holiday tradition?'
     ]
   },
   {
@@ -453,7 +444,7 @@ export default [
       'Who was your first crush?',
       'Do you currently have a crush on anyone? Who?',
       'Who\'s your celebrity crush?',
-      'Who do you have a serious crush on that didn\'t feel the same way?'
+      'Who did you have a serious crush on that didn\'t feel the same way?'
     ]
   },
   /*

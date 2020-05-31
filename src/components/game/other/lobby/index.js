@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PlayerList from '../player-list';
 import {connect} from 'react-redux';
+import './style.sass';
 
 class Lobby extends Component {
 
@@ -28,10 +29,10 @@ class Lobby extends Component {
   }
 
   render() {
-    return <div className="column">
-      <div style={{fontSize: '1.2em', marginBottom: '1em'}}>
+    return <div className="column Lobby">
+      <h1 style={{marginBottom: 0}}>
         {this.props.game.displayName}
-      </div>
+      </h1>
       <PlayerList />
       {this.props.isHost ? <form onSubmit={this.onSubmit}>
         <input type="submit"
