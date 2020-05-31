@@ -15,9 +15,9 @@ class App extends Component {
     if (this.props.code) {
       return (
         <div className="column">
-          <div className="row blue-back" style={{alignItems: 'center'}}>
+          <div className="row blue-back room-banner" style={{alignItems: 'center'}}>
             <RoomCode roomCode={this.props.code}/>
-            <img src="/assets/img/logo.png" alt="Party House Games" style={{margin: '1em', height: '72px'}}></img>
+            <img src="/assets/img/logo.png" alt="Party House Games"></img>
           </div>
           <game.component {...props} gameUrl={game.url}/>
         </div>

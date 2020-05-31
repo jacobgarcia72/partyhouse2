@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { getCategories, formatText, screens } from './helpers';
 import { setGameState } from '../../../../functions/index';
-import './style.sass';
 
 class ChooseCategory extends Component {
 

@@ -1,0 +1,16 @@
+@keyframes crossZoomIn
+  0% 
+    transform: scale(10)
+  100% 
+    transform: scale(1)
+@keyframes crossZoomOut
+  0% 
+    transform: scale(1)
+    opacity: 1
+  100% 
+    transform: scale(10) 
+    opacity: 0
+.cross-zoom-in
+  animation: 300ms cubic-bezier(.15,1,.85,1) 0s 1 crossZoomIn
+.cross-zoom-out 
+  animation: 300ms cubic-bezier(.7,.05,.92,.53) 0s 1 forwards crossZoomOut

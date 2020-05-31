@@ -10,6 +10,8 @@ import ReadQuestion from './readQuestion';
 
 import NotificationService, { PLAYERS_CHANGED } from '../../../../services/notif-service';
 import { getGameByUrl } from '../../../../config/games';
+import './style.sass';
+
 let ns = new NotificationService();
 
 class HonestAnswers extends Component {
