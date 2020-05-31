@@ -2,7 +2,7 @@ export default [
   {
     category: 'Guests',
     questions: [
-      'Given the choice of anyone in the world, who would you want as a dinner guest?',
+      'Who is your dream dinner guest?',
       'Do you enjoy hosting guests? Why or why not?'
     ]
   },
@@ -14,49 +14,107 @@ export default [
     ]
   },
   {
-    category: 'Phone Calls',
+    category: 'Nicknames',
     questions: [
-      'Before making a telephone call, do you ever rehearse what you are going to say? Why?',
-      'What do you think was the longest phone call you\'ve ever had? Where were you and who was it with?'
-    ]
-  },
-  {
-    category: 'Perfect Day',
-    questions: [
-      'What would constitute a "perfect" day for you?',
-      'Describe a day in your past that felt like a perfect day to you.'
+      'Have you ever had a nickname? What was it?',
+      'Do you have a nickname you wish people would call you more?'
     ]
   },
   {
     category: 'Music',
     questions: [
-      'When did you last sing to yourself? To someone else?',
-      'What is your favorite band or music artist? Describe their significance in your life.'
+      'What is your go-to Karaoke song?',
+      'What was your first album?',
+      'Who is your favorite band and when did you start listening to them?',
+      'What was your favorite concert you\'ve ever been to?',
+      'What are your top radio stations?',
+      'What is your favorite genre of music?',
+      'What is a song that meant a lot to you growing up?',
+      'What is a song that really takes you back?',
+      'What band do you think is overrated?',
+      'What is a band or artist you\'ve discovered recently that you\'ve been enjoying?'
+    ]
+  },
+  {
+    category: 'Chores',
+    questions: [
+      'What is your least favorite chore?',
+      'What\'s a chore you enjoy doing?',
+      'If you could hire someone to help you, would it be with cleaning, cooking, or yard work?'
+    ]
+  },
+  {
+    category: 'Animals',
+    questions: [
+      'What is your spirit animal?',
+      'How do you feel about zoos?',
+      'If you were an animal, what kind of animal would you be?',
+      'What pets do you have?'
     ]
   },
   {
     category: 'Growing Old',
     questions: [
-      'If you were able to live to the age of 90 and retain either the mind or body of a 30-year-old for the last 60 years of your life, which would you want?',
+      'If you were able to live to the age of 90 and retain either the mind or body of a 30-year-old for the last 60 years of your life, which would you choose?',
       'What do you think the last 10 years of your life will look like?'
     ]
   },
   {
     category: 'Jacob',
     questions: [
-      'Name three things you and Jacob appear to have in common.',
-      'Name five things about Jacob you consider to be positive characteristics.',
-      'Make three true "we" statements about Jacob. For instance, "We are both in this room feeling ... "',
-      'Tell Jacob what you like about them; be very honest.',
-      'Describe Jacob in three words.'
+      'Name three things you and Jacob have in common.',
+      'Name three positive characteristics about Jacob.'
     ]
   },
   {
-    category: 'What\'s Important',
+    category: 'Gratitude',
     questions: [
-      'For what in your life do you feel most grateful?',
-      'Your house, containing everything you own, catches fire. After saving your loved ones and pets, you have time to safely make a final dash to save any one item. What would it be? Why?',
+      'What does gratitude mean to you?',
       'Name 5 things you\'re grateful for.'
+    ]
+  },
+  {
+    category: 'Books',
+    questions: [
+      'What is a really good book you\'ve read recently?',
+      'What book did you really like growing up?',
+      'What is a book you really enjoy?',
+      'What was the last book you read? What did you think?',
+      'What kind of books do you enjoy the most?',
+      'Who is your favorite author?'
+    ]
+  },
+  {
+    category: 'Movies',
+    questions: [
+      'What is a really good movie you\'ve seen recently?',
+      'What movie did you really like growing up?',
+      'What was the last movie you went to? What did you think?',
+      'What is a movie you could never get tired of seeing?',
+      'What kind of movies do you enjoy the most?',
+      'What movie are you looking forward to?',
+      'Who would you want to play you in a movie of your life?'
+    ]
+  },
+  {
+    category: 'Games',
+    questions: [
+      'What is your favorite game?',
+      'What game did you really like growing up?',
+      'What was the last game you played? What did you think?',
+      'What kind of games do you enjoy the most?'
+    ]
+  },
+  {
+    category: 'Food',
+    questions: [
+      'What is a really restaurant you\'ve been to recently?',
+      'What kind of food did you really enjoy growing up?',
+      'What is your favorite kind of food?',
+      'What is your favorite restaurant?',
+      'What do you enjoy cooking?',
+      'What\'s your favorite fast food chain?',
+      'What\'s the most unusual thing you\'ve ever eaten?'
     ]
   },
   {
@@ -65,8 +123,8 @@ export default [
       'If you could change anything about the way you were raised, what would it be?',
       'Do you feel your childhood was happier than most other people\'s?',
       'What is something you miss from your childhood, if anything?',
-      'What was your favorite book (or movie) as a child and why did you like it so much?',
-      'What was your favorite place to go as a child and why did you love it there?'
+      'What did you want to be when you grew up when you were a kid?',
+      'What was your favorite place to go as a child and why?'
     ]
   },
   {
@@ -90,9 +148,7 @@ export default [
     questions: [
       'What do you value most in a friendship?',
       'What does friendship mean to you?',
-      'If you were going to become a close (or closer) friend with Jacob, please share what would be important for them to know.',
-      'Describe a true friend in your life, past or present.',
-      'Complete this sentence: "I wish I had someone with whom I could share ... "'
+      'Describe a true friend in your life, past or present.'
     ]
   },
   {
@@ -117,24 +173,33 @@ export default [
   {
     category: 'Love and Affection',
     questions: [
-      'What roles do love and affection play in your life?',
       'When was the last time you felt loved?',
       'What is your love language?',
       'Do you love yourself? Why or why not?'
     ]
   },
   {
-    category: 'Family',
+    category: 'Super Heroes',
     questions: [
-      'How close and warm is your family?',
-      'How do you feel about your relationship with your mother?',
-      'Who in your family are you closest to and why do you think that is?'
+      'Who is your favorite super hero and why?',
+      'If you were a super-hero, what powers would you have?',
+      'What super hero movie are you looking forward to?'
+    ]
+  },
+  {
+    category: 'Dress',
+    questions: [
+      'How many pairs of shoes do you own?',
+      'How would you describe your style of dress?',
+      'What style of dress do you wish you could pull off?',
+      'How often do you buy clothes?',
+      'Is there anything you wished would come back into fashion?'
     ]
   },
   {
     category: 'Crying',
     questions: [
-      'When did you last cry in front of another person? By yourself?',
+      'When did you last cry in front of another person?',
       'What has made you cry or feel upset recently?',
       'Describe a scene from a movie or TV show that made you cry?'
     ]
@@ -147,20 +212,12 @@ export default [
     ]
   },
   {
-    category: 'Advice',
-    questions: [
-      'Share a personal problem and ask Jacob\'s advice on how he or she might handle it.',
-      'What advice would you tell your 25-year-old self?',
-      'If your future self went back in time, what would he/she tell you?',
-      'What is the most memorable life advice you received?'
-    ]
-  },
-  {
     category: 'Money',
     questions: [
       'If someone gave you $100, what would you spend it on?',
       'If someone gave you enough money to start a business, no strings attached, what kind of business would you want to start?',
-      'What would you do with a million dollars?'
+      'What would you do with a million dollars?',
+      'If you had enough money to retire right now, would you quit your job? Why or why not?'
     ]
   },
   {
@@ -184,9 +241,7 @@ export default [
       'What is your favorite date you\'ve ever had? Why?',
       'What would the perfect first date look like?',
       'What is the most important thing in a relationship to you?',
-      'What do you envy from other people\'s relationships?',
-      'What is your biggest fear in a relationship?',
-      'Who comes to mind with the phrase "The one that got away?"'
+      'What is your biggest fear in a relationship?'
     ]
   },
   {
@@ -213,6 +268,21 @@ export default [
     ]
   },
   {
+    category: 'Pet Peeves',
+    questions: [
+      'List three pet peeves.',
+      'What is your biggest pet peeve when driving?',
+      'What is your biggest pet peeve at work?'
+    ]
+  },
+  {
+    category: 'Gifts',
+    questions: [
+      'What is the best gift you have been given?',
+      'What is the worst gift you have received?'
+    ]
+  },
+  {
     category: 'Free Time',
     questions: [
       'What do wish you could spend more time on?',
@@ -230,7 +300,7 @@ export default [
     ]
   },
   {
-    category: 'Looking Forward',
+    category: 'The Future',
     questions: [
       'What are you most looking forward to right now?',
       'Five years from now, how do you envision your life?',
@@ -243,15 +313,6 @@ export default [
       'What adventure would you like to do in the next few months?',
       'What spontaneous things have you done this month?',
       'What\'s one of the most adventurous things you have ever done?'
-    ]
-  },
-  {
-    category: 'Recent Feelings',
-    questions: [
-      'Who has been inspiring you lately?',
-      'What has overwhelmed you recently?',
-      'What has gotten you excited these days?',
-      'What has made you laugh or brought you joy this week?'
     ]
   },
   {
@@ -277,11 +338,15 @@ export default [
     ]
   },
   {
-    category: 'Occupation',
+    category: 'Work',
     questions: [
       'If money didn\'t matter, what occupation would you choose?',
       'What are your career ambitions?',
-      'How do you feel about your job? Are you trying to change the way you feel about it? If so, how?'
+      'How do you feel about your job? Are you trying to change the way you feel about it?',
+      'What is your favorite thing about your current job or career?',
+      'What is your biggest complaint about your job?',
+      'How long does it take you to get ready for work in the morning?',
+      'What was your first job?'
     ]
   },
   {
@@ -307,6 +372,88 @@ export default [
       'What is your current relationship with drinking?',
       'What is the drunkest you\'ve ever been?',
       'What is your number one reason for drinking? If you don\'t drink, why not?'
+    ]
+  },
+  {
+    category: 'Vacation',
+    questions: [
+      'What was your favorite family vacation?',
+      'What was your last vacation?',
+      'Where do you hope to go on vacation next?',
+      'What is your favorite vacation spot?',
+      'Where do you think Jacob would love vacationing and why?'
+    ]
+  },
+  {
+    category: 'Anger',
+    questions: [
+      'What really makes you angry?',
+      'What has recently made you angry?',
+      'How do you handle anger?'
+    ]
+  },
+  {
+    category: 'Motivation',
+    questions: [
+      'What motivates you to work hard?',
+      'Who do you find motivational?',
+      'What song do you find motivational?'
+    ]
+  },
+  {
+    category: 'Holidays',
+    questions: [
+      'What is your favorite holiday?',
+      'Is there a holiday you don\'t like? Why?',
+      'What is your favorite family holiday tradition?'
+    ]
+  },
+  {
+    category: 'Theme Parks',
+    questions: [
+      'Do you love or hate roller coasters?',
+      'What\'s your favorite ride?',
+      'How often did you go to theme parks growing up versus now?'
+    ]
+  },
+  {
+    category: 'School',
+    questions: [
+      'What was your favorite subject in school?',
+      'What was your worst subject in school?',
+      'Who was your favorite teacher?',
+      'How would you describe yourself in high school?'
+    ]
+  },
+  {
+    category: 'Birthdays',
+    questions: [
+      'Have you ever had a surprise birtday party? How did it go?',
+      'How do you hope to spend your next birthday?',
+      'What was a really memorable birthday for you?'
+    ]
+  },
+  {
+    category: 'Working Out',
+    questions: [
+      'What do you do to keep fit?',
+      'What is your favorite workout?'
+    ]
+  },
+  {
+    category: 'Personality',
+    questions: [
+      'What do you do to keep fit?',
+      'What is your favorite workout?'
+    ]
+  },
+  {
+    category: 'Crushes',
+    questions: [
+      'Who was your first crush?',
+      'Do you currently have a crush on anyone? Who?',
+      'Who\'s your celebrity crush?',
+      'Who do you have a serious crush on that didn\'t feel the same way?'
     ]
   },
   /*
