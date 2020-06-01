@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { screens, assignCaptionersToMemes, Meme } from './helpers';
-import { setGameState } from '../../../../functions/index';
+import { sendInput } from '../../../../functions/index';
 import Crop from './Crop';
 import { totalImages } from './helpers';
 
@@ -61,24 +60,12 @@ class Upload extends Component {
   }
 
   handleSubmit = image => {
-    const {code, playerIndex, gameState, players} = this.props;
+    const {code, playerIndex} = this.props;
     let {uploads} = this.state;
     uploads.push(image);
     this.setState({uploads});
     if (uploads.length===2) {
-      let memes = gameState.memes || [];
-      const images = uploads;
-      const numPlayers = players.length;
-      for (let i = 0; i < 2; i++) {
-        let meme = new Meme(memes.length, playerIndex, images[i]);
-        memes.push(meme);
-      }
-      if (memes.length === numPlayers * 2) {
-        memes = assignCaptionersToMemes(memes, players);
-        setGameState(code, { memes, screen: screens.caption });
-      } else {
-        setGameState(code, { memes });
-      }
+      sendInput(code, playerIndex, uploads);
     }
   }
 

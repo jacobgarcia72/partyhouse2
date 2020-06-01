@@ -113,3 +113,25 @@ export function setGameState(roomCode, gameState) {
     database.ref(`rooms/${roomCode}/`).remove();
   }
 }
+
+export function sendInput(roomCode, playerIndex, newInput) {
+  database.ref(`rooms/${roomCode}`).once('value', snapshot => {
+    const room = snapshot.val();
+    if (!room) {
+      return;
+    }
+    const input = room.input || {};
+    input[playerIndex] = newInput;
+    database.ref(`rooms/${roomCode}/input/${playerIndex}`).set(newInput);
+  });
+}
+
+export function clearInput(roomCode) {
+  database.ref(`rooms/${roomCode}`).once('value', snapshot => {
+    const room = snapshot.val();
+    if (!room) {
+      return;
+    }
+    database.ref(`rooms/${roomCode}/input`).set(null);
+  });
+}
