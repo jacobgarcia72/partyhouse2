@@ -6,33 +6,67 @@ import Upload from './upload';
 import { screens, Meme, assignCaptionersToMemes } from './helpers';
 import { setGameState, clearInput } from '../../../../functions/index';
 import './style.sass';
+import Caption from './Caption';
 
 class MemeGame extends Component {
 
   componentDidUpdate() {
-    const { isHost, gameState, players, code, input } = this.props;
+    const { isHost, gameState, input } = this.props;
     const { screen } = gameState;
     if (!isHost || !input) return;
-    if (screen === screens.upload) {
-      let allPlayersIn = true;
-      const submittedPlayers = Object.keys(input).map(index => Number(index));
-      for (let i = 0; i < players.length; i++) {
-        if (!submittedPlayers.includes(players[i].index)) {
-          allPlayersIn = false;
-          break;
-        }
+    switch (screen) {
+      case screens.upload:
+        this.handleUploadUpdate();
+        break;
+      case screens.caption:
+        this.handleCaptionUpdate();
+        break;
+      default:
+    }
+  }
+
+  handleUploadUpdate = () => {
+    const { players, code, input } = this.props;
+    let allPlayersIn = true;
+    const submittedPlayers = Object.keys(input).map(index => Number(index));
+    for (let i = 0; i < players.length; i++) {
+      if (!submittedPlayers.includes(players[i].index)) {
+        allPlayersIn = false;
+        break;
       }
-      if (allPlayersIn) {
-        clearInput(code);
-        let memes = [];
-        players.forEach((player, i) => {
-          input[player.index].forEach(image => {
-            memes.push(new Meme(memes.length, player.index, image));
-          });
+    }
+    if (allPlayersIn) {
+      clearInput(code);
+      let memes = [];
+      players.forEach((player, i) => {
+        input[player.index].forEach(image => {
+          memes.push(new Meme(memes.length, player.index, image));
         });
-        memes = assignCaptionersToMemes(memes, players);
-        setGameState(code, {screen: screens.caption, memes});
+      });
+      memes = assignCaptionersToMemes(memes, players);
+      setGameState(code, {screen: screens.caption, memes});
+    }
+  }
+
+  handleCaptionUpdate = () => {
+    const { players, code, input, gameState } = this.props;
+    let allPlayersIn = true;
+    const submittedPlayers = Object.keys(input).map(index => Number(index));
+    for (let i = 0; i < players.length; i++) {
+      if (!submittedPlayers.includes(players[i].index)) {
+        allPlayersIn = false;
+        break;
       }
+    }
+    if (allPlayersIn) {
+      clearInput(code);
+      const {memes} = gameState;
+      players.forEach((player, i) => {
+        input[player.index].forEach(meme => {
+          memes[meme.index].caption = meme.caption;
+        });
+      });
+      setGameState(code, {screen: screens.vote, memes});
     }
   }
 
@@ -52,6 +86,8 @@ class MemeGame extends Component {
         return <Intro nextScreen={() => this.nextScreen(screens.upload)}/>;
       case screens.upload:
         return <Upload />;
+      case screens.caption:
+        return <Caption />;
       default:
         return null;
     }

@@ -114,8 +114,8 @@ class Upload extends Component {
   }
 }
 
-function mapStateToProps({ gameState, playerIndex, players, code }) {
-  return { gameState, playerIndex, players, code };
+function mapStateToProps({ playerIndex, code }) {
+  return { playerIndex, code };
 }
 
 export default connect(mapStateToProps, null)(Upload);
