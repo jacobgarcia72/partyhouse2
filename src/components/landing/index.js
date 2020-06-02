@@ -17,6 +17,13 @@ class Landing extends Component {
     }
   }
 
+  componentDidMount() {
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      const names = ['Karen', 'Konnor', 'David', 'Emily', 'Stephen', 'Shayla', 'Jon', 'Debra', 'Brandon', 'Tasheda', 'Luis', 'Ethan', 'Fernando'];
+      this.setState({roomCode: 'TEST', playerName: names[Math.floor(Math.random() * names.length)]});
+    } 
+  }
+
   handleInputChange = event => {
     const {name, value} = event.target;
     this.setState({

@@ -12,6 +12,12 @@ class NewGame extends Component {
     }
   }
 
+  componentDidMount() {
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      this.setState({playerName: 'Jacob'});
+    }
+  }
+
   createRoom = (event) => {
     event.preventDefault();
     this.setState({loading: true});

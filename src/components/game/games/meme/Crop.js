@@ -129,6 +129,17 @@ class MyEditor extends React.Component {
     this.setState({zoom}, () => this.setSize(this.image));
   }
 
+  renderControls = () => {
+    return ( 
+      <div className="row adjust-img-buttons">
+        <i className="fas fa-undo" onClick={() => this.handleRotate(false)}></i>
+        <i className="fas fa-redo" onClick={() => this.handleRotate(true)}></i>
+        <i className="fas fa-search-plus" onClick={() => this.handleZoom(false)}></i>
+        <i className="fas fa-search-minus" onClick={() => this.handleZoom(true)}></i>
+      </div>
+    )
+  }
+
   render() {
     const {height, src, zoom} = this.state;
     let renderDisplay = <p>Loading Image...</p>;
@@ -151,12 +162,7 @@ class MyEditor extends React.Component {
           <div className="img-editor-container">
             {renderDisplay}
           </div>
-          <div className="row adjust-img-buttons">
-            <i className="fas fa-undo" onClick={() => this.handleRotate(false)}></i>
-            <i className="fas fa-redo" onClick={() => this.handleRotate(true)}></i>
-            <i className="fas fa-search-plus" onClick={() => this.handleZoom(false)}></i>
-            <i className="fas fa-search-minus" onClick={() => this.handleZoom(true)}></i>
-          </div>
+          {Number.isInteger(this.props.img) ? null : this.renderControls()}
           {src ? <button type="submit" onClick={this.onClickSave}>Confirm</button> : <br/>}
           <div className="btn-link" onClick={()=>this.props.returnImage(null)}>Cancel</div>
         </div>

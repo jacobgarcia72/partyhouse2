@@ -3,18 +3,18 @@ import HonestAnswers from '../components/game/games/answers';
 
 export const games = [
   {
-    displayName: 'Honest Answers',
-    url: 'answers',
-    minPlayers: 2,
-    maxPlayers: 30,
-    component: HonestAnswers
-  },
-  {
     displayName: 'Dank U',
     url: 'meme',
     minPlayers: 3,
     maxPlayers: 30,
     component: MemeGame
+  },
+  {
+    displayName: 'Honest Answers',
+    url: 'answers',
+    minPlayers: 2,
+    maxPlayers: 30,
+    component: HonestAnswers
   },
   {
     displayName: 'Draw The Line',

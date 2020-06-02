@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import Lobby from '../../other/lobby';
 import Intro from './intro';
 import Upload from './upload';
-import { screens, Meme, assignCaptionersToMemes } from './helpers';
+import { screens, Meme, assignCaptionersToMemes, pairMemes } from './helpers';
 import { setGameState, clearInput } from '../../../../functions/index';
 import './style.sass';
 import Caption from './Caption';
+import Vote from './Vote';
 
 class MemeGame extends Component {
 
@@ -20,6 +21,9 @@ class MemeGame extends Component {
         break;
       case screens.caption:
         this.handleCaptionUpdate();
+        break;
+      case screens.vote:
+        this.handleVoteUpdate();
         break;
       default:
     }
@@ -61,12 +65,36 @@ class MemeGame extends Component {
     if (allPlayersIn) {
       clearInput(code);
       const {memes} = gameState;
-      players.forEach((player, i) => {
+      players.forEach((player) => {
         input[player.index].forEach(meme => {
           memes[meme.index].caption = meme.caption;
         });
       });
-      setGameState(code, {screen: screens.vote, memes});
+      const pairs = pairMemes(memes);
+      setGameState(code, {screen: screens.vote, memes, pairs, round: 0, showStats: false});
+    }
+  }
+
+  handleVoteUpdate = () => {
+    const { players, code, input, gameState } = this.props;
+    let allPlayersIn = true;
+    const submittedPlayers = Object.keys(input).map(index => Number(index));
+    for (let i = 0; i < players.length; i++) {
+      if (!submittedPlayers.includes(players[i].index)) {
+        allPlayersIn = false;
+        break;
+      }
+    }
+    if (allPlayersIn) {
+      clearInput(code);
+      const {memes, round} = gameState;
+      players.forEach((player) => {
+          memes[input[player.index]].votes += 1;
+      });
+      setGameState(code, {memes, showStats: true});
+      setTimeout(() => {
+        setGameState(code, {round: round + 1, showStats: false});
+      }, 3500);
     }
   }
 
@@ -88,6 +116,8 @@ class MemeGame extends Component {
         return <Upload />;
       case screens.caption:
         return <Caption />;
+      case screens.vote:
+        return <Vote />;
       default:
         return null;
     }
