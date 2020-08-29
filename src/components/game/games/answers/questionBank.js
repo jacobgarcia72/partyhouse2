@@ -432,13 +432,6 @@ export default [
     ]
   },
   {
-    category: 'Personality',
-    questions: [
-      'What do you do to keep fit?',
-      'What is your favorite workout?'
-    ]
-  },
-  {
     category: 'Crushes',
     questions: [
       'Who was your first crush?',
