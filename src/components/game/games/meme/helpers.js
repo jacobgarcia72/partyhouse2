@@ -25,6 +25,14 @@ export class Meme {
   }
 }
 
+export class Score {
+  constructor(player) {
+    this.playerIndex = player.index;
+    this.playerName = player.name;
+    this.points = 0;
+  }
+}
+
 export const renderMeme = (meme, i, specialClass) => (
   <div className={`meme${specialClass ? ` ${specialClass}` : ''}`} id={'meme-' + i} key={i}>
     <div className="caption">{meme.caption}</div>
@@ -37,10 +45,10 @@ export const assignCaptionersToMemes = (memes, players) => {
   let mapPlayerIndexToNumberOfPairs = {};
 
   players.forEach(player=>{
-    mapPlayerIndexToNumberOfPairs[player.index]=0; // goal is to pair each player to 2 memes
+    mapPlayerIndexToNumberOfPairs[player.index] = 0; // goal is to pair each player to 2 memes
   });
 
-  let playersAvailable = players.map(player=>player.index);
+  let playersAvailable = players.map(player => player.index);
 
   // select a player to caption the meme, not the same as the uploader!
   const selectCaptioner = (uploader) => {
