@@ -39,7 +39,7 @@ class Lobby extends Component {
           value="Start Game!"
         ></input>
         <div className="error">{this.state.error}</div>
-      </form> : null}
+      </form> : <p style={{margin: '1.5em'}}>Waiting on host to start the game.</p>}
     </div>;
   }
 }

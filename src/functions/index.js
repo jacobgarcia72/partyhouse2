@@ -44,7 +44,7 @@ export function joinRoom(roomCode, name, callback) {
     const room = snapshot.val();
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
-    const roomIsFull = roomExists && room.players.filter(player => player.active).length === game.maxPlayers;
+    const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     let playerIndex = null;
     if (roomExists && !roomIsFull) {
       playerIndex = room.nextIndex;
@@ -67,7 +67,7 @@ export function rejoinRoom(roomCode, callback) {
     let success = false;
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
-    const roomIsFull = roomExists && room.players.filter(player => player.active).length === game.maxPlayers;
+    const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     let playerIndex = localStorage.getItem('player-index');
     if (roomExists && !roomIsFull && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
       success = true;
@@ -97,7 +97,7 @@ function setRoomListener(roomCode) {
         .filter(index => !playerIndices(prevPlayers).includes(index));
       const playersGone = playerIndices(prevPlayers)
         .filter(index => !playerIndices(newPlayers).includes(index));
-      ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length });
+      ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length, newPlayers });
     }
   });
   database.ref(`rooms/${roomCode}`).on('value', snapshot => {

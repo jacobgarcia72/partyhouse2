@@ -1,4 +1,5 @@
 import React from 'react';
+import { setGameState } from '../../../../functions';
 
 export const totalImages = 106;
 
@@ -7,19 +8,20 @@ export const screens = {
   intro: 'intro',
   upload: 'upload',
   caption: 'caption',
-  voteIntro: 'vote-intro',
   vote: 'vote',
   dankestMeme: 'dankest-meme',
   scores: 'scores'
 }
 
 export class Meme {
-  constructor(index, uploader, image) {
+  constructor(index, uploadingPlayer, image) {
     this.index = index;
-    this.uploader = uploader;
+    this.uploader = uploadingPlayer.index;
+    this.uploaderName = uploadingPlayer.name;
     this.image = image;
     this.caption = null;
     this.captioner = null;
+    this.captionerName = null;
     this.votes = 0;
     this.bonusVotes = 0;
   }
@@ -84,9 +86,9 @@ export const assignCaptionersToMemes = (memes, players) => {
     
     return captioner;
   }
-
   memes.forEach(meme=>{
     meme.captioner = selectCaptioner(meme.uploader);
+    meme.captionerName = players.find(p => p.index === meme.captioner).name;
   });
 
   return memes;
@@ -95,7 +97,7 @@ export const assignCaptionersToMemes = (memes, players) => {
 // returns array of paired indices. e.g. [[1,4],[3,5]...]
 export const pairMemes = memes => {
   let pairs = [];
-  let remainingIndices = memes.map((meme,i)=>i);
+  let remainingIndices = memes.map(meme => meme.index);
 
   const getRndX = ()=> Math.floor(Math.random()*remainingIndices.length);
 
@@ -109,7 +111,7 @@ export const pairMemes = memes => {
       rndX = getRndX();
       const index2 = remainingIndices[rndX];
       //don't let them have the same captioner
-      if (memes[index1].captioner === memes[index2].captioner) {
+      if (memes.find(m => m.index === index1).captioner === memes.find(m => m.index === index2).captioner) {
         if (remainingIndices.length > 1) {
           continue; 
         } else {
@@ -128,4 +130,46 @@ export const pairMemes = memes => {
     pairs.push(pair);
   }
   return pairs;
+}
+
+export function handlePlayersGone(playersGone, props) {
+  const { screen, memes } = props.gameState;
+  const unusedMemes = props.gameState.unusedMemes || [];
+  if (screen === screens.caption) {
+    playersGone.forEach(playerIndex => {
+      const playerWithNoMemes = props.players.find(p => !memes.filter(m => m.captioner === p.index).length);
+      for (let i = 0; i < memes.length; i++) {
+        const meme = memes[i];
+        if (meme.captioner === playerIndex) {
+          if (playerWithNoMemes) {
+            meme.captioner = playerWithNoMemes.index;
+            meme.captionerName = playerWithNoMemes.name;
+          } else {
+            unusedMemes.push(meme);
+            memes.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    });
+    setGameState(props.code, {unusedMemes, memes});
+  }
+}
+
+export function handlePlayersJoined(playersJoined, newPlayers, props) {
+  const { screen, memes } = props.gameState;
+  const unusedMemes = props.gameState.unusedMemes || [];
+  if (screen === screens.caption) {
+    playersJoined.forEach(playerIndex => {
+      if (unusedMemes.length) {
+        for (let i = 0; i < 2 && unusedMemes.length; i++) {
+          const meme = unusedMemes.shift();
+          meme.captioner = playerIndex;
+          meme.captionerName = newPlayers.find(p => p.index === playerIndex).name;
+          memes.push(meme);
+        }
+      }
+    });
+    setGameState(props.code, {unusedMemes, memes});
+  }
 }

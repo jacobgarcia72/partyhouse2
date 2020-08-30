@@ -3,20 +3,62 @@ import { connect } from 'react-redux';
 import Lobby from '../../other/lobby';
 import Intro from './intro';
 import Upload from './upload';
-import { screens, Meme, assignCaptionersToMemes, pairMemes, Score } from './helpers';
+import { screens, Meme, assignCaptionersToMemes, pairMemes, Score, handlePlayersGone, handlePlayersJoined } from './helpers';
 import { setGameState, clearInput } from '../../../../functions/index';
 import './style.sass';
 import Caption from './Caption';
 import Vote from './Vote';
 import DankestMeme from './DankestMeme';
 import Scores from './Scores';
+import NotificationService, { PLAYERS_CHANGED } from '../../../../services/notif-service';
+import { getGameByUrl } from '../../../../config/games';
+
+let ns = new NotificationService();
 
 class MemeGame extends Component {
 
-  componentDidUpdate() {
-    const { isHost, gameState, input } = this.props;
-    const { screen } = gameState;
-    if (!isHost || !input) return;
+  startGame = () => {
+    if (this.props.isHost) {
+      ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
+      this.newRound();
+    }
+  }
+
+  componentWillUnmount() {
+    ns.removeObserver(this, PLAYERS_CHANGED);
+  }
+
+  updatePlayers = update => {
+    const { gameUrl, gameState, code } = this.props;
+    const minPlayers = getGameByUrl(gameUrl).minPlayers;
+    const screensThatCanContinueWithLessThanMinimum = [
+      screens.vote, screens.dankestMeme, screens.scores
+    ]
+    if (update.newTotal < minPlayers && !screensThatCanContinueWithLessThanMinimum.includes(gameState.screen)) {
+      setGameState(code, null)
+      this.props.history.push('/');
+      return;
+    }
+    if (update.playersGone.length) {
+      handlePlayersGone(update.playersGone, this.props);
+      if (this.props.input) {
+        this.updatePlayerInput();
+      }
+    }
+    if (update.playersJoined.length) {
+      handlePlayersJoined(update.playersJoined, update.newPlayers, this.props);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { isHost, input, players } = this.props;
+    if ((players.length < prevProps.players.length || input !== prevProps.input) && isHost && input) {
+      this.updatePlayerInput();
+    }
+  }
+
+  updatePlayerInput = () => {
+    const { screen } = this.props.gameState;
     switch (screen) {
       case screens.upload:
         this.handleUploadUpdate();
@@ -31,8 +73,17 @@ class MemeGame extends Component {
     }
   }
 
-  newRound = () => {
-    setGameState(this.props.code, { screen: screens.upload, round: 0, memes: [], pairs: [], showStats: false, dankestMemeIndex: null, bonusRound: false });
+  newRound = (isReplay = false) => {
+    setGameState(this.props.code, {
+      screen: isReplay ? screens.upload : screens.intro,
+      round: 0,
+      memes: [],
+      unusedMemes: [],
+      pairs: [],
+      showStats: false,
+      dankestMemeIndex: null,
+      bonusRound: false
+    });
   }
 
   handleUploadUpdate = () => {
@@ -50,7 +101,7 @@ class MemeGame extends Component {
       let memes = [];
       players.forEach((player, i) => {
         input[player.index].forEach(image => {
-          memes.push(new Meme(memes.length, player.index, image));
+          memes.push(new Meme(memes.length, player, image));
         });
       });
       memes = assignCaptionersToMemes(memes, players);
@@ -63,17 +114,18 @@ class MemeGame extends Component {
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).map(index => Number(index));
     for (let i = 0; i < players.length; i++) {
-      if (!submittedPlayers.includes(players[i].index)) {
+      const { index } = players[i];
+      if (!submittedPlayers.includes(index) && gameState.memes.filter(m => m.captioner === index).length) {
         allPlayersIn = false;
         break;
       }
     }
     if (allPlayersIn) {
       clearInput(code);
-      const {memes} = gameState;
-      players.forEach((player) => {
+      const memes = gameState.memes.filter(m => submittedPlayers.includes(m.captioner));
+      players.filter(p => submittedPlayers.includes(p.index)).forEach((player) => {
         input[player.index].forEach(meme => {
-          memes[meme.index].caption = meme.caption;
+          memes.find(m => m.index === meme.index).caption = meme.caption;
         });
       });
       const pairs = pairMemes(memes);
@@ -98,7 +150,8 @@ class MemeGame extends Component {
       bonusRound = bonusRound || false;
       players.forEach((player) => {
         const key = bonusRound ? 'bonusVotes' : 'votes';
-        memes[input[player.index]][key] += 1;
+        const vote = input[player.index];
+        memes.find(m => m.index === vote)[key] += 1;
       });
       if (bonusRound) {
         const dankestMemeIndex = this.getDankestMemeIndex(memes, pairs[pairs.length - 1]);
@@ -119,21 +172,23 @@ class MemeGame extends Component {
   }
 
   getDankestMemeIndex = (memes, pair) => {
+    const i = memes.find(m => m.index === pair[0]);
+    const j = memes.find(m => m.index === pair[1]);
     let dankestMeme;
       // first look at only votes from bonus round
-    if (memes[pair[0]].bonusVotes > memes[pair[1]].bonusVotes) {
-      dankestMeme = memes[pair[0]].index;
-    } else if (memes[pair[1]].bonusVotes > memes[pair[0]].bonusVotes) {
-      dankestMeme = memes[pair[1]].index;
+    if (i.bonusVotes > j.bonusVotes) {
+      dankestMeme = i.index;
+    } else if (j.bonusVotes > i.bonusVotes) {
+      dankestMeme = j.index;
       // if it's a tie, include votes from earlier
-    } else if (memes[pair[0]].bonusVotes + memes[pair[0]].votes > memes[pair[1]].bonusVotes + memes[pair[1]].votes) {
-      dankestMeme = memes[pair[0]].index;
-    } else if (memes[pair[1]].bonusVotes + memes[pair[1]].votes > memes[pair[0]].bonusVotes + memes[pair[0]].votes) {
-      dankestMeme = memes[pair[1]].index;
+    } else if (i.bonusVotes + i.votes > j.bonusVotes + j.votes) {
+      dankestMeme = i.index;
+    } else if (j.bonusVotes + j.votes > i.bonusVotes + i.votes) {
+      dankestMeme = j.index;
       // if it's still a tie, select at random
     } else {
       const rndX = Math.floor(Math.random() * 2);
-      dankestMeme = memes[pair[rndX]].index;
+      dankestMeme = pair[rndX];
     }
     return dankestMeme;
   }
@@ -158,17 +213,19 @@ class MemeGame extends Component {
       scores = players.map(p => new Score(p));
     }
     const addPoints = (memeIndex, pointsToAdd) => ['uploader', 'captioner'].forEach(role => {
-      const index = memes[memeIndex][role];
-      const score = scores.find(s => s.playerIndex === index) || new Score(players[index]);
-      score.points += pointsToAdd;
+      const pIndex = memes.find(m => m.index === memeIndex)[role];
+      if (players[pIndex]) {
+        const score = scores.find(s => s.playerIndex === pIndex) || new Score(players[pIndex]);
+        score.points += pointsToAdd;
+      }
     });
     // dont't include last pair, bc this is bonus round pair which is scored separately.
     pairs.slice(0, pairs.length - 1).forEach(pair => {
-      const votesReceived = memes[pair[0]].votes + memes[pair[1]].votes;
+      const votesReceived = memes.find(m => m.index === pair[0]).votes + memes.find(m => m.index === pair[1]).votes;
       const points = [0,0];
       pair.forEach((memeIndex, i)=> {
         if (votesReceived) {
-          points[i] = Math.round((memes[memeIndex].votes / votesReceived) * 1000);
+          points[i] = Math.round((memes.find(m => m.index === memeIndex).votes / votesReceived) * 1000);
         }
         addPoints(memeIndex, points[i]);
       });
@@ -179,11 +236,10 @@ class MemeGame extends Component {
   }
 
   nextScreen = screen => {
-    let { round } = this.props.gameState;
     if (screen === screens.intro) {
-      round = 0;
+      this.startGame();
     }
-    setGameState(this.props.code, { screen, round });
+    setGameState(this.props.code, { screen });
   }
 
   renderContent() {
@@ -201,7 +257,7 @@ class MemeGame extends Component {
       case screens.dankestMeme:
         return <DankestMeme nextScreen={() => this.nextScreen(screens.scores)}/>;
       case screens.scores:
-        return <Scores continueGame={this.newRound} />;
+        return <Scores continueGame={() => this.newRound(true)} />;
       default:
         return null;
     }

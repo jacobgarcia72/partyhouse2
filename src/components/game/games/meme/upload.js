@@ -88,7 +88,7 @@ class Upload extends Component {
   render() {
     const { currentImg, uploads } = this.state;
     if (uploads.length === 2) {
-      return <div className="center-screen">
+      return <div className="center-screen upload">
         <h2>Done. Waiting for other players.</h2>
       </div>
     }

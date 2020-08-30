@@ -48,9 +48,9 @@ class DankestMeme extends Component {
 
   render() {
     const { memeAnimation } = this.state;
-    const { players, gameState } = this.props;
+    const { gameState } = this.props;
     const { memes, dankestMemeIndex } = gameState;
-    const meme = memes[dankestMemeIndex];
+    const meme = memes.find(m => m.index === dankestMemeIndex);
     return (
       <div className="no-scroll center-screen">
         {renderMeme(meme, 2, memeAnimation)}
@@ -66,8 +66,8 @@ class DankestMeme extends Component {
         <div id="bonus-points" className="impact no-scroll center-screen">
           <div className="column">
             <div id="bonus-points-0">500 Bonus Points To:</div>
-            <div id="bonus-points-1"><i className="fas fa-camera"></i>&nbsp;:&nbsp;{players.find(p => p.index === meme.uploader).name}</div>
-            <div id="bonus-points-2"><i className="fas fa-edit"></i>&nbsp;:&nbsp;{players.find(p => p.index === meme.captioner).name}</div>
+            <div id="bonus-points-1"><i className="fas fa-camera"></i>&nbsp;:&nbsp;{meme.uploaderName}</div>
+            <div id="bonus-points-2"><i className="fas fa-edit"></i>&nbsp;:&nbsp;{meme.captionerName}</div>
           </div>
         </div>
       </div>

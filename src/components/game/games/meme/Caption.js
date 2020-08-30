@@ -17,9 +17,20 @@ class Caption extends Component {
   }
 
   componentDidMount() {
-    const { gameState, playerIndex } = this.props;
-    const memes = gameState.memes.filter(meme => meme.captioner === playerIndex);
-    this.setState({memes});
+    const { playerIndex, gameState } = this.props;
+    const playerMemes = gameState.memes.filter(meme => meme.captioner === playerIndex);
+    this.setState({memes: playerMemes});
+  }
+
+  componentDidUpdate(prevProps) {
+    const newMemes = this.props.gameState.memes || [];
+    const oldMemes = prevProps.gameState.memes || [];
+    const playerMemes = this.state.memes || [];
+    const newMemesForPlayer = playerMemes.length ? [] : newMemes.filter(m => m.captioner === this.props.playerIndex);
+    const oldMemesForPlayer = playerMemes.length ? [] : oldMemes.filter(m => m.captioner === this.props.playerIndex);
+    if (!playerMemes.length && newMemesForPlayer.length && !oldMemesForPlayer.length) {
+      this.setState({memes: newMemesForPlayer});
+    }
   }
 
   handleSubmit = () => {
@@ -48,7 +59,7 @@ class Caption extends Component {
         <h2>Done. Waiting for other players.</h2>
       </div>
     } else if (!memes.length) {
-      return null;
+      return <h2>Waiting for other players.</h2>;
     }
     const image = memes[completed ? 1 : 0].image;
     return <div className="caption-screen column">

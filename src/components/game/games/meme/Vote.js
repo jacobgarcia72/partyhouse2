@@ -54,8 +54,8 @@ class Vote extends Component {
 
   renderMemes = ()=> {
     const {memes, pairs, round, showStats} = this.props.gameState;
-    let renderedMemes = pairs[round].map((index,i)=>{
-      const meme = memes[index];
+    let renderedMemes = pairs[round].map((index, i)=>{
+      const meme = memes.find(m => m.index === index);
       return <div className="meme-container" key={i}>
         {renderMeme(meme, i)}
         {showStats && this.renderStats(meme)}
@@ -65,14 +65,14 @@ class Vote extends Component {
   }
   
   renderStats = meme => {
-    const {players, gameState} = this.props;
+    const {gameState} = this.props;
     const {memes, pairs, round} = gameState;
-    const totalVotes = memes[pairs[round][0]].votes + memes[pairs[round][1]].votes;
+    const totalVotes = memes.find(m => m.index === pairs[round][0]).votes + memes.find(m => m.index === pairs[round][1]).votes;
     const percent = Math.round(meme.votes / totalVotes * 100);
     return <div className="stat">
       <div className="impact large-font percent">{`${percent}%`}</div>
-      <div className="credit">{`Image: ${players.find(p => p.index === meme.uploader).name}`}</div>
-      <div className="credit">{`Caption: ${players.find(p => p.index === meme.captioner).name}`}</div>
+      <div className="credit">{`Image: ${meme.uploaderName}`}</div>
+      <div className="credit">{`Caption: ${meme.captionerName}`}</div>
     </div>;
   }
 

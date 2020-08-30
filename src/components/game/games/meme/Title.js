@@ -18,6 +18,7 @@ export default class Title extends Component {
       words,
       i: 0, j: 0
     }
+    this.animate = null;
   }
 
   componentDidMount() {
@@ -27,7 +28,7 @@ export default class Title extends Component {
   animateWords = ()=> {
     let i = 0;
     let j = 0;
-    const animate = setInterval(()=>{
+    this.animate = setInterval(()=>{
       const words=this.state.words.slice();
       let el = document.getElementById(`line-${i}-word-${j}`);
       if (el) el.classList.add('cross-zoom-in');
@@ -36,7 +37,7 @@ export default class Title extends Component {
         j = 0;
         i++;
         if (i > words.length - 1) {
-          clearInterval(animate);
+          clearInterval(this.animate);
           if (this.props.callback) {
             setTimeout(() => {
               let el = document.getElementById('full-title');
@@ -48,6 +49,10 @@ export default class Title extends Component {
       }
       this.setState({i, j});
     }, 150);
+  }
+
+  componentWillUnmount() {
+    if (this.animate) clearInterval(this.animate);
   }
 
   render() {
