@@ -8,6 +8,7 @@ import { setGameState, clearInput } from '../../../../functions/index';
 import './style.sass';
 import Caption from './Caption';
 import Vote from './Vote';
+import DankestMeme from './DankestMeme';
 
 class MemeGame extends Component {
 
@@ -87,15 +88,60 @@ class MemeGame extends Component {
     }
     if (allPlayersIn) {
       clearInput(code);
-      const {memes, round} = gameState;
+      const { memes, pairs } = gameState;
+      let { round, bonusRound } = gameState;
+      bonusRound = bonusRound || false;
       players.forEach((player) => {
-          memes[input[player.index]].votes += 1;
+        const key = bonusRound ? 'bonusVotes' : 'votes';
+        memes[input[player.index]][key] += 1;
       });
-      setGameState(code, {memes, showStats: true});
-      setTimeout(() => {
-        setGameState(code, {round: round + 1, showStats: false});
-      }, 3500);
+      if (bonusRound) {
+        const dankestMemeIndex = this.getDankestMemeIndex(memes, pairs[pairs.length - 1]);
+        setGameState(code, {dankestMemeIndex, screen: screens.dankestMeme});
+      } else {
+        setGameState(code, {memes, showStats: true});
+        round += 1;
+        if (round >= pairs.length) {
+          this.addBonusRoundMemes();
+          bonusRound = true;
+        }
+        setTimeout(() => {
+          setGameState(code, { round, showStats: false, bonusRound });
+        }, 3500);
+      }
     }
+  }
+
+  getDankestMemeIndex = (memes, pair) => {
+    let dankestMeme;
+      // first look at only votes from bonus round
+    if (memes[pair[0]].bonusVotes > memes[pair[1]].bonusVotes) {
+      dankestMeme = memes[pair[0]].index;
+    } else if (memes[pair[1]].bonusVotes > memes[pair[0]].bonusVotes) {
+      dankestMeme = memes[pair[1]].index;
+      // if it's a tie, include votes from earlier
+    } else if (memes[pair[0]].bonusVotes + memes[pair[0]].votes > memes[pair[1]].bonusVotes + memes[pair[1]].votes) {
+      dankestMeme = memes[pair[0]].index;
+    } else if (memes[pair[1]].bonusVotes + memes[pair[1]].votes > memes[pair[0]].bonusVotes + memes[pair[0]].votes) {
+      dankestMeme = memes[pair[1]].index;
+      // if it's still a tie, select at random
+    } else {
+      const rndX = Math.floor(Math.random() * 2);
+      dankestMeme = memes[pair[rndX]].index;
+    }
+    return dankestMeme;
+  }
+
+  addBonusRoundMemes = ()=> {
+    const { code } = this.props;
+    const pairs = this.props.gameState.pairs.slice();
+    const sortedMemes = this.props.gameState.memes.slice().sort((a, b)=> b.votes - a.votes);
+    const bonusPair = [];
+    for (let i = 0; i < 2; i++) {
+      bonusPair.push(sortedMemes[i].index);
+    }
+    pairs.push(bonusPair);
+    setGameState(code, { pairs });
   }
 
   nextScreen = screen => {
@@ -118,6 +164,8 @@ class MemeGame extends Component {
         return <Caption />;
       case screens.vote:
         return <Vote />;
+      case screens.dankestMeme:
+        return <DankestMeme nextScreen={() => this.nextScreen(screens.scores)}/>;
       default:
         return null;
     }

@@ -1,0 +1,82 @@
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { renderMeme } from './helpers';
+
+
+// const testMeme = new Meme(0, 0, `/assets/img/meme/templates/1.jpg`);
+// testMeme.captioner = 1;
+
+class DankestMeme extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      memeAnimation: 'cross-zoom-in'
+    }
+  }
+
+  componentDidMount() {
+    this.animateElements('dankest', 6, 1500);
+    setTimeout(() => {
+      this.setState({ memeAnimation: 'cross-zoom-out' });
+      this.animateElements('bonus-points', 2, 3000);
+      if (this.props.isHost) {
+        setTimeout(() => {
+          this.props.nextScreen();
+        }, 4000);
+      }
+    }, 5000);
+  }
+
+  animateElements = (elementName, finalElementIndex, pauseTime)=> {
+    let counter = 0;
+    let animate = setInterval(()=>{
+      let element = document.getElementById(`${elementName}-${counter}`);
+      if (element) {
+        element.classList.add('cross-zoom-in');
+      }
+      counter++;
+      if (counter > finalElementIndex) {
+        clearInterval(animate);
+        setTimeout(() => {
+          let fullElement = document.getElementById(elementName);
+          if (fullElement) fullElement.classList.add('cross-zoom-out');
+        }, pauseTime);
+      }
+    }, 150);
+  }
+
+  render() {
+    const { memeAnimation } = this.state;
+    const { players, gameState } = this.props;
+    const { memes, dankestMemeIndex } = gameState;
+    const meme = memes[dankestMemeIndex];
+    return (
+      <div className="no-scroll center-screen">
+        {renderMeme(meme, 2, memeAnimation)}
+        <div id="dankest" className="impact no-scroll center-screen row">
+          <div id="dankest-0">D</div>
+          <div id="dankest-1">A</div>
+          <div id="dankest-2">N</div>
+          <div id="dankest-3">K</div>
+          <div id="dankest-4">E</div>
+          <div id="dankest-5">S</div>
+          <div id="dankest-6">T</div>
+        </div>
+        <div id="bonus-points" className="impact no-scroll center-screen">
+          <div className="column">
+            <div id="bonus-points-0">500 Bonus Points To:</div>
+            <div id="bonus-points-1"><i className="fas fa-camera"></i>: {players.find(p => p.index === meme.uploader).name}</div>
+            <div id="bonus-points-2"><i className="fas fa-edit"></i>: {players.find(p => p.index === meme.captioner).name}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+function mapStateToProps({ gameState, code, isHost, players }) {
+  return { gameState, code, isHost, players };
+}
+
+export default connect(mapStateToProps, null)(DankestMeme);

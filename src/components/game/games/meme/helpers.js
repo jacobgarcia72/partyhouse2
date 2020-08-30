@@ -9,7 +9,8 @@ export const screens = {
   caption: 'caption',
   voteIntro: 'vote-intro',
   vote: 'vote',
-  final: 'final'
+  dankestMeme: 'dankest-meme',
+  scores: 'scores'
 }
 
 export class Meme {

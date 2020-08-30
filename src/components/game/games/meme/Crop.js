@@ -145,7 +145,6 @@ class MyEditor extends React.Component {
     let renderDisplay = <p>Loading Image...</p>;
     if (src) renderDisplay = (
       <AvatarEditor
-        onScroll={e => console.log(e)}
         ref={this.setEditorRef}
         image={src}
         width={280}

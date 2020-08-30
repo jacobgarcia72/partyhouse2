@@ -13,7 +13,6 @@ class Vote extends Component {
       animation: 1,
       votesReceived: 0, // votes received this round 
       points: [0,0], // points awarded to left meme and right meme, changes each round
-      bonusRound: false, // are we currently in the bonus round
       dankestMeme: null,  // meme index of the winner of the dankest meme bonus round
       sortedMemes: [], // memes sorted by votes
       voted: false
@@ -23,6 +22,9 @@ class Vote extends Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.gameState || this.props.gameState.round > prevProps.gameState.round) {
       this.setState({voted: false});
+      if (this.props.gameState.bonusRound) {
+        this.setState({ animation: 2 });
+      }
     } else if (!prevProps.gameState || this.props.gameState.showStats !== prevProps.gameState.showStats) {
       window.scrollTo(0, 0);
     }
@@ -69,8 +71,8 @@ class Vote extends Component {
     const percent = Math.round(meme.votes / totalVotes * 100);
     return <div className="stat">
       <div className="impact large-font percent">{`${percent}%`}</div>
-      <div className="credit">{`Image: ${players[meme.uploader].name}`}</div>
-      <div className="credit">{`Caption: ${players[meme.captioner].name}`}</div>
+      <div className="credit">{`Image: ${players.find(p => p.index === meme.uploader).name}`}</div>
+      <div className="credit">{`Caption: ${players.find(p => p.index === meme.captioner).name}`}</div>
     </div>;
   }
 
@@ -79,6 +81,8 @@ class Vote extends Component {
     const { showStats } = this.props.gameState;
     if (animation === 1) {
       return <Title lines={['Step 3:', 'Vote']} callback={()=> this.setState({animation: null})} />
+    } else if (animation === 2) {
+      return <Title lines={['Bonus Round:', 'Dankest Meme']} callback={()=> this.setState({animation: null})} />
     } else {
       return <div className="Meme Vote">
         {this.renderMemes()}
