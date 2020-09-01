@@ -35,7 +35,7 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
   store.dispatch(setPlayerIndex(0));
   setRoomListener(roomCode);
   database.ref(`rooms/${roomCode}`).set(newRoom).then(() => callback(newRoom));
-  database.ref(`rooms/${roomCode}`).onDisconnect().remove();
+  // database.ref(`rooms/${roomCode}`).onDisconnect().remove();
 }
 
 export function joinRoom(roomCode, name, callback) {
