@@ -108,7 +108,7 @@
     box-shadow: 10px 10px 4px rgba(0, 0, 0, .5)
     text-shadow: none
     .caption
-      font-size: calc(20pt + 1.5vw)
+      font-size: calc(15pt + 1.5vw)
       line-height: 1.1
       white-space: pre-wrap 
       padding: .09em .17em .08em .2em
@@ -117,7 +117,7 @@
     img
       width: 87.75vw
       max-width: 585px
-      margin: 0 auto 1.2vw
+      margin: 0 auto 0.25em
   .voting-tokens
     margin: auto
     h2 
@@ -172,3 +172,55 @@
     font-size: 2rem
     > div, button
       margin-top: 0.5em
+    button.continue-btn
+      margin-bottom: 32px
+  .save-memes
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    align-items: center
+    .save-meme-container
+      padding: 2vw 2vw calc(2vw + 8px)
+    .save-meme
+      box-shadow: none
+      position: relative
+      button
+        background-color: rgba(0, 30, 100, 0.9)
+        font-size: 60%
+        line-height: 1
+        border: 0
+        width: 122px
+        height: auto
+        border-radius: 18%
+        padding: 0.3em
+        margin: 0
+        top: -1em
+        right: -0.5em
+        box-shadow: none
+        color: rgba(255, 255, 255, 0.8)
+        position: absolute
+      .watermark
+        font-size: 40%
+        line-height: 1
+        text-align: right
+        color: #666
+        text-shadow: 1px 1px 1px white
+        padding-right: 0.5em
+        position: absolute
+        background-color: white
+        bottom: 0.25em
+        padding-left: 0.4em
+        right: 0
+        opacity: 0
+        border-radius: 0.2em
+      .caption
+        font-size: 24pt
+        padding: 8px 10px 12px
+    .saving
+      width: 600px
+      img
+        width: 585px
+      .watermark
+        opacity: 1
+      button
+        display: none
