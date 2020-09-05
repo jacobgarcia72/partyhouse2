@@ -1,46 +1,27 @@
 {
-  "name": "gamehouse",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.3.4",
-    "downloadjs": "^1.4.7",
-    "exif-js": "^2.3.0",
-    "firebase": "^5.8.3",
-    "html-to-image": "^0.1.0",
-    "node-sass": "^4.13.1",
-    "react": "^16.8.2",
-    "react-avatar-editor": "^11.0.9",
-    "react-canvas-draw": "^1.0.1-hotfix.4",
-    "react-dom": "^16.8.2",
-    "react-facebook": "^8.1.4",
-    "react-redux": "^7.2.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.4.3",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "source-map-explorer": "^2.0.1",
-    "webfontloader": "^1.6.28"
-  },
+  "name": "party-house-games",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:prod": "node server.js",
+    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "client": "cd client && npm run start",
+    "install": "cd client && npm install",
+    "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "redux-devtools": "^3.5.0",
-    "redux-devtools-extension": "^2.13.8"
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.7"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.3",
+    "if-env": "^1.0.4",
+    "mongoose": "^5.3.16"
   }
 }
