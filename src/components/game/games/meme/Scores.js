@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 class Scores extends Component {
 
   getHyphenatedShortenedCaption = caption => {
-    const strArr = caption.replace(/[^a-zA-Z0-9 ]/g, '').split(' ').join('-').slice(0, 40).split('-');
-    return strArr.slice(0, strArr.length - 1).join('-').toLowerCase();
+    const strArr = caption.trim().replace(/[^a-zA-Z0-9 ]/g, '').split(' ').join('-').slice(0, 40).split('-');
+    return strArr.slice(0, Math.max(5, strArr.length - 1)).join('-').toLowerCase().trim();
   }
 
   saveMeme = (meme) => {

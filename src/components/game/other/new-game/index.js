@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { createNewRoom } from "../../../../functions/index";
+import { FacebookProvider, Share } from 'react-facebook';
 import './style.sass';
 
 class NewGame extends Component {
@@ -8,7 +9,9 @@ class NewGame extends Component {
     super(props);
     this.state = {
       playerName: '',
-      loading: false
+      loading: false,
+      share: false,
+      roomUrl: ''
     }
   }
 
@@ -24,7 +27,13 @@ class NewGame extends Component {
     const roomCode = this.getRoomCode();
     const { url } = this.props.game;
     createNewRoom(url, roomCode, this.state.playerName, newRoom => {
-      this.props.history.push(`/${url}/${roomCode.toLowerCase()}`);
+      const roomUrl = `/${url}/${roomCode.toLowerCase()}`;
+      this.setState({roomUrl}, () => {
+        if (this.state.share) {
+          document.getElementById('share-btn').click();
+        }
+        this.props.history.push(roomUrl);
+      });
     });
   }
 
@@ -47,18 +56,26 @@ class NewGame extends Component {
   }
 
   handleInputChange = event => {
-    const {name, value} = event.target;
+    const { name, type, value, checked } = event.target;
+    const newState = type === 'checkbox' ? checked : value;
     this.setState({
-      [name]: value
+      [name]: newState
     });
   }
 
   render() {
-    const { playerName, loading } = this.state;
+    const { playerName, loading, roomUrl } = this.state;
     const { displayName, url } = this.props.game;
     return <div className="column NewGame">
       <img alt={displayName} src={`assets/img/thumbnails/${url}.png`} className="thumbnail" />
       <form onSubmit={this.createRoom} className="column">
+        <FacebookProvider appId="1044229522678518">
+          <Share href={`partyhouse.tv${roomUrl}`}>
+            {({ handleClick, loading }) => (
+              <button id="share-btn" type="button" disabled={loading} onClick={handleClick} style={{display: 'none'}}>Share</button>
+            )}
+          </Share>
+        </FacebookProvider>
         <input
           className="input-name"
           placeholder="Name"
@@ -70,6 +87,14 @@ class NewGame extends Component {
           name="playerName"
           value={playerName}
         ></input>
+        <label class="checkbox-container">Share Room to Facebook
+          <input
+            name="share"
+            type="checkbox"
+            checked={this.state.isGoing}
+            onChange={this.handleInputChange} />
+          <span class="checkmark"></span>
+        </label>
         <input
           type="submit"
           value="Create Room"
