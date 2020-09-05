@@ -22,6 +22,8 @@ class App extends Component {
           <game.component {...props} gameUrl={game.url}/>
         </div>
       )
+    } else if (this.props.playerNeedsToJoinRoom) {
+      return <NewGame {...props} game={game} joiningExistingRoom={true} />
     } else {
       return <Rejoin {...props} />;
     }
@@ -47,8 +49,8 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({code}) {
-  return { code };
+function mapStateToProps({code, playerNeedsToJoinRoom}) {
+  return { code, playerNeedsToJoinRoom };
 }
 
 export default connect(mapStateToProps, null)(App);

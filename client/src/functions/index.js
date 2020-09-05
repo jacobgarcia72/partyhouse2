@@ -1,5 +1,5 @@
 import { database } from '../Firebase';
-import { setRoom, setPlayerIndex } from '../actions';
+import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
@@ -68,14 +68,19 @@ export function rejoinRoom(roomCode, callback) {
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
     const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
-    let playerIndex = localStorage.getItem('player-index');
-    if (roomExists && !roomIsFull && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
+    if (roomExists && !roomIsFull) {
+      let playerIndex = localStorage.getItem('player-index');
+      const savedRoomCode = localStorage.getItem('room-code');
       success = true;
-      room.players[playerIndex].active = true;
-      store.dispatch(setPlayerIndex(playerIndex));
-      setRoomListener(roomCode)
-      database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true});
-      database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
+      if (savedRoomCode === roomCode && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
+        room.players[playerIndex].active = true;
+        store.dispatch(setPlayerIndex(playerIndex));
+        setRoomListener(roomCode);
+        database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true});
+        database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
+      } else {
+        store.dispatch(setPlayerNeedsToJoinRoom(true));
+      }
     }
     callback(success ? room : null);
   });    

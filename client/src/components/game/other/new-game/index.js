@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { createNewRoom } from "../../../../functions/index";
+import { createNewRoom, joinRoom } from "../../../../functions/index";
 import { FacebookProvider, Share } from 'react-facebook';
 import './style.sass';
 
@@ -11,7 +11,8 @@ class NewGame extends Component {
       playerName: '',
       loading: false,
       share: false,
-      roomUrl: ''
+      roomUrl: '',
+      error: ''
     }
   }
 
@@ -23,7 +24,7 @@ class NewGame extends Component {
 
   createRoom = (event) => {
     event.preventDefault();
-    this.setState({loading: true});
+    this.setState({loading: true, error: ''});
     const roomCode = this.getRoomCode();
     const { url } = this.props.game;
     createNewRoom(url, roomCode, this.state.playerName, newRoom => {
@@ -34,6 +35,24 @@ class NewGame extends Component {
         }
         this.props.history.push(roomUrl);
       });
+    });
+  }
+
+  joinRoom  = (event) => {
+    event.preventDefault();
+    this.setState({loading: true, error: ''});
+    const roomCode = this.props.match.params.roomCode;
+    joinRoom(roomCode, this.state.playerName, (roomExists, roomIsFull, room) => {
+      let error = '';
+      if (!roomExists) {
+        error = `Couldn't find room code ${roomCode.toUpperCase()}.`;
+      } else if (roomIsFull) {
+        error = `Sorry. Room ${roomCode.toUpperCase()} is full.`;
+      } else {
+        this.props.history.push(`/${room.url}/${roomCode.toLowerCase()}`);
+        return;
+      }
+      this.setState({error, loading: false});
     });
   }
 
@@ -65,17 +84,20 @@ class NewGame extends Component {
 
   render() {
     const { playerName, loading, roomUrl } = this.state;
+    const { joiningExistingRoom } = this.props;
     const { displayName, url } = this.props.game;
     return <div className="column NewGame">
-      <img alt={displayName} src={`assets/img/thumbnails/${url}.png`} className="thumbnail" />
-      <form onSubmit={this.createRoom} className="column">
-        <FacebookProvider appId="1044229522678518">
-          <Share href={`partyhouse.tv${roomUrl}`}>
-            {({ handleClick, loading }) => (
-              <button id="share-btn" type="button" disabled={loading} onClick={handleClick} style={{display: 'none'}}>Share</button>
-            )}
-          </Share>
-        </FacebookProvider>
+      <img alt={displayName} src={`/assets/img/thumbnails/${url}.png`} className="thumbnail" />
+      <form onSubmit={joiningExistingRoom ? this.joinRoom : this.createRoom} className="column">
+        { joiningExistingRoom ? null : (
+          <FacebookProvider appId="1044229522678518">
+            <Share href={`partyhouse.tv${roomUrl}`}>
+              {({ handleClick, loading }) => (
+                <button id="share-btn" type="button" disabled={loading} onClick={handleClick} style={{display: 'none'}}>Share</button>
+              )}
+            </Share>
+          </FacebookProvider>
+        )}
         <input
           className="input-name"
           placeholder="Name"
@@ -87,20 +109,23 @@ class NewGame extends Component {
           name="playerName"
           value={playerName}
         ></input>
-        <label className="checkbox-container">Share Room to Facebook
-          <input
-            name="share"
-            type="checkbox"
-            checked={this.state.isGoing}
-            onChange={this.handleInputChange}
-          />
-          <span className="checkmark"></span>
-        </label>
+        { joiningExistingRoom ? null : (
+          <label className="checkbox-container">Share Room to Facebook
+            <input
+              name="share"
+              type="checkbox"
+              checked={this.state.isGoing}
+              onChange={this.handleInputChange}
+            />
+            <span className="checkmark"></span>
+          </label>
+        )}
         <input
           type="submit"
-          value="Create Room"
+          value={joiningExistingRoom ? 'Join Game' : 'Create Room'}
           disabled={playerName === '' || loading}
         ></input>
+        <div className="error">{this.state.error}</div>
       </form>
     </div>;
   }
