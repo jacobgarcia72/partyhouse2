@@ -87,13 +87,14 @@ class NewGame extends Component {
           name="playerName"
           value={playerName}
         ></input>
-        <label class="checkbox-container">Share Room to Facebook
+        <label className="checkbox-container">Share Room to Facebook
           <input
             name="share"
             type="checkbox"
             checked={this.state.isGoing}
-            onChange={this.handleInputChange} />
-          <span class="checkmark"></span>
+            onChange={this.handleInputChange}
+          />
+          <span className="checkmark"></span>
         </label>
         <input
           type="submit"

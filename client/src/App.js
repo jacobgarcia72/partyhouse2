@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import {Route, BrowserRouter} from 'react-router-dom';
 import Landing from './components/landing';
-import ScrollToTop from './components/ScrollToTop';
+import UpdatePage from './components/UpdatePage';
 import { games } from './config/games';
 import NewGame from './components/game/other/new-game';
 import {connect} from 'react-redux';
@@ -30,7 +30,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <ScrollToTop>
+        <UpdatePage>
           <Route exact path="/" render={props => <Landing  {...props}/> } />
           {games.map(game => {
             const { url, displayName } = game;
@@ -41,7 +41,7 @@ class App extends Component {
                 render={props => this.renderGameScreen(props, game)}/>
             </Fragment>
           })}
-        </ScrollToTop>
+        </UpdatePage>
       </BrowserRouter>
     )
   }
