@@ -8,6 +8,11 @@ import Intro from './intro';
 import NotificationService, { PLAYERS_CHANGED } from '../../../../services/notif-service';
 import { getGameByUrl } from '../../../../config/games';
 import './style.sass';
+import Read from './Read';
+import Next from './Next';
+import Write from './Write';
+import Winner from './Winner';
+import Final from './Final';
 
 let ns = new NotificationService();
 
@@ -50,6 +55,16 @@ class StoryTime extends Component {
         return <Lobby onContinue={this.startGame}/>;
       case screens.intro:
         return <Intro nextScreen={() => this.nextScreen(null)}/>;
+      case screens.read:
+        return <Read />;
+      case screens.next:
+        return <Next />;
+      case screens.write:
+        return <Write />;
+      case screens.winner:
+        return <Winner />;
+      case screens.final:
+        return <Final />;
       default:
         return null;
     }
