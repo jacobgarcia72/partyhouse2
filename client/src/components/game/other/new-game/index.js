@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { createNewRoom, joinRoom } from "../../../../functions/index";
+import { createNewRoom, joinRoom, isDevMode } from "../../../../functions/index";
 import { FacebookProvider, Share } from 'react-facebook';
 import './style.sass';
 
@@ -17,7 +17,7 @@ class NewGame extends Component {
   }
 
   componentDidMount() {
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    if (isDevMode()) {
       this.setState({playerName: 'Jacob'});
     }
   }
@@ -57,7 +57,7 @@ class NewGame extends Component {
   }
 
   getRoomCode = ()=> {
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    if (isDevMode()) {
       return "test";
     }
     let code = "";

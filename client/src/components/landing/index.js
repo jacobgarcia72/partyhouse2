@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './style.sass';
 
-import { joinRoom } from '../../functions';
+import { joinRoom, isDevMode } from '../../functions';
 import { games } from '../../config/games';
 
 class Landing extends Component {
@@ -14,11 +14,12 @@ class Landing extends Component {
       playerName: '',
       error: '',
       loading: false
-    }
+    };
+    this.games = isDevMode() ? games : games.filter(g => g.public);
   }
 
   componentDidMount() {
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    if (isDevMode()) {
       const names = ['Karen', 'Konnor', 'David', 'Emily', 'Stephen', 'Shayla', 'Jon', 'Debra', 'Brandon', 'Tasheda', 'Luis', 'Ethan', 'Fernando'];
       this.setState({roomCode: 'TEST', playerName: names[Math.floor(Math.random() * names.length)]});
     } 
@@ -95,7 +96,7 @@ class Landing extends Component {
         </div>
         <h1>Create Room:</h1>
         <div className="thumbnails row">
-          {games.map(game => <div key={game.url}>
+          {this.games.map(game => <div key={game.url}>
             <Link to={game.url}>
               <img alt={game.displayName} src={`assets/img/thumbnails/${game.url}.png`} />
             </Link>

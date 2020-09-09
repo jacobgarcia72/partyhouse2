@@ -20,6 +20,8 @@ function setLocalStorage(playerIndex, roomCode) {
   localStorage.setItem('room-code', roomCode);
 }
 
+export const isDevMode = () => !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+
 export function createNewRoom(gameUrl, roomCode, playerName, callback) {
   roomCode = roomCode.toLowerCase();
   const newRoom = {

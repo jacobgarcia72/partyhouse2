@@ -7,14 +7,16 @@ export const games = [
     url: 'meme',
     minPlayers: 3,
     maxPlayers: 30,
-    component: MemeGame
+    component: MemeGame,
+    public: true
   },
   {
     displayName: 'Honest Answers',
     url: 'answers',
     minPlayers: 2,
     maxPlayers: 30,
-    component: HonestAnswers
+    component: HonestAnswers,
+    public: true
   },
   {
     displayName: 'Draw The Line',
