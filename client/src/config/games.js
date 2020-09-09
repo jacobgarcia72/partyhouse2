@@ -1,5 +1,6 @@
 import MemeGame from '../components/game/games/meme';
 import HonestAnswers from '../components/game/games/answers';
+import StoryTime from '../components/game/games/story-time';
 
 export const games = [
   {
@@ -29,8 +30,8 @@ export const games = [
     displayName: 'Story Time',
     url: 'story-time',
     minPlayers: 3,
-    maxPlayers: 30,
-    component: null
+    maxPlayers: 28,
+    component: StoryTime
   },
   {
     displayName: 'Pass The Art',
