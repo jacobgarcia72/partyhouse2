@@ -1,1 +1,64 @@
 .StoryTime
+  font-size: 16pt
+  font-weight: 200
+  font-family: Helvetica, sans-serif
+  background-color: teal
+  .read-story
+    text-align: center
+    background-color: rgba(0, 0, 0, 0.8)
+    color: white
+    padding: .75em 1.5em
+    margin: 1em 0
+  .next-prompt
+    font-size: 2rem
+    padding: 12px
+  .next-players
+    padding: 12px
+  textarea
+    padding: 0.25em 0.25em
+    font-size: 14pt
+    width: 95vw
+    max-width: 500px
+  button
+    padding: 0.25em 1em
+    min-width: 200px
+  .writer-input
+    width: 700px
+    max-width: 95vw
+    margin: 0.25em auto
+  .writer-name
+    width: 90px
+    min-width: 90px
+    align-items: center
+    justify-content: flex-end
+    align-items: center
+    text-align: right
+  .speech-bubble-container
+    width: 100%
+    justify-content: flex-start
+  .speech-bubble
+    position: relative
+    display: flex
+    align-items: center
+    min-width: 200px
+    min-height: 48px
+    box-shadow: 1vw 1vw 2vw rgba(0, 0, 0, .5)
+    background: white 
+    color: black
+    line-height: 1
+    border-radius: 10px
+    padding: 0.3em 0.4em
+    margin: 0 1em
+    text-align: center
+  .speech-bubble:after 
+    content: ''
+    position: absolute
+    left: 0
+    top: 50%
+    width: 0
+    height: 0
+    border: 10px solid transparent
+    border-right-color: white
+    border-left: 0
+    margin-top: -10px
+    margin-left: -10px

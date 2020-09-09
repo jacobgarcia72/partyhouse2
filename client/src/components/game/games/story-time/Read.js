@@ -5,9 +5,10 @@ class Read extends Component {
 
 
   render() {
+    const { story } = this.props.gameState;
     return (
       <div className="read-story">
-        
+        {story.join(' ')}
       </div>
     )
   }

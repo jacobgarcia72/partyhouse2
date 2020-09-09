@@ -30,7 +30,7 @@ export const games = [
     displayName: 'Story Time',
     url: 'story-time',
     minPlayers: 3,
-    maxPlayers: 28,
+    maxPlayers: 32,
     component: StoryTime
   },
   {

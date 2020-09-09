@@ -9,15 +9,19 @@ export default class TextArea extends Component {
     }
   }
 
-  onChange = text=> {
+  onChange = text => {
+    if (this.props.startingText) {
+      text = text.slice(this.props.startingText.length + 1);
+    }
     this.setState({text});
     this.props.onChange(text);
   }
 
-  render() {  
+  render() {
     const maxLength = this.props.maxLength || 120;
     const {text} = this.state;
     const remainingChars = maxLength-text.length;
+    const displayText = this.props.startingText ? `${this.props.startingText} ${text}` : text;
     return (
       <div className="TextArea">
         <div id='characters-remaining' style={{color: remainingChars ? remainingChars < 10 ? '#ba0000' : '#111111' : '#ff0000', height: '1.1rem', textAlign: 'right'}}>
@@ -27,7 +31,7 @@ export default class TextArea extends Component {
         </div>
         <textarea 
           className="textbox" 
-          value={text}
+          value={displayText}
           maxLength={maxLength} 
           rows={Math.max(2, Math.round(maxLength / 30))} 
           onChange={e=>this.onChange(e.target.value)}

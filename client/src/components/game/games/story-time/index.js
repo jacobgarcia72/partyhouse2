@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Lobby from '../../other/lobby';
-import { screens, handlePlayersGone, handlePlayersJoined } from './helpers';
-import { setGameState } from '../../../../functions/index';
+import { screens, handlePlayersGone, handlePlayersJoined, getStoryStart, getPrompt, getWriters } from './helpers';
+import { setGameState, shuffle, clearInput } from '../../../../functions/index';
 import { connect } from 'react-redux';
 import Intro from './intro';
 
@@ -21,13 +21,42 @@ class StoryTime extends Component {
   componentWillUnmount() {
     ns.removeObserver(this, PLAYERS_CHANGED);
   }
+
+  componentDidUpdate(prevProps) {
+    const { isHost, input, players } = this.props;
+    if ((players.length < prevProps.players.length || input !== prevProps.input) && isHost && input) {
+      this.updatePlayerInput();
+    }
+  }
+
+  updatePlayerInput = () => {
+    const { screen } = this.props.gameState;
+    switch (screen) {
+      case screens.write:
+        this.handleUploadText();
+        break;
+      default:
+    }
+  }
   
   startGame = () => {
-    setGameState(this.props.code, {
-      screen: screens.intro,
-      round: 0
+    const { code, players } = this.props;
+    const firstLine = `Once upon a time, there was ${getStoryStart()}.`;
+    players.forEach(p => {
+      p.timesAsWriter = 0;
+    });
+    setGameState(code, {
+      screen: screens.read,
+      turn: 0,
+      story: [firstLine],
+      prompt: getPrompt(0),
+      writers: getWriters(players),
+      players: shuffle(players)
     });
     ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
+    setTimeout(() => {
+      this.nextScreen(screens.next);
+    }, 4000);
   }
 
   updatePlayers = update => {
@@ -45,22 +74,45 @@ class StoryTime extends Component {
     }
   }
 
+  handleCaptionUpdate = () => {
+    const { code, input, gameState } = this.props;
+    let allPlayersIn = true;
+    const submittedPlayers = Object.keys(input).filter(index => input[index].submitted).map(index => Number(index));
+    for (let i = 0; i < gameState.writers.length; i++) {
+      const { index } = gameState.writers[i];
+      if (!submittedPlayers.includes(index)) {
+        allPlayersIn = false;
+        break;
+      }
+    }
+    if (allPlayersIn) {
+      clearInput(code);
+      console.log('all players submitted', input)
+      //next
+    }
+  }
+
   nextScreen = screen => {
+    if (screen === screens.next) {
+      setTimeout(() => {
+        this.nextScreen(screens.write);
+      }, 4000);
+    }
     setGameState(this.props.code, {screen});
   }
 
   renderContent() {
     switch (this.props.gameState.screen) {
       case screens.lobby:
-        return <Lobby onContinue={this.startGame}/>;
+        return <Lobby onContinue={() => this.nextScreen(screens.intro)}/>;
       case screens.intro:
-        return <Intro nextScreen={() => this.nextScreen(null)}/>;
+        return <Intro nextScreen={this.startGame}/>;
       case screens.read:
         return <Read />;
       case screens.next:
-        return <Next />;
+        return <div><Read /><Next /></div>;
       case screens.write:
-        return <Write />;
+        return <div><Read /><Write /></div>;
       case screens.winner:
         return <Winner />;
       case screens.final:
