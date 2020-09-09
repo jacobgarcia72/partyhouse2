@@ -28,6 +28,8 @@ export default (state = initialState, action) => {
       return setState({playerIndex: action.payload, isHost: action.payload === 0});
     case actions.SET_PLAYER_NEEDS_TO_JOIN_ROOM:
       return setState({playerNeedsToJoinRoom: action.payload});
+    case actions.SET_IS_HOST:
+      return setState({isHost: action.payload});
     default:
       return state
   }

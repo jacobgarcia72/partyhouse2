@@ -1,5 +1,5 @@
 import { database } from '../Firebase';
-import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom } from '../actions';
+import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
@@ -33,9 +33,9 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
   };
   setLocalStorage(0, roomCode);
   store.dispatch(setPlayerIndex(0));
-  setRoomListener(roomCode);
+  setRoomListener(roomCode, 0);
   database.ref(`rooms/${roomCode}`).set(newRoom).then(() => callback(newRoom));
-  // database.ref(`rooms/${roomCode}`).onDisconnect().remove();
+  database.ref(`rooms/${roomCode}/players/${0}/active`).onDisconnect().remove();
 }
 
 export function joinRoom(roomCode, name, callback) {
@@ -53,7 +53,7 @@ export function joinRoom(roomCode, name, callback) {
       room.players[playerIndex] = newPlayer;
       setLocalStorage(playerIndex, roomCode);
       store.dispatch(setPlayerIndex(playerIndex));
-      setRoomListener(roomCode)
+      setRoomListener(roomCode, playerIndex)
       database.ref(`rooms/${roomCode}`).update(room);
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
     }
@@ -75,7 +75,7 @@ export function rejoinRoom(roomCode, callback) {
       if (savedRoomCode === roomCode && (playerIndex || playerIndex === 0) && room.players[playerIndex]) {
         room.players[playerIndex].active = true;
         store.dispatch(setPlayerIndex(playerIndex));
-        setRoomListener(roomCode);
+        setRoomListener(roomCode, playerIndex);
         database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true});
         database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
       } else {
@@ -86,7 +86,7 @@ export function rejoinRoom(roomCode, callback) {
   });    
 };
 
-function setRoomListener(roomCode) {
+function setRoomListener(roomCode, playerIndex) {
   database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
     const players = snapshot.val();
     
@@ -102,6 +102,10 @@ function setRoomListener(roomCode) {
         .filter(index => !playerIndices(prevPlayers).includes(index));
       const playersGone = playerIndices(prevPlayers)
         .filter(index => !playerIndices(newPlayers).includes(index));
+      const firstActivePlayer = playerIndices(players.filter(p => p.active).sort())[0];
+      if (Number(firstActivePlayer) === Number(playerIndex)) {
+        store.dispatch(setIsHost(true));
+      }
       ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length, newPlayers });
     }
   });
