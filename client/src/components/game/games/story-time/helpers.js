@@ -1,5 +1,6 @@
 import storyStarts from './prompts';
 import { maleNames, femaleNames } from './names';
+import { shuffle } from '../../../../functions';
 
 export const screens = {
   intro: 'intro',
@@ -47,7 +48,7 @@ export const getPrompt = turn => {
   ][turn];
 }
 
-export const getWriters = players => {
+export const getWriters = (players, timesAsWriter) => {
   let numOfWriters;
   if (players.length < 6) {
     numOfWriters = 2;
@@ -56,7 +57,7 @@ export const getWriters = players => {
   } else {
     numOfWriters = 4;
   }
-  return players.sort((a, b) => b.timesAsWriter - a.timesAsWriter).slice(0, numOfWriters);
+  return shuffle(players).sort((a, b) => timesAsWriter[a.index] || 0 - timesAsWriter[b.index] || 0).slice(0, numOfWriters);
 }
 
 export function handlePlayersGone(playersGone, props) {

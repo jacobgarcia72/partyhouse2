@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Lobby from '../../other/lobby';
 import { screens, handlePlayersGone, handlePlayersJoined, getStoryStart, getPrompt, getWriters } from './helpers';
-import { setGameState, shuffle, clearInput } from '../../../../functions/index';
+import { setGameState, clearInput } from '../../../../functions/index';
 import { connect } from 'react-redux';
 import Intro from './intro';
 
@@ -35,29 +35,40 @@ class StoryTime extends Component {
     const { screen } = this.props.gameState;
     switch (screen) {
       case screens.write:
-        this.handleUploadText();
+        this.handleText();
+        break;
+      case screens.vote:
+        this.handleVote();
         break;
       default:
     }
   }
   
   startGame = () => {
-    const { code, players } = this.props;
+    const { code } = this.props;
     const firstLine = `Once upon a time, there was ${getStoryStart()}.`;
-    players.forEach(p => {
-      p.timesAsWriter = 0;
-    });
     setGameState(code, {
       screen: screens.read,
       turn: 0,
       story: [firstLine],
       prompt: getPrompt(0),
-      writers: getWriters(players),
-      players: shuffle(players)
+      timesAsWriter: { }
     });
+    this.setNextWriters();
     this.interval = setTimeout(() => {
       this.nextScreen(screens.next);
     }, 4000);
+  }
+
+  setNextWriters = () => {
+    const { players, code } = this.props;
+    const timesAsWriter = this.props.timesAsWriter || { };
+    const writers = getWriters(players, timesAsWriter);
+    writers.forEach(writer => {
+      timesAsWriter[writer.index] = timesAsWriter[writer.index] || 0;
+      timesAsWriter[writer.index] += 1;
+    });
+    setGameState(code, { writers, timesAsWriter });
   }
 
   updatePlayers = update => {
@@ -74,11 +85,10 @@ class StoryTime extends Component {
     }
   }
 
-  handleUploadText = () => {
+  handleText = () => {
     const { code, input, gameState } = this.props;
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).filter(index => input[index].submitted).map(index => Number(index));
-    console.log('submittedPlayers', submittedPlayers);
     const submittedCaptions = gameState.submittedCaptions || { };
     for (let i = 0; i < gameState.writers.length; i++) {
       const { index } = gameState.writers[i];
@@ -92,6 +102,24 @@ class StoryTime extends Component {
       clearInput(code);
       this.nextScreen(screens.vote);
     }
+  }
+
+  handleVote = () => {
+    // const { code, input, gameState } = this.props;
+    // let allPlayersIn = true;
+    // const submittedPlayers = Object.keys(input).map(index => Number(index));
+    // for (let i = 0; i < gameState.writers.length; i++) {
+    //   const { index } = gameState.writers[i];
+    //   submittedCaptions[index] = input[index] ? input[index].text : submittedCaptions[index] || ' ';
+    //   if (allPlayersIn && !submittedPlayers.includes(index)) {
+    //     allPlayersIn = false;
+    //   }
+    // }
+    // setGameState(code, { submittedCaptions });
+    // if (allPlayersIn) {
+    //   clearInput(code);
+    //   this.nextScreen(screens.vote);
+    // }
   }
 
   nextScreen = screen => {
