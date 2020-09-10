@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Lobby from '../../other/lobby';
-import { screens, handlePlayersGone, handlePlayersJoined, getStoryStart, getPrompt, getWriters, findWinner } from './helpers';
+import { screens, handlePlayersGone, getStoryStart, getPrompt, getWriters, findWinner } from './helpers';
 import { setGameState, clearInput } from '../../../../functions/index';
 import { connect } from 'react-redux';
 import Intro from './intro';
@@ -73,15 +73,12 @@ class StoryTime extends Component {
 
   updatePlayers = update => {
     const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
-    if (update.newTotal < minPlayers) {
+    if (this.props.screen !== screens.final && update.newTotal < minPlayers) {
       this.nextScreen(screens.lobby);
       return;
     }
     if (update.playersGone.length) {
       handlePlayersGone(update.playersGone, this.props);
-    }
-    if (update.playersJoined.length) {
-      handlePlayersJoined(update.playersJoined, this.props);
     }
   }
 
@@ -121,9 +118,6 @@ class StoryTime extends Component {
       const { submittedCaptions, story, turn, prompt, writers } = this.props.gameState;
       story[turn + 1] = `${prompt}, ${submittedCaptions[winnerIndex]}`;
       const winner = writers.find(w => w.index === winnerIndex) || {};
-      console.log(winnerIndex)
-      console.log(winner)
-      console.log(writers)
       setGameState(code, { story, winner: winner.name, screen: screens.winner, submittedCaptions: null });
       this.setNextWriters();
       this.interval = setTimeout(() => {
@@ -137,10 +131,14 @@ class StoryTime extends Component {
     if (screen === screens.next) {
       const turn = this.props.gameState.turn + 1;
       const prompt = getPrompt(turn);
-      setGameState(this.props.code, { turn, prompt });
-      this.interval = setTimeout(() => {
-        this.nextScreen(screens.write);
-      }, 4000);
+      if (prompt) {
+        setGameState(this.props.code, { turn, prompt });
+        this.interval = setTimeout(() => {
+          this.nextScreen(screens.write);
+        }, 4000);
+      } else {
+        screen = screens.final;
+      }
     }
     setGameState(this.props.code, { screen });
   }
@@ -164,7 +162,7 @@ class StoryTime extends Component {
       case screens.winner:
         return <Winner />;
       case screens.final:
-        return <Final />;
+        return <div><Read /><Final /></div>;
       default:
         return null;
     }

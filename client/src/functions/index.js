@@ -58,7 +58,6 @@ export function joinRoom(roomCode, name, callback) {
     let playerIndex = null;
     if (roomExists && !roomIsFull) {
       playerIndex = room.nextIndex;
-      console.log('playerindex', playerIndex)
       const newPlayer = new Player(name, playerIndex);
       room.nextIndex++;
       room.players[playerIndex] = newPlayer;
@@ -81,7 +80,6 @@ export function rejoinRoom(roomCode, callback) {
     const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     if (roomExists && !roomIsFull) {
       let playerIndex = localStorage.getItem('player-index');
-      console.log('playerindex', playerIndex)
       const savedRoomCode = localStorage.getItem('room-code');
       success = true;
       if (savedRoomCode === roomCode && (playerIndex || playerIndex === 0) && room.players && room.players[playerIndex]) {

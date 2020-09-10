@@ -9,17 +9,10 @@ class Write extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isWriter: null,
       submittedText: false,
       submittedVote: false,
       text: ''
     }
-  }
-
-  componentDidMount() {
-    const { playerIndex, gameState } = this.props;
-    const isWriter = Boolean(gameState.writers.find(w => w.index === playerIndex));
-    this.setState({isWriter});
   }
 
   updateText = text=> {
@@ -32,7 +25,7 @@ class Write extends Component {
     e.preventDefault();
     const { code, playerIndex } = this.props;
     let { text } = this.state;
-    const punctuation = ['.','!','?',';','"',];
+    const punctuation = ['.','!','?',';','"',')','(','-'];
     if (!punctuation.includes(text.charAt(text.length - 1))) {
       text += '.';
     }
@@ -86,7 +79,9 @@ class Write extends Component {
   }
 
   render() {
-    if (this.state.isWriter && !this.state.submittedText) {
+    const { gameState, playerIndex } = this.props;
+    const isWriter = Boolean(gameState.writers.find(w => w.index === playerIndex));
+    if (isWriter && !this.state.submittedText) {
       const { prompt } = this.props.gameState;
       return <form className="column" onSubmit={e => e.preventDefault()}>
         <TextArea maxLength={120 + prompt.length} onChange={this.updateText} startingText={`${prompt},`} />
