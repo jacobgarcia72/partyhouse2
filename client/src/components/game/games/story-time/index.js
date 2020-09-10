@@ -61,9 +61,7 @@ class StoryTime extends Component {
   }
 
   updatePlayers = update => {
-    console.log('update', update)
     const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
-    console.log(minPlayers)
     if (update.newTotal < minPlayers) {
       this.nextScreen(screens.lobby);
       return;
@@ -76,21 +74,23 @@ class StoryTime extends Component {
     }
   }
 
-  handleCaptionUpdate = () => {
+  handleUploadText = () => {
     const { code, input, gameState } = this.props;
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).filter(index => input[index].submitted).map(index => Number(index));
+    console.log('submittedPlayers', submittedPlayers);
+    const submittedCaptions = gameState.submittedCaptions || { };
     for (let i = 0; i < gameState.writers.length; i++) {
       const { index } = gameState.writers[i];
-      if (!submittedPlayers.includes(index)) {
+      submittedCaptions[index] = input[index] ? input[index].text : submittedCaptions[index] || ' ';
+      if (allPlayersIn && !submittedPlayers.includes(index)) {
         allPlayersIn = false;
-        break;
       }
     }
+    setGameState(code, { submittedCaptions });
     if (allPlayersIn) {
       clearInput(code);
-      console.log('all players submitted', input)
-      //next
+      this.nextScreen(screens.vote);
     }
   }
 
@@ -118,6 +118,7 @@ class StoryTime extends Component {
       case screens.next:
         return <div><Read /><Next /></div>;
       case screens.write:
+      case screens.vote:
         return <div><Read /><Write /></div>;
       case screens.winner:
         return <Winner />;
@@ -133,8 +134,8 @@ class StoryTime extends Component {
   }
 }
 
-function mapStateToProps({ gameState, players, code, isHost }) {
-  return { gameState, players, code, isHost };
+function mapStateToProps({ gameState, players, code, isHost, input }) {
+  return { gameState, players, code, isHost, input };
 }
 
 export default connect(mapStateToProps, null)(StoryTime);

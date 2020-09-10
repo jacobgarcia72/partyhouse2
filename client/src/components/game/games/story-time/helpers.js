@@ -7,6 +7,7 @@ export const screens = {
   read: 'read',
   next: 'next',
   write: 'write',
+  vote: 'vote',
   winner: 'winner',
   final: 'final'
 };

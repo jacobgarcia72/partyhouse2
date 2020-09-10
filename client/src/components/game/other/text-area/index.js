@@ -19,9 +19,10 @@ export default class TextArea extends Component {
 
   render() {
     const maxLength = this.props.maxLength || 120;
-    const {text} = this.state;
-    const remainingChars = maxLength-text.length;
-    const displayText = this.props.startingText ? `${this.props.startingText} ${text}` : text;
+    const { text } = this.state;
+    const { startingText } = this.props;
+    const displayText = startingText ? `${startingText} ${text}` : text;
+    const remainingChars = maxLength - displayText.length;
     return (
       <div className="TextArea">
         <div id='characters-remaining' style={{color: remainingChars ? remainingChars < 10 ? '#ba0000' : '#111111' : '#ff0000', height: '1.1rem', textAlign: 'right'}}>

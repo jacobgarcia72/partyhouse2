@@ -20,7 +20,7 @@ class Landing extends Component {
 
   componentDidMount() {
     if (isDevMode()) {
-      const names = ['Karen', 'Konnor', 'David', 'Emily', 'Stephen', 'Shayla', 'Jon', 'Debra', 'Brandon', 'Tasheda', 'Luis', 'Ethan', 'Fernando'];
+      const names = ['Karen', 'Konnor', 'David', 'Emily', 'Stephen', 'Shayla', 'Jon', 'Debra', 'Brandon', 'Tasheda', 'Luis', 'Ethan', 'Fernando', 'Cliff', 'Savanna', 'Allie', 'Justin', 'Heather', 'Brett'];
       this.setState({roomCode: 'TEST', playerName: names[Math.floor(Math.random() * names.length)]});
     } 
   }

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { sendInput } from '../../../../functions';
 import TextArea from '../../other/text-area';
+import { screens } from '../meme/helpers';
 
 class Write extends Component {
 
@@ -9,7 +10,8 @@ class Write extends Component {
     super(props);
     this.state = {
       isWriter: null,
-      submitted: false,
+      submittedText: false,
+      submittedVote: false,
       text: ''
     }
   }
@@ -28,28 +30,73 @@ class Write extends Component {
 
   handleSubmit = () => {
     const { code, playerIndex } = this.props;
-    const { text } = this.state;
+    let { text } = this.state;
+    const punctuation = ['.','!','?',';','"',];
+    if (!punctuation.includes(text.charAt(text.length - 1))) {
+      text += '.';
+    }
     sendInput(code, playerIndex, {text, submitted: true});
-    this.setState({text, submitted: true});
+    this.setState({text, submittedText: true});
+  }
+
+  submitVote = indexOfPlayerVotedFor => {
+    const { code, playerIndex } = this.props;
+    this.setState({submittedVote: true});
+    sendInput(code, playerIndex, indexOfPlayerVotedFor);
+  }
+
+  renderPlayerResponses = () => {
+    const { writers, submittedCaptions, prompt } = this.props.gameState;
+    return writers.map(w => {
+      const text = submittedCaptions && submittedCaptions[w.index] ? submittedCaptions[w.index] : ' ';
+      return (
+        <div className="row writer-input" key={w.index}>
+          <div className="row writer-name">{w.name}</div>
+          <div className="row speech-bubble-container">
+            <div className="speech-bubble">{prompt},&nbsp;{text}</div>
+          </div>
+        </div>
+      )
+    });
+  }
+
+  renderVotingOptions = () => {
+    const { gameState } = this.props;
+    if (gameState.screen !== screens.vote) {
+      return null;
+    } else if (this.state.submittedVote) {
+      return <div>Vote submitted. Waiting for other players.</div>;
+    } else {
+      const renderVoteButton = player => (
+        <button onClick={() => this.submitVote(player.index)}
+          className="vote-btn" key={player.index}>{player.name}
+        </button>
+      );
+      return (
+        <div className="column">
+          <div>Vote:</div>
+          <div className="row">
+            {gameState.writers.map(renderVoteButton)}
+          </div>
+        </div>
+      )
+    }
   }
 
   render() {
-    if (this.state.isWriter && !this.state.submitted) {
+    if (this.state.isWriter && !this.state.submittedText) {
+      const { prompt } = this.props.gameState;
       return <form className="column">
-        <TextArea maxLength={120} onChange={this.updateText} startingText={`${this.props.gameState.prompt},`} />
+        <TextArea maxLength={120 + prompt.length} onChange={this.updateText} startingText={`${prompt},`} />
         <button type="submit" disabled={!this.state.text} onClick={this.handleSubmit}>Submit</button>
       </form>
     } else {
-      const { gameState, input } = this.props;
-      return gameState.writers.map(w => {
-        const text = input && input[w.index] ? input[w.index].text : ' ';
-        return <div className="row writer-input" key={w.index}>
-          <div className="row writer-name">{w.name}</div>
-          <div className="row speech-bubble-container">
-            <div className="speech-bubble">{gameState.prompt},&nbsp;{text}</div>
-          </div>
+      return (
+        <div className="column">
+          {this.renderVotingOptions()}
+          {this.renderPlayerResponses()}
         </div>
-      });
+      )
     }
   }
 }
