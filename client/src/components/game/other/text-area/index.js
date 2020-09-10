@@ -16,6 +16,13 @@ export default class TextArea extends Component {
     this.setState({text});
     this.props.onChange(text);
   }
+  
+  setFocusOutsideStartingText = e => {
+    const { startingText } = this.props;
+    if (startingText && e.target.selectionStart < startingText.length + 1) {
+      e.target.setSelectionRange(startingText.length + 1, startingText.length + 1);
+    }
+  }
 
   render() {
     const maxLength = this.props.maxLength || 120;
@@ -36,6 +43,7 @@ export default class TextArea extends Component {
           maxLength={maxLength} 
           rows={Math.max(2, Math.round(maxLength / 30))} 
           onChange={e=>this.onChange(e.target.value)}
+          onClick={this.setFocusOutsideStartingText}
         ></textarea>
       </div>
     )

@@ -28,7 +28,8 @@ class Write extends Component {
     sendInput(code, playerIndex, {text});
   }
 
-  handleSubmit = () => {
+  handleSubmit = e => {
+    e.preventDefault();
     const { code, playerIndex } = this.props;
     let { text } = this.state;
     const punctuation = ['.','!','?',';','"',];
@@ -39,7 +40,8 @@ class Write extends Component {
     this.setState({text, submittedText: true});
   }
 
-  submitVote = indexOfPlayerVotedFor => {
+  submitVote = (e, indexOfPlayerVotedFor) => {
+    e.preventDefault();
     const { code, playerIndex } = this.props;
     this.setState({submittedVote: true});
     sendInput(code, playerIndex, indexOfPlayerVotedFor);
@@ -68,16 +70,16 @@ class Write extends Component {
       return <div>Vote submitted. Waiting for other players.</div>;
     } else {
       const renderVoteButton = player => (
-        <button onClick={() => this.submitVote(player.index)}
+        <button type="submit" onClick={e => this.submitVote(e, player.index)}
           className="vote-btn" key={player.index}>{player.name}
         </button>
       );
       return (
         <div className="column">
           <div>Vote:</div>
-          <div className="row">
+          <form className="row" onSubmit={e => e.preventDefault()}>
             {gameState.writers.map(renderVoteButton)}
-          </div>
+          </form>
         </div>
       )
     }
@@ -86,7 +88,7 @@ class Write extends Component {
   render() {
     if (this.state.isWriter && !this.state.submittedText) {
       const { prompt } = this.props.gameState;
-      return <form className="column">
+      return <form className="column" onSubmit={e => e.preventDefault()}>
         <TextArea maxLength={120 + prompt.length} onChange={this.updateText} startingText={`${prompt},`} />
         <button type="submit" disabled={!this.state.text} onClick={this.handleSubmit}>Submit</button>
       </form>

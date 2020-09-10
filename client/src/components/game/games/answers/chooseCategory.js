@@ -30,7 +30,7 @@ class ChooseCategory extends Component {
     } else if (rounds[round].answeringIndex === playerIndex) {
       return <div className="column">
           <h2>Choose a category:</h2>
-          <form  onSubmit={e => e.preventDefault()} className="column options">
+          <form onSubmit={e => e.preventDefault()} className="column options">
             {categories.map((cat, i) => <button type="submit" key={i} onClick={() => this.submitCategoryChoice(cat)}>{formatText(cat, rounds[round], players)}</button>)}
           </form>
         </div>

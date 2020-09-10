@@ -57,7 +57,7 @@ export const getWriters = (players, timesAsWriter) => {
   } else {
     numOfWriters = 4;
   }
-  return shuffle(players).sort((a, b) => timesAsWriter[a.index] || 0 - timesAsWriter[b.index] || 0).slice(0, numOfWriters);
+  return shuffle(players).sort((a, b) => (timesAsWriter[a.index] || 0) - (timesAsWriter[b.index] || 0)).slice(0, numOfWriters);
 }
 
 export const findWinner = (votes) => {

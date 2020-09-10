@@ -49,7 +49,7 @@ class StoryTime extends Component {
     const firstLine = `Once upon a time, there was ${getStoryStart()}.`;
     setGameState(code, {
       screen: screens.read,
-      turn: 0,
+      turn: -1,
       story: [firstLine],
       prompt: getPrompt(0),
       timesAsWriter: { }
@@ -62,7 +62,7 @@ class StoryTime extends Component {
 
   setNextWriters = () => {
     const { players, code } = this.props;
-    const timesAsWriter = this.props.timesAsWriter || { };
+    const timesAsWriter = this.props.gameState.timesAsWriter || { };
     const writers = getWriters(players, timesAsWriter);
     writers.forEach(writer => {
       timesAsWriter[writer.index] = timesAsWriter[writer.index] || 0;
@@ -124,18 +124,25 @@ class StoryTime extends Component {
       console.log(winnerIndex)
       console.log(winner)
       console.log(writers)
-      setGameState(code, { story, winner: winner.name, screen: screens.winner });
+      setGameState(code, { story, winner: winner.name, screen: screens.winner, submittedCaptions: null });
+      this.setNextWriters();
+      this.interval = setTimeout(() => {
+        this.nextScreen(screens.next);
+      }, 4000);
     }
   }
 
   nextScreen = screen => {
     clearInterval(this.interval);
     if (screen === screens.next) {
+      const turn = this.props.gameState.turn + 1;
+      const prompt = getPrompt(turn);
+      setGameState(this.props.code, { turn, prompt });
       this.interval = setTimeout(() => {
         this.nextScreen(screens.write);
       }, 4000);
     }
-    setGameState(this.props.code, {screen});
+    setGameState(this.props.code, { screen });
   }
 
   renderContent = () => {
