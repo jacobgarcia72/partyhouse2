@@ -17,6 +17,8 @@ let ns = new NotificationService();
 
 class MemeGame extends Component {
 
+  interval;
+
   startGame = () => {
     if (this.props.isHost) {
       ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
@@ -29,14 +31,14 @@ class MemeGame extends Component {
   }
 
   updatePlayers = update => {
-    const { gameUrl, gameState, code } = this.props;
+    const { gameUrl, gameState } = this.props;
     const minPlayers = getGameByUrl(gameUrl).minPlayers;
     const screensThatCanContinueWithLessThanMinimum = [
       screens.vote, screens.dankestMeme, screens.scores
     ]
     if (update.newTotal < minPlayers && !screensThatCanContinueWithLessThanMinimum.includes(gameState.screen)) {
-      setGameState(code, null)
-      this.props.history.push('/');
+      clearInterval(this.interval);
+      this.nextScreen(screens.lobby);
       return;
     }
     if (update.playersGone.length) {
@@ -164,7 +166,7 @@ class MemeGame extends Component {
           this.addBonusRoundMemes();
           bonusRound = true;
         }
-        setTimeout(() => {
+        this.interval = setTimeout(() => {
           setGameState(code, { round, showStats: false, bonusRound });
         }, 3500);
       }

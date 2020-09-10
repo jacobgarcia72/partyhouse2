@@ -19,6 +19,7 @@ export default class Title extends Component {
       i: 0, j: 0
     }
     this.animate = null;
+    this.intervals = [];
   }
 
   componentDidMount() {
@@ -39,11 +40,11 @@ export default class Title extends Component {
         if (i > words.length - 1) {
           clearInterval(this.animate);
           if (this.props.callback) {
-            setTimeout(() => {
+            this.intervals.push(setTimeout(() => {
               let el = document.getElementById('full-title');
               if (el) el.classList.add('cross-zoom-out');
-            }, 1000);
-            setTimeout(this.props.callback, 1300);
+            }, 1000));
+            this.intervals.push(setTimeout(this.props.callback, 1300));
           }
         }
       }
@@ -52,7 +53,8 @@ export default class Title extends Component {
   }
 
   componentWillUnmount() {
-    if (this.animate) clearInterval(this.animate);
+    clearInterval(this.animate);
+    this.intervals.forEach(i => clearInterval(i));
   }
 
   render() {

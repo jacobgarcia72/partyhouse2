@@ -34,7 +34,7 @@ class Lobby extends Component {
         {this.props.game.displayName}
       </h1>
       <PlayerList />
-      {this.props.isHost ? <form onSubmit={this.onSubmit}>
+      {this.props.isHost ? <form onSubmit={this.onSubmit} className="column">
         <input type="submit"
           value="Start Game!"
         ></input>

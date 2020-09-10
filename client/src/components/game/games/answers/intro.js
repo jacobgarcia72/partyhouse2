@@ -3,12 +3,18 @@ import { connect } from 'react-redux';
 
 class Intro extends Component {
 
+  interval;
+
   componentDidMount() {
     if (this.props.isHost) {
-      setTimeout(() => {
+      this.interval = setTimeout(() => {
         this.props.nextScreen();
       }, 2500);
     }
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.interval);
   }
 
   render() {

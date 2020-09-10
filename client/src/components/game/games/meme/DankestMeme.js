@@ -13,19 +13,24 @@ class DankestMeme extends Component {
     this.state = {
       memeAnimation: 'cross-zoom-in'
     }
+    this.interval = null;
   }
 
   componentDidMount() {
     this.animateElements('dankest', 6, 1500);
-    setTimeout(() => {
+    this.interval = setTimeout(() => {
       this.setState({ memeAnimation: 'cross-zoom-out' });
       this.animateElements('bonus-points', 2, 3000);
       if (this.props.isHost) {
-        setTimeout(() => {
+        this.interval = setTimeout(() => {
           this.props.nextScreen();
         }, 4000);
       }
     }, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   animateElements = (elementName, finalElementIndex, pauseTime)=> {
@@ -38,7 +43,7 @@ class DankestMeme extends Component {
       counter++;
       if (counter > finalElementIndex) {
         clearInterval(animate);
-        setTimeout(() => {
+        this.interval = setTimeout(() => {
           let fullElement = document.getElementById(elementName);
           if (fullElement) fullElement.classList.add('cross-zoom-out');
         }, pauseTime);

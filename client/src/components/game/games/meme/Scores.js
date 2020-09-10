@@ -3,6 +3,12 @@ import { connect } from 'react-redux';
 
 class Scores extends Component {
 
+  interval;
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   getHyphenatedShortenedCaption = caption => {
     const strArr = caption.trim().replace(/[^a-zA-Z0-9 ]/g, '').split(' ').join('-').slice(0, 40).split('-');
     return strArr.slice(0, Math.max(5, strArr.length - 1)).join('-').toLowerCase().trim();
@@ -12,7 +18,7 @@ class Scores extends Component {
     const element = document.getElementById(`save-meme-${meme.index}`);
     if (!element) return;
     element.classList.add('saving');
-    setTimeout(() => {
+    this.interval = setTimeout(() => {
       const htmlToImage = require('html-to-image');
       const download = require('downloadjs');
       htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{

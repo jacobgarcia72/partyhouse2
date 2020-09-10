@@ -18,6 +18,8 @@ let ns = new NotificationService();
 
 class StoryTime extends Component {
 
+  interval;
+
   componentWillUnmount() {
     ns.removeObserver(this, PLAYERS_CHANGED);
   }
@@ -53,17 +55,17 @@ class StoryTime extends Component {
       writers: getWriters(players),
       players: shuffle(players)
     });
-    ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
-    setTimeout(() => {
+    this.interval = setTimeout(() => {
       this.nextScreen(screens.next);
     }, 4000);
   }
 
   updatePlayers = update => {
+    console.log('update', update)
     const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
+    console.log(minPlayers)
     if (update.newTotal < minPlayers) {
-      setGameState(this.props.code, null)
-      this.props.history.push('/');
+      this.nextScreen(screens.lobby);
       return;
     }
     if (update.playersGone.length) {
@@ -93,18 +95,22 @@ class StoryTime extends Component {
   }
 
   nextScreen = screen => {
+    clearInterval(this.interval);
     if (screen === screens.next) {
-      setTimeout(() => {
+      this.interval = setTimeout(() => {
         this.nextScreen(screens.write);
       }, 4000);
     }
     setGameState(this.props.code, {screen});
   }
 
-  renderContent() {
+  renderContent = () => {
     switch (this.props.gameState.screen) {
       case screens.lobby:
-        return <Lobby onContinue={() => this.nextScreen(screens.intro)}/>;
+        return <Lobby onContinue={() => {
+          this.nextScreen(screens.intro);
+          ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
+        }}/>;
       case screens.intro:
         return <Intro nextScreen={this.startGame}/>;
       case screens.read:
