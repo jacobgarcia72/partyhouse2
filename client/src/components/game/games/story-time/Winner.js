@@ -3,11 +3,22 @@ import { connect } from 'react-redux';
 
 class Winner extends Component {
 
+  componentDidMount() {
+    const { story, turn, winner } = this.props.gameState;
+    console.log(story)
+    console.log(turn)
+    console.log(story[turn + 1])
+  }
 
   render() {
+    const { story, turn, winner } = this.props.gameState;
     return (
-      <div>
-        Hello
+      <div className="column">
+        <div>Winning Caption:</div>
+        <div className="speech-bubble">
+          {story[turn + 1]}
+        </div>
+        <div className="winner-name">{winner}</div>
       </div>
     )
   }

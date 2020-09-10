@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Lobby from '../../other/lobby';
-import { screens, handlePlayersGone, handlePlayersJoined, getStoryStart, getPrompt, getWriters } from './helpers';
+import { screens, handlePlayersGone, handlePlayersJoined, getStoryStart, getPrompt, getWriters, findWinner } from './helpers';
 import { setGameState, clearInput } from '../../../../functions/index';
 import { connect } from 'react-redux';
 import Intro from './intro';
@@ -105,21 +105,27 @@ class StoryTime extends Component {
   }
 
   handleVote = () => {
-    // const { code, input, gameState } = this.props;
-    // let allPlayersIn = true;
-    // const submittedPlayers = Object.keys(input).map(index => Number(index));
-    // for (let i = 0; i < gameState.writers.length; i++) {
-    //   const { index } = gameState.writers[i];
-    //   submittedCaptions[index] = input[index] ? input[index].text : submittedCaptions[index] || ' ';
-    //   if (allPlayersIn && !submittedPlayers.includes(index)) {
-    //     allPlayersIn = false;
-    //   }
-    // }
-    // setGameState(code, { submittedCaptions });
-    // if (allPlayersIn) {
-    //   clearInput(code);
-    //   this.nextScreen(screens.vote);
-    // }
+    const { code, input, players } = this.props;
+    let allPlayersIn = true;
+    const submittedPlayers = Object.keys(input).map(index => Number(index));
+    for (let i = 0; i < players.length; i++) {
+      const { index } = players[i];
+      if (!submittedPlayers.includes(index)) {
+        allPlayersIn = false;
+        break;
+      }
+    }
+    if (allPlayersIn) {
+      clearInput(code);
+      const winnerIndex = findWinner(input);
+      const { submittedCaptions, story, turn, prompt, writers } = this.props.gameState;
+      story[turn + 1] = `${prompt}, ${submittedCaptions[winnerIndex]}`;
+      const winner = writers.find(w => w.index === winnerIndex) || {};
+      console.log(winnerIndex)
+      console.log(winner)
+      console.log(writers)
+      setGameState(code, { story, winner: winner.name, screen: screens.winner });
+    }
   }
 
   nextScreen = screen => {

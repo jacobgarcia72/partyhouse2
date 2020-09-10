@@ -60,6 +60,25 @@ export const getWriters = (players, timesAsWriter) => {
   return shuffle(players).sort((a, b) => timesAsWriter[a.index] || 0 - timesAsWriter[b.index] || 0).slice(0, numOfWriters);
 }
 
+export const findWinner = (votes) => {
+  const tallies = { };
+  let maxVotes = 0;
+  votes.forEach(vote => {
+    tallies[vote] = tallies[vote] || 0;
+    tallies[vote] += 1;
+    if (tallies[vote] > maxVotes) {
+      maxVotes = tallies[vote];
+    }
+  });
+  const winners = Object.keys(tallies).filter(index => tallies[index] === maxVotes).map(i => Number(i));
+  console.log(winners)
+  if (winners.length === 1) {
+    return winners[0];
+  } else {
+    return winners[Math.floor(Math.random() * winners.length)];
+  }
+}
+
 export function handlePlayersGone(playersGone, props) {
 
 }
