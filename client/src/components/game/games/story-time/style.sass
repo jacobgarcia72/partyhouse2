@@ -1,3 +1,4 @@
+@import 'src/style/variables'
 .StoryTime
   font-size: 16pt
   font-weight: 200
@@ -63,3 +64,70 @@
     border-left: 0
     margin-top: -10px
     margin-left: -10px
+  .save-images
+    flex-wrap: wrap
+    width: 90vw
+    justify-content: space-around
+    &.off-screen
+      position: fixed
+      right: 200vw
+  .save-image 
+    background-repeat: no-repeat
+    background-size: cover
+    width: 42vw
+    height: 56vw
+    margin: 0
+    position: relative
+    button
+      background-color: rgba(130, 40, 60, 0.9)
+      font-size: 60%
+      line-height: 1
+      border: 0
+      width: 122px
+      min-width: 122px
+      height: auto
+      border-radius: 18%
+      padding: 0.3em
+      margin: 0
+      top: -1em
+      right: -0.5em
+      box-shadow: none
+      color: rgba(255, 255, 255, 0.8)
+      position: absolute
+    .watermark
+      font-size: 11pt 
+      line-height: 15px
+      position: absolute 
+      bottom: 8px
+      right: 20px
+      color: rgba(180,180,185,0.7) 
+      padding: 0 5px
+      font-family: $font-default
+      opacity: 0
+    .story 
+      background-color: rgba(0,0,0,0.3)
+      color: #ffffff
+      line-height: 1.2
+      padding: 0 32px 24px
+      text-align: center
+      display: flex
+      align-items: center
+      justify-content: center
+      margin: 0
+      font-weight: 100
+      font-family: 'Quicksand', Arial, Helvetica, sans-serif
+      width: 42vw
+      height: 56vw
+    &.saving
+      width: 540px
+      height: 720px
+      .story
+        width: 540px
+        height: 720px
+      .watermark
+        opacity: 1
+      button
+        display: none
+
+  .save-image.moral div.story
+    text-transform: uppercase

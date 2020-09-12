@@ -62,7 +62,7 @@ class Landing extends Component {
           <div className="column">
             <img src="assets/img/logo.png" alt="Party House Games"></img>
             <h1>Connect!</h1>
-            <form onSubmit={this.connectRoom}>
+            <form onSubmit={this.connectRoom} className="row">
               <input
                 className="input-name"
                 placeholder="Name"
@@ -74,22 +74,24 @@ class Landing extends Component {
                 name="playerName"
                 value={playerName}
               ></input>
-              <input
-                className="input-code"
-                placeholder="Code"
-                type="text"
-                maxLength="4"
-                onChange={this.handleInputChange}
-                autoComplete="off"
-                spellCheck={false}
-                name="roomCode"
-                value={roomCode}
-              ></input>
-              <input
-                type="submit"
-                value="Go"
-                disabled={roomCode === '' || playerName === '' || loading}
-              ></input>
+              <div>
+                <input
+                  className="input-code"
+                  placeholder="Code"
+                  type="text"
+                  maxLength="4"
+                  onChange={this.handleInputChange}
+                  autoComplete="off"
+                  spellCheck={false}
+                  name="roomCode"
+                  value={roomCode}
+                ></input>
+                <input
+                  type="submit"
+                  value="Go"
+                  disabled={roomCode === '' || playerName === '' || loading}
+                ></input>
+              </div>
             </form>
             <div className="error">{error}</div>
           </div>

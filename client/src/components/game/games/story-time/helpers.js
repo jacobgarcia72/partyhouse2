@@ -13,6 +13,11 @@ export const screens = {
   final: 'final'
 };
 
+export const numberOfBackgroundImages = {
+  stories: 7,
+  morals: 7
+};
+
 export const getStoryStart = () => {
 
   const makeMale = text => {

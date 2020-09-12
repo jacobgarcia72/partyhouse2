@@ -169,8 +169,11 @@
     flex-wrap: wrap
     justify-content: center
     align-items: center
+    &.off-screen
+      position: fixed
+      right: 200vw
     .save-meme-container
-      padding: 1vw 1vw calc(1vw + 16px)
+      padding: 1vw 1vw calc(1vw + 24px)
     .save-meme
       box-shadow: none
       position: relative
@@ -198,7 +201,7 @@
         text-align: right
         color: #666
         text-shadow: 1px 1px 1px white
-        padding-right: 0.5em
+        padding-right: 16px
         position: absolute
         background-color: white
         bottom: 0.25em

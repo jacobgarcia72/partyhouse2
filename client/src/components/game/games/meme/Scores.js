@@ -17,25 +17,27 @@ class Scores extends Component {
   saveMeme = (meme) => {
     const element = document.getElementById(`save-meme-${meme.index}`);
     if (!element) return;
-    element.classList.add('saving');
     this.interval = setTimeout(() => {
       const htmlToImage = require('html-to-image');
       const download = require('downloadjs');
       htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{
         download(dataUrl, `party-house-dank-u-${this.getHyphenatedShortenedCaption(meme.caption)}`);
-        element.classList.remove('saving');
       });
     }, 0);
   }
 
-  renderMemesToSave = ()=> {
+  renderMemesToSave = (offscreen)=> {
     let renderedMemes = null;
     const {memes} = this.props.gameState;
     if (memes) {
       renderedMemes =  memes.map((meme)=>{
+        let memeClassName = 'save-meme meme';
+        if (offscreen) {
+          memeClassName += ' saving'
+        }
         return (
-          <div className="save-meme-container">
-            <div key={meme.index} id={`save-meme-${meme.index}`} className="save-meme meme">
+          <div className="save-meme-container" key={meme.index}>
+            <div key={meme.index} id={`${offscreen ? 'save' : 'display'}-meme-${meme.index}`} className={memeClassName}>
               <button id={`save-button-${meme.index}`} onClick={() => this.saveMeme(meme)}>Save</button>
               <div className="caption">{meme.caption}</div>
               <img alt="meme" src={Number.isInteger(meme.image) ? `/assets/img/meme/templates/${meme.image}.jpg` : meme.image} />
@@ -44,8 +46,12 @@ class Scores extends Component {
           </div>
         )
       });
-    } 
-    return <div className="save-memes" id="save-content">{renderedMemes}</div>
+    }
+    let className = 'save-memes';
+    if (offscreen) {
+      className += ' off-screen';
+    }
+    return <div className={className} id="save-content">{renderedMemes}</div>
   }
 
   render() {
@@ -54,7 +60,8 @@ class Scores extends Component {
     return (
       <div className="scores column">
         {gameState.scores.map((s, i) => <div key={i}>{s.playerName}: {s.points}</div>)}
-        {this.renderMemesToSave()}
+        {this.renderMemesToSave(false)}
+        {this.renderMemesToSave(true)}
         {isHost && players.length >= minPlayers ? <button className="continue-btn" type="submit" onClick={continueGame}>Continue Game</button> : null}
       </div>
     )

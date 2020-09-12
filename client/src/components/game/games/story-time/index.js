@@ -116,12 +116,20 @@ class StoryTime extends Component {
       clearInput(code);
       const winnerIndex = findWinner(input);
       const { submittedCaptions, story, turn, prompt, writers } = this.props.gameState;
-      story[turn + 1] = `${prompt}, ${submittedCaptions[winnerIndex]}`;
+      const winningCaption = submittedCaptions[winnerIndex];
+      story[turn + 1] = `${prompt}, ${winningCaption}`;
       const winner = writers.find(w => w.index === winnerIndex) || {};
       setGameState(code, { story, winner: winner.name, screen: screens.winner, submittedCaptions: null });
-      this.setNextWriters();
+      let screen;
+      if (turn === 7) {
+        screen = screens.final;
+        setGameState(code, { moral: winningCaption });
+      } else {
+        screen = screens.next;
+        this.setNextWriters();
+      }
       this.interval = setTimeout(() => {
-        this.nextScreen(screens.next);
+        this.nextScreen(screen);
       }, 4000);
     }
   }
@@ -131,14 +139,10 @@ class StoryTime extends Component {
     if (screen === screens.next) {
       const turn = this.props.gameState.turn + 1;
       const prompt = getPrompt(turn);
-      if (prompt) {
-        setGameState(this.props.code, { turn, prompt });
-        this.interval = setTimeout(() => {
-          this.nextScreen(screens.write);
-        }, 4000);
-      } else {
-        screen = screens.final;
-      }
+      setGameState(this.props.code, { turn, prompt });
+      this.interval = setTimeout(() => {
+        this.nextScreen(screens.write);
+      }, 4000);
     }
     setGameState(this.props.code, { screen });
   }
