@@ -61,14 +61,15 @@ class Write extends Component {
     const voterIndices = players.filter(p => !writerIndices.includes(p.index))
       .map(p => p.index);
     const isAVoter = voterIndices.includes(playerIndex);
-    const voter = voterIndices.length === 1 ? players.find(p => p.index === voterIndices[0]) : null;
+    const onlyOneVoter = voterIndices.length === 1;
+    const voter = onlyOneVoter ? players.find(p => p.index === voterIndices[0]) : null;
     const voterName = voter ? voter.name : 'other players';
     if (gameState.screen !== screens.vote) {
       return null;
     } else if (!isAVoter) {
       return <div>Waiting for {voterName} to vote.</div>
     } else if (this.state.submittedVote) {
-      return <div>Vote submitted. Waiting for other players.</div>;
+      return onlyOneVoter ? null : <div>Vote submitted. Waiting for other players.</div>;
     } else {
       const renderVoteButton = player => (
         <button type="submit" onClick={e => this.submitVote(e, player.index)}

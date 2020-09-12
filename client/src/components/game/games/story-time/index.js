@@ -73,7 +73,7 @@ class StoryTime extends Component {
 
   updatePlayers = update => {
     const minPlayers = getGameByUrl(this.props.gameUrl).minPlayers;
-    if (this.props.screen !== screens.final && update.newTotal < minPlayers) {
+    if ((this.props.screen !== screens.final) && (update.newTotal < minPlayers)) {
       this.nextScreen(screens.lobby);
       return;
     }
