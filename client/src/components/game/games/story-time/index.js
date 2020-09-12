@@ -102,11 +102,14 @@ class StoryTime extends Component {
   }
 
   handleVote = () => {
-    const { code, input, players } = this.props;
+    const { code, input, players, gameState } = this.props;
     let allPlayersIn = true;
+    const writerIndices = gameState.writers.map(w => w.index);
+    const voterIndices = players.filter(p => !writerIndices.includes(p.index))
+      .map(p => p.index);
     const submittedPlayers = Object.keys(input).map(index => Number(index));
-    for (let i = 0; i < players.length; i++) {
-      const { index } = players[i];
+    for (let i = 0; i < voterIndices.length; i++) {
+      const index = voterIndices[i];
       if (!submittedPlayers.includes(index)) {
         allPlayersIn = false;
         break;
@@ -114,7 +117,7 @@ class StoryTime extends Component {
     }
     if (allPlayersIn) {
       clearInput(code);
-      const winnerIndex = findWinner(input);
+      const winnerIndex = findWinner(Object.values(input));
       const { submittedCaptions, story, turn, prompt, writers } = this.props.gameState;
       const winningCaption = submittedCaptions[winnerIndex];
       story[turn + 1] = `${prompt}, ${winningCaption}`;

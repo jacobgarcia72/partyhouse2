@@ -139,8 +139,6 @@ export function sendInput(roomCode, playerIndex, newInput) {
     if (!room) {
       return;
     }
-    const input = room.input || {};
-    input[playerIndex] = newInput;
     database.ref(`rooms/${roomCode}/input/${playerIndex}`).set(newInput);
   });
 }

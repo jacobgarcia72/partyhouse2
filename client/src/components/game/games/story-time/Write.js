@@ -56,9 +56,17 @@ class Write extends Component {
   }
 
   renderVotingOptions = () => {
-    const { gameState } = this.props;
+    const { gameState, players, playerIndex } = this.props;
+    const writerIndices = gameState.writers.map(w => w.index);
+    const voterIndices = players.filter(p => !writerIndices.includes(p.index))
+      .map(p => p.index);
+    const isAVoter = voterIndices.includes(playerIndex);
+    const voter = voterIndices.length === 1 ? players.find(p => p.index === voterIndices[0]) : null;
+    const voterName = voter ? voter.name : 'other players';
     if (gameState.screen !== screens.vote) {
       return null;
+    } else if (!isAVoter) {
+      return <div>Waiting for {voterName} to vote.</div>
     } else if (this.state.submittedVote) {
       return <div>Vote submitted. Waiting for other players.</div>;
     } else {
@@ -98,8 +106,8 @@ class Write extends Component {
   }
 }
 
-function mapStateToProps({ gameState, playerIndex, code, input }) {
-  return { gameState, playerIndex, code, input };
+function mapStateToProps({ gameState, playerIndex, code, input, players }) {
+  return { gameState, playerIndex, code, input, players };
 }
 
 export default connect(mapStateToProps, null)(Write);
