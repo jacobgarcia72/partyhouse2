@@ -32,8 +32,19 @@ export default class TextArea extends Component {
     const remainingChars = maxLength - displayText.length;
     return (
       <div className="TextArea">
-        <div id='characters-remaining' style={{color: remainingChars ? remainingChars < 10 ? '#ba0000' : '#111111' : '#ff0000', height: '1.1rem', textAlign: 'right'}}>
-          <span style={{ backgroundColor: 'white', padding: '0 0.25em', borderRadius: '0.5em', display: remainingChars <= 20 ? 'inline' : 'none'}}>
+        <div id='characters-remaining' style={{
+          color: remainingChars ? remainingChars < 10 ? '#ba0000' : '#111111' : '#ff0000',
+          height: '1rem',
+          textAlign: 'right',
+          fontFamily: 'sans-serif',
+          fontSize: '12pt'
+        }}>
+          <span style={{
+            backgroundColor: 'white',
+            padding: '0 0.25em',
+            borderRadius: '0.5em',
+            display: remainingChars <= 20 ? 'inline' : 'none'
+          }}>
             {remainingChars}
           </span>
         </div>

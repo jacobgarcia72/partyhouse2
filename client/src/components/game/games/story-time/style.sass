@@ -2,15 +2,30 @@
 .StoryTime
   font-size: 16pt
   font-weight: 200
-  font-family: Helvetica, sans-serif
-  background-color: teal
-  padding-bottom: 32px
-  .read-story
+  font-family: 'Quicksand', Arial, Helvetica, sans-serif
+  min-height: calc(100vh - 64px)
+  width: 100vw
+  overflow: hidden
+  background-color: #000
+  color: white
+  background-image: url("/assets/img/storytime/bg.jpg")
+  background-size: cover
+  background-attachment: fixed
+  .black-back, .read-story
     text-align: center
-    background-color: rgba(0, 0, 0, 0.8)
+    background-color: rgba(0, 0, 0, 0.6)
     color: white
-    padding: .75em 1.5em
-    margin: 1em 0
+    padding-bottom: 32px
+  .black-back
+    min-height: calc(100vh - 64px)
+    h2
+      font-size: 1.5rem
+  .read-story-container
+    padding: 1em 1em
+    .read-story
+      padding: .75em 1.5em
+      width: 95vw
+      max-width: 1000px
   .next-prompt
     font-size: 2rem
     padding: 12px
@@ -39,10 +54,13 @@
     width: 100%
     justify-content: flex-start
   .speech-bubble
+    font-family: $font-default
     position: relative
     display: flex
     align-items: center
     min-width: 200px
+    max-width: calc(100vw - 90px - 1em)
+    overflow-wrap: anywhere
     min-height: 48px
     box-shadow: 1vw 1vw 2vw rgba(0, 0, 0, .5)
     background: white 
@@ -64,6 +82,8 @@
     border-left: 0
     margin-top: -10px
     margin-left: -10px
+  .vote-header
+    margin-bottom: 16px
   .save-images
     flex-wrap: wrap
     width: 90vw

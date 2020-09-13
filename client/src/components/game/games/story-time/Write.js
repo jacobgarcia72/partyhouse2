@@ -67,9 +67,9 @@ class Write extends Component {
     if (gameState.screen !== screens.vote) {
       return null;
     } else if (!isAVoter) {
-      return <div>Waiting for {voterName} to vote.</div>
+      return <div className="vote-header">Waiting for {voterName} to vote.</div>
     } else if (this.state.submittedVote) {
-      return onlyOneVoter ? null : <div>Vote submitted. Waiting for other players.</div>;
+      return onlyOneVoter ? null : <div className="vote-header">Vote submitted. Waiting for other players.</div>;
     } else {
       const renderVoteButton = player => (
         <button type="submit" onClick={e => this.submitVote(e, player.index)}
@@ -78,7 +78,7 @@ class Write extends Component {
       );
       return (
         <div className="column">
-          <div>Vote:</div>
+          <div className="vote-header">Vote:</div>
           <form className="row" onSubmit={e => e.preventDefault()}>
             {gameState.writers.map(renderVoteButton)}
           </form>

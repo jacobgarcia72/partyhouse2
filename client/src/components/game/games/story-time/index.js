@@ -153,14 +153,16 @@ class StoryTime extends Component {
   renderContent = () => {
     switch (this.props.gameState.screen) {
       case screens.lobby:
-        return <Lobby onContinue={() => {
-          this.nextScreen(screens.intro);
-          ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
-        }}/>;
+        return (
+          <Lobby onContinue={() => {
+            this.nextScreen(screens.intro);
+            ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
+          }}/>
+        )
       case screens.intro:
         return <Intro nextScreen={this.startGame}/>;
       case screens.read:
-        return <Read />;
+        return <div className="column"><h2>Today's Story:</h2><Read /></div>;
       case screens.next:
         return <div><Read /><Next /></div>;
       case screens.write:
@@ -176,7 +178,10 @@ class StoryTime extends Component {
   }
 
   render() {
-    return <div className="StoryTime">{this.renderContent()}</div>
+    return <div className="StoryTime">
+      <div className="black-back">
+        {this.renderContent()}</div>
+    </div>
   }
 }
 
