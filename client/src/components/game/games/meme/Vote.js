@@ -21,6 +21,7 @@ class Vote extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.gameState || this.props.gameState.round > prevProps.gameState.round) {
+      window.scrollTo(0, 0);
       this.setState({voted: false});
       if (this.props.gameState.bonusRound) {
         this.setState({ animation: 2 });

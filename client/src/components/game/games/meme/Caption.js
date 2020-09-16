@@ -36,6 +36,7 @@ class Caption extends Component {
   handleSubmit = () => {
     const {text, captionedMemes, memes} = this.state;
     if (!text) return;
+    window.scrollTo(0, 0);
     let {completed} = this.state;
     const index = memes[completed].index;
     const meme = {index, caption: this.state.text};
