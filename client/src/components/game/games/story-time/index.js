@@ -13,12 +13,18 @@ import Next from './Next';
 import Write from './Write';
 import Winner from './Winner';
 import Final from './Final';
+import allPrompts from './prompts';
 
 let ns = new NotificationService();
 
 class StoryTime extends Component {
 
   interval;
+  prompts = [];
+
+  componentDidMount() {
+    this.promps = allPrompts;
+  }
 
   componentWillUnmount() {
     ns.removeObserver(this, PLAYERS_CHANGED);
@@ -46,7 +52,10 @@ class StoryTime extends Component {
   
   startGame = () => {
     const { code } = this.props;
-    const firstLine = `Once upon a time, there was ${getStoryStart()}.`;
+    if (!this.prompts.length) {
+      this.prompts = allPrompts;
+    }
+    const firstLine = `Once upon a time, there was ${getStoryStart(this.prompts)}.`;
     setGameState(code, {
       screen: screens.read,
       turn: -1,
@@ -57,7 +66,7 @@ class StoryTime extends Component {
     this.setNextWriters();
     this.interval = setTimeout(() => {
       this.nextScreen(screens.next);
-    }, 7000);
+    }, 6000);
   }
 
   setNextWriters = () => {
@@ -177,7 +186,7 @@ class StoryTime extends Component {
       case screens.winner:
         return <Winner />;
       case screens.final:
-        return <div><Read /><Final /></div>;
+        return <div><Read /><Final continueGame={this.startGame} /></div>;
       default:
         return null;
     }

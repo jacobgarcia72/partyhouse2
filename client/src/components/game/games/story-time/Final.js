@@ -92,12 +92,16 @@ class Final extends Component {
   }
 
   render() {
-    const { story, moral } = this.props.gameState;
+    const { gameState, isHost, continueGame, players } = this.props;
+    const { story, moral } = gameState;
     return (
       <React.Fragment>
-        <div className="row save-images">
-          {this.renderDownloadableImage(0, story.join(' '), false, false)}
-          {this.renderDownloadableImage(1, moral, true, false)}
+        <div className="column">
+          <div className="row save-images">
+            {this.renderDownloadableImage(0, story.join(' '), false, false)}
+            {this.renderDownloadableImage(1, moral, true, false)}
+          </div>
+          {isHost && players.length >= 3 ? <button className="continue-btn" type="submit" onClick={continueGame}>Play Again</button> : null}
         </div>
         <div className="save-images off-screen">
           {this.renderDownloadableImage(0, story.join(' '), false, true)}
@@ -108,8 +112,8 @@ class Final extends Component {
   }
 }
 
-function mapStateToProps({ gameState }) {
-  return { gameState };
+function mapStateToProps({ gameState, isHost, players }) {
+  return { gameState, isHost, players };
 }
 
 export default connect(mapStateToProps, null)(Final);

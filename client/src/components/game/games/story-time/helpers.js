@@ -32,10 +32,11 @@ export const getStoryStart = () => {
     return text.split('Jacob').join(name).split(' his ').join(' her ').split(' he ').join(' she ').split(' man ').join(' woman ').split(' boy ').join(' girl ').split(' prince ').join(' princess ').split(' father ').join(' mother ');
   }
 
-  let rnd = Math.floor(Math.random() * storyStarts.length);
-  let storyStart = storyStarts[rnd];
-  rnd = Math.floor(Math.random() * 2);
-  rnd ? storyStart = makeMale(storyStart) : storyStart = makeFemale(storyStart);
+  const rndX = Math.floor(Math.random() * storyStarts.length);
+  let storyStart = storyStarts[rndX];
+  storyStarts.splice(rndX, 1);
+  const isMale = Math.floor(Math.random() * 2);
+  isMale ? storyStart = makeMale(storyStart) : storyStart = makeFemale(storyStart);
 
   return storyStart;
 }
