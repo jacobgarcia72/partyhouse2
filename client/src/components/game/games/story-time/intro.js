@@ -3,27 +3,34 @@ import { connect } from 'react-redux';
 
 class Intro extends Component {
 
-  interval;
+  state = {
+    animateOut: false
+  }
+
+  intervals = [];
 
   componentDidMount() {
+    this.intervals.push(setTimeout(() => {
+      this.setState({animateOut: true});
+    }, 4800));
     if (this.props.isHost) {
-      this.interval = setTimeout(() => {
+      this.intervals.push(setTimeout(() => {
         this.props.nextScreen();
-      }, 2500);
+      }, 5500));
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    this.intervals.forEach(clearInterval);
   }
 
   render() {
-    return <div>
-      <h1>
-        Welcome to
-        <br />
-        Story Time
-      </h1>
+    return <div className="center-screen no-scroll">
+      <div className={`intro column${this.state.animateOut ? ' slide-down': ''}`}>
+        <div className="welcome slide-in-from-left">Welcome to</div>
+        <div className="title slide-in-from-right">Story Time!</div>
+        <div className="description fade-in">Players will take turns writing the next line of the story and voting for which line gets added.</div>
+      </div>
     </div>
   }
 }

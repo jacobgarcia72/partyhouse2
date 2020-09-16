@@ -48,7 +48,7 @@ class Write extends Component {
         <div className="row writer-input" key={w.index}>
           <div className="row writer-name">{w.name}</div>
           <div className="row speech-bubble-container">
-            <div className="speech-bubble">{prompt},&nbsp;{text}</div>
+            <div className="speech-bubble speech-bubble-left">{prompt},&nbsp;{text}</div>
           </div>
         </div>
       )
@@ -77,7 +77,7 @@ class Write extends Component {
         </button>
       );
       return (
-        <div className="column">
+        <div className="column vote">
           <div className="vote-header">Vote:</div>
           <form className="row" onSubmit={e => e.preventDefault()}>
             {gameState.writers.map(renderVoteButton)}
@@ -92,13 +92,13 @@ class Write extends Component {
     const isWriter = Boolean(gameState.writers.find(w => w.index === playerIndex));
     if (isWriter && !this.state.submittedText) {
       const { prompt } = this.props.gameState;
-      return <form className="column" onSubmit={e => e.preventDefault()}>
+      return <form className="column write" onSubmit={e => e.preventDefault()}>
         <TextArea maxLength={120 + prompt.length} onChange={this.updateText} startingText={`${prompt},`} />
         <button type="submit" disabled={!this.state.text} onClick={this.handleSubmit}>Submit</button>
       </form>
     } else {
       return (
-        <div className="column">
+        <div className="column write">
           {this.renderVotingOptions()}
           {this.renderPlayerResponses()}
         </div>

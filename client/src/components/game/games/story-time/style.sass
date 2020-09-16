@@ -4,45 +4,84 @@
   font-weight: 200
   font-family: 'Quicksand', Arial, Helvetica, sans-serif
   min-height: calc(100vh - 64px)
-  width: 100vw
+  width: 100%
   overflow: hidden
-  background-color: #000
-  color: white
+  background-color: #dcdedf
+  color: #000033
   background-image: url("/assets/img/storytime/bg.jpg")
   background-size: cover
   background-attachment: fixed
-  .black-back, .read-story
-    text-align: center
-    background-color: rgba(0, 0, 0, 0.6)
-    color: white
-    padding-bottom: 32px
-  .black-back
-    min-height: calc(100vh - 64px)
-    h2
+  .Lobby
+    input
+      border-radius: 40px
+      height: 60px
+      margin-bottom: 30px
+  .intro
+    padding: 18px
+    margin-bottom: 15vh
+    .welcome
+      font-size: 2rem
+    .title
+      font-size: 2.7rem
+    .description
       font-size: 1.5rem
+      padding: 24px 0
+      max-width: 540px
+      text-align: center
+    @media screen and (min-width: 720px)
+      .welcome
+        font-size: 3rem
+      .title
+        font-size: 4rem
   .read-story-container
-    padding: 1em 1em
+    padding: 1em 0.5em 0
+    align-items: center
+    transition: height 300ms, min-height 300ms
     .read-story
-      padding: .75em 1.5em
-      width: 95vw
       max-width: 1000px
-  .next-prompt
-    font-size: 2rem
-    padding: 12px
-  .next-players
-    padding: 12px
-  textarea
-    padding: 0.25em 0.25em
-    font-size: 14pt
-    width: 95vw
-    max-width: 500px
-  button
-    padding: 0.25em 1em
-    min-width: 200px
+      text-align: center
+      font-weight: 600
+      padding-bottom: 32px
+    @media screen and (min-width: 720px)
+      padding: 1em 1em
+      font-size: 1.6rem
+      min-height: calc(60vh - 200px)
+  .read .read-story-container
+    min-height: calc(40vh - 100px)
+    @media screen and (min-width: 720px)
+      min-height: calc(60vh - 100px)
+  .next
+    padding: 8px 8px 5vh
+    text-align: center
+    .next-prompt
+      font-size: 2rem
+      padding: 12px 6px 24px
+    .next-players
+      padding: 12px
+      font-size: 1.8rem
+    @media screen and (min-width: 720px)
+      transform: scale(1.3)
+  .write
+    padding-bottom: 30px
+    textarea
+      padding: 0.25em 0.25em
+      font-size: 14pt
+      width: 95vw
+      max-width: 800px
+      margin-bottom: 8px
+      @media screen and (min-width: 720px)
+        font-size: 16pt
+        font-weight: 100
+        padding: 0.25em 0.6em
+    button
+      padding: 0.25em 1em
+      min-width: 200px
   .writer-input
     width: 700px
     max-width: 95vw
     margin: 0.25em auto
+    @media screen and (min-width: 720px)
+      margin-bottom: 0.5em
   .writer-name
     width: 90px
     min-width: 90px
@@ -50,6 +89,10 @@
     justify-content: flex-end
     align-items: center
     text-align: right
+    @media screen and (min-width: 720px)
+      font-size: 1.6rem
+      margin: 0 6px
+      font-weight: 800
   .speech-bubble-container
     width: 100%
     justify-content: flex-start
@@ -62,32 +105,92 @@
     max-width: calc(100vw - 90px - 1em)
     overflow-wrap: anywhere
     min-height: 48px
-    box-shadow: 1vw 1vw 2vw rgba(0, 0, 0, .5)
     background: white 
     color: black
     line-height: 1
-    border-radius: 10px
     padding: 0.3em 0.4em
     margin: 0 1em
     text-align: center
+    @media screen and (min-width: 720px)
+      padding: 0.6em 1em
+      line-height: 1.2
   .speech-bubble:after 
     content: ''
     position: absolute
-    left: 0
-    top: 50%
     width: 0
     height: 0
+  .speech-bubble-left
+    border-radius: 10px
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, .5)
+  .speech-bubble-left:after 
+    left: 0
+    top: 50%
     border: 10px solid transparent
     border-right-color: white
     border-left: 0
     margin-top: -10px
     margin-left: -10px
+  .speech-bubble-down
+    border-radius: .4em
+    box-shadow: 2px -2px 4px rgba(0, 0, 0, .25)
+    margin-bottom: 15px
+    padding-bottom: .5em
+  .speech-bubble-down:after
+    bottom: 0
+    left: 50%
+    border: 15px solid transparent
+    border-top-color: white
+    border-bottom: 0
+    margin-bottom: -15px
+    margin-left: -15px
   .vote-header
-    margin-bottom: 16px
+    margin-bottom: 6px
+    font-size: 18pt
+    @media screen and (min-width: 720px)
+      margin-bottom: 16px
+  .vote
+    form
+      margin-bottom: 8px
+      flex-wrap: wrap
+      @media screen and (min-width: 720px)
+        margin-bottom: 36px
+      button
+        min-width: 150px
+        height: 36px
+        margin: 2px
+        border-radius: 18px
+        font-size: 14pt
+        @media screen and (min-width: 720px)
+          min-width: 200px
+          height: 50px
+          margin: 4px
+          border-radius: 25px
+          font-size: 18pt
+  .winner
+    margin-bottom: 15vh
+    .winning
+      margin-bottom: 2px
+      font-size: 22pt
+      @media screen and (min-width: 720px)
+        margin-bottom: 30px
+        font-size: 30pt
+    .speech-bubble
+      max-width: 600px
+      margin: 12px 16px 12px
+      @media screen and (min-width: 720px)
+        font-size: 20pt
+        padding-bottom: 22px
+        border-radius: 20px
+        margin: 18px 20px 24px
+    .winner-name
+      font-size: 28pt
+      @media screen and (min-width: 720px)
+        font-size: 36pt
   .save-images
     flex-wrap: wrap
     width: 90vw
     justify-content: space-around
+    margin-bottom: 30px
     &.off-screen
       position: fixed
       right: 200vw
@@ -99,7 +202,7 @@
     margin: 0
     position: relative
     button
-      background-color: rgba(130, 40, 60, 0.9)
+      background-color: rgba(20, 80, 20, 0.9)
       font-size: 60%
       line-height: 1
       border: 0
@@ -115,12 +218,12 @@
       color: rgba(255, 255, 255, 0.8)
       position: absolute
     .watermark
-      font-size: 11pt 
-      line-height: 15px
+      font-size: 10pt 
+      line-height: 14px
       position: absolute 
       bottom: 8px
       right: 20px
-      color: rgba(180,180,185,0.7) 
+      color: rgba(180,180,185,0.5) 
       padding: 0 5px
       font-family: $font-default
       opacity: 0
@@ -128,7 +231,7 @@
       background-color: rgba(0,0,0,0.3)
       color: #ffffff
       line-height: 1.2
-      padding: 0 32px 24px
+      padding: 0 2.48vw 1.86vw
       text-align: center
       display: flex
       align-items: center
@@ -144,6 +247,7 @@
       .story
         width: 540px
         height: 720px
+        padding: 0 32px 24px
       .watermark
         opacity: 1
       button

@@ -45,16 +45,15 @@ class Final extends Component {
     return strArr.slice(0, Math.max(5, strArr.length - 1)).join('-').toLowerCase().trim();
   }
 
-  saveImage = (key) => {
+  saveImage = (event, key) => {
+    event.preventDefault();
     const element = document.getElementById(`save-image-${key}`);
     if (!element) return;
-    this.interval = setTimeout(() => {
-      const htmlToImage = require('html-to-image');
-      const download = require('downloadjs');
-      htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{
-        download(dataUrl, `party-house-story-${this.getHyphenatedShortenedCaption()}-${key}`);
-      });
-    }, 0);
+    const htmlToImage = require('html-to-image');
+    const download = require('downloadjs');
+    htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{
+      download(dataUrl, `party-house-story-${this.getHyphenatedShortenedCaption()}-${key}`);
+    });
   }
 
   renderDownloadableImage = (key, text, isForMoral, offscreenFullImage) => {
@@ -83,7 +82,7 @@ class Final extends Component {
           backgroundImage: this.state.backgroundImages[isForMoral ? 'moral' : 'story']
         }}
       >
-        <button id={`save-button-${key}`} onClick={() => this.saveImage(key)}>Save</button>
+        <button id={`save-button-${key}`} onClick={e => this.saveImage(e, key)}>Save</button>
         <div className="story">
           {getImageContent()}
         </div>

@@ -57,7 +57,7 @@ class StoryTime extends Component {
     this.setNextWriters();
     this.interval = setTimeout(() => {
       this.nextScreen(screens.next);
-    }, 4000);
+    }, 7000);
   }
 
   setNextWriters = () => {
@@ -131,9 +131,10 @@ class StoryTime extends Component {
         screen = screens.next;
         this.setNextWriters();
       }
+      const timeToShowWinnerScreen = 3700 + (winningCaption.length * 40);
       this.interval = setTimeout(() => {
         this.nextScreen(screen);
-      }, 4000);
+      }, timeToShowWinnerScreen);
     }
   }
 
@@ -145,7 +146,7 @@ class StoryTime extends Component {
       setGameState(this.props.code, { turn, prompt });
       this.interval = setTimeout(() => {
         this.nextScreen(screens.write);
-      }, 4000);
+      }, 4500);
     }
     setGameState(this.props.code, { screen });
   }
@@ -162,7 +163,12 @@ class StoryTime extends Component {
       case screens.intro:
         return <Intro nextScreen={this.startGame}/>;
       case screens.read:
-        return <div className="column"><h2>Today's Story:</h2><Read /></div>;
+        return <div className="column read">
+          <h2 className="fade-in">Today's Story:</h2>
+          <div className="slide-in-from-top">
+            <Read />
+          </div>
+        </div>;
       case screens.next:
         return <div><Read /><Next /></div>;
       case screens.write:
@@ -179,8 +185,7 @@ class StoryTime extends Component {
 
   render() {
     return <div className="StoryTime">
-      <div className="black-back">
-        {this.renderContent()}</div>
+      {this.renderContent()}
     </div>
   }
 }

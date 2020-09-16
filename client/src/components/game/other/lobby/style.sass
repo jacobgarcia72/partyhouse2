@@ -1,7 +1,15 @@
 .Lobby
+  text-align: center
   input[type="submit"]
     font-size: 1.75rem
     cursor: pointer
-    margin: 0.5em 0
+    margin: 0.5em 0 1.5em
     padding: 0.25em
     width: 280px
+  h1
+    font-size: 180%
+  @media screen and (min-width: 720px)
+    min-height: calc(90vh - 100px)
+    justify-content: space-between !important
+    h1
+      font-size: 240%

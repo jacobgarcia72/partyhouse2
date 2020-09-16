@@ -30,10 +30,12 @@ class Lobby extends Component {
 
   render() {
     return <div className="column Lobby">
-      <h1 style={{marginBottom: 0}}>
-        {this.props.game.displayName}
-      </h1>
-      <PlayerList />
+      <div className="column">
+        <h1 style={{marginBottom: 0}}>
+          {this.props.game.displayName}
+        </h1>
+        <PlayerList />
+      </div>
       {this.props.isHost ? <form onSubmit={this.onSubmit} className="column">
         <input type="submit"
           value="Start Game!"
