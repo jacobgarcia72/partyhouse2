@@ -25,6 +25,7 @@ class Write extends Component {
     e.preventDefault();
     const { code, playerIndex } = this.props;
     let { text } = this.state;
+    text = text.trim();
     const punctuation = ['.','!','?',';','"',')','(','-'];
     if (!punctuation.includes(text.charAt(text.length - 1))) {
       text += '.';
