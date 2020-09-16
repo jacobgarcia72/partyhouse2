@@ -1,16 +1,18 @@
 @import 'src/style/variables'
 .StoryTime
   font-size: 16pt
-  font-weight: 200
   font-family: 'Quicksand', Arial, Helvetica, sans-serif
   min-height: calc(100vh - 64px)
   width: 100%
   overflow: hidden
   background-color: #dcdedf
-  color: #000033
+  color: #000000
   background-image: url("/assets/img/storytime/bg.jpg")
   background-size: cover
   background-attachment: fixed
+  font-weight: 700
+  button, input[type="submit"]
+    background-color: white
   .Lobby
     input
       border-radius: 40px
@@ -40,7 +42,6 @@
     .read-story
       max-width: 1000px
       text-align: center
-      font-weight: 600
       padding-bottom: 32px
     @media screen and (min-width: 720px)
       padding: 1em 1em
@@ -167,7 +168,7 @@
           border-radius: 25px
           font-size: 18pt
   .winner
-    margin-bottom: 15vh
+    margin-bottom: 20vh
     .winning
       margin-bottom: 2px
       font-size: 22pt
