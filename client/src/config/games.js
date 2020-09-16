@@ -12,6 +12,14 @@ export const games = [
     public: true
   },
   {
+    displayName: 'Story Time',
+    url: 'story-time',
+    minPlayers: 3,
+    maxPlayers: 32,
+    component: StoryTime,
+    public: true
+  },
+  {
     displayName: 'Honest Answers',
     url: 'answers',
     minPlayers: 2,
@@ -25,13 +33,6 @@ export const games = [
     minPlayers: 3,
     maxPlayers: 30,
     component: null
-  },
-  {
-    displayName: 'Story Time',
-    url: 'story-time',
-    minPlayers: 3,
-    maxPlayers: 32,
-    component: StoryTime
   },
   {
     displayName: 'Pass The Art',
