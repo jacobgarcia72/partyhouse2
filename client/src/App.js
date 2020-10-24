@@ -6,6 +6,7 @@ import { games } from './config/games';
 import NewGame from './components/game/other/new-game';
 import {connect} from 'react-redux';
 import Rejoin from './components/game/other/rejoin';
+import PlayerCounter from './components/game/other/player-counter';
 import RoomCode from './components/game/other/room-code';
 import './style/style.sass';
 
@@ -15,9 +16,12 @@ class App extends Component {
     if (this.props.code) {
       return (
         <div className="column">
-          <div className="row blue-back room-banner" style={{alignItems: 'center'}}>
-            <RoomCode roomCode={this.props.code}/>
-            <img src="/assets/img/logo.png" alt="Party House Games"></img>
+          <div className="row blue-back">
+            <div className="row room-banner">
+              <img src="/assets/img/logo.png" alt="Party House Games"></img>
+              <RoomCode roomCode={this.props.code}/>
+              <PlayerCounter />
+            </div>
           </div>
           <game.component {...props} gameUrl={game.url}/>
         </div>
