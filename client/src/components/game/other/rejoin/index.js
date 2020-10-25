@@ -7,6 +7,11 @@ class Rejoin extends Component {
   roomCode = this.props.match.params.roomCode;
 
   componentDidMount() {
+    const bannedRoom = localStorage.getItem('banned');
+    if (bannedRoom && bannedRoom.toLowerCase() === this.roomCode.toLowerCase()) {
+      this.props.history.push('/');
+      return;
+    }
     rejoinRoom(this.roomCode, room => {
       if (!room) {
         this.props.history.push('/');

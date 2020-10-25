@@ -56,6 +56,7 @@ export function joinRoom(roomCode, name, callback) {
     const room = snapshot.val();
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
+    if (room && !Array.isArray(room.players)) room.players = Object.values(room.players);
     const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     let playerIndex = null;
     if (roomExists && !roomIsFull) {
@@ -79,17 +80,22 @@ export function rejoinRoom(roomCode, callback) {
     let success = false;
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
+    if (room && !Array.isArray(room.players)) room.players = Object.values(room.players);
     const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     if (roomExists && !roomIsFull) {
       let playerIndex = localStorage.getItem('player-index');
       const savedRoomCode = localStorage.getItem('room-code');
       success = true;
       if (savedRoomCode === roomCode && (playerIndex || playerIndex === 0) && room.players && room.players[playerIndex]) {
-        room.players[playerIndex].active = true;
-        store.dispatch(setPlayerIndex(playerIndex));
-        setRoomListener(roomCode, playerIndex);
-        database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true});
-        database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
+        if (room.players[playerIndex].banned) {
+          success = false;
+        } else {
+          room.players[playerIndex].active = true;
+          store.dispatch(setPlayerIndex(playerIndex));
+          setRoomListener(roomCode, playerIndex);
+          database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: true, kicked: null});
+          database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
+        }
       } else {
         store.dispatch(setPlayerNeedsToJoinRoom(true));
       }
@@ -98,12 +104,16 @@ export function rejoinRoom(roomCode, callback) {
   });    
 };
 
+export function removePlayerFromRoom(roomCode, playerIndex, banned) {
+  database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: false, kicked: true, banned});
+};
+
 function setRoomListener(roomCode, playerIndex) {
   database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
     const players = snapshot.val();
     
     const prevPlayers = store.getState().players;
-    const newPlayers = players ? players.filter(p => p.active) : [];
+    const newPlayers = players ? players.filter(p => p.active && !p.kicked && !p.banned) : [];
     if (!newPlayers.length) {
       database.ref(`rooms/${roomCode}/`).remove();
       return;
@@ -119,6 +129,11 @@ function setRoomListener(roomCode, playerIndex) {
         store.dispatch(setIsHost(true));
       }
       ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length, newPlayers });
+    }
+    const currentPlayer = players.find(p => Number(p.index) === Number(playerIndex));
+    if (currentPlayer && currentPlayer.kicked) {
+      if (currentPlayer.banned) localStorage.setItem('banned', roomCode);
+      window.location.replace(window.location.origin);
     }
   });
   database.ref(`rooms/${roomCode}`).on('value', snapshot => {

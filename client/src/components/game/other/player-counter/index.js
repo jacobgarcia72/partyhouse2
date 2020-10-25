@@ -23,8 +23,8 @@ class PlayerCounter extends Component {
     return (
       <React.Fragment>
         {showPlayerList ? (
-        <div className="active-player-list column" onClick={this.togglePlayerList}>
-          <PlayerList title={'Online Players'}/>
+        <div className="active-player-list column">
+          <PlayerList title={'Online Players'} allowBoot={this.props.isHost} callback={this.togglePlayerList} />
         </div>
         ) : null}
         <div className={`player-counter ${showPlayerList && 'active'}`} onClick={this.togglePlayerList}>
@@ -38,8 +38,8 @@ class PlayerCounter extends Component {
   }
 }
 
-function mapStateToProps({ players }) {
-  return { players };
+function mapStateToProps({ players, isHost }) {
+  return { players, isHost };
 }
 
 export default connect(mapStateToProps, null)(PlayerCounter);

@@ -72,6 +72,11 @@ class NewGame extends Component {
     event.preventDefault();
     this.setState({loading: true, error: ''});
     const roomCode = this.props.match.params.roomCode;
+    const bannedRoom = localStorage.getItem('banned');
+    if (bannedRoom && bannedRoom.toLowerCase() === roomCode.toLowerCase()) {
+      this.setState({loading: false, error: 'Cannot rejoin room.'});
+      return;
+    }
     joinRoom(roomCode, this.state.playerName, (roomExists, roomIsFull, room) => {
       let error = '';
       if (!roomExists) {

@@ -37,6 +37,10 @@ class Landing extends Component {
     event.preventDefault();
     const { roomCode, playerName } = this.state;
     let error = roomCode.length < 4 ? 'Code must be 4 characters.' : '';
+    const bannedRoom = localStorage.getItem('banned');
+    if (bannedRoom && bannedRoom.toLowerCase() === roomCode.toLowerCase()) {
+      error = 'Cannot rejoin room.';
+    }
     this.setState({error});
     if (error) {
       return;
