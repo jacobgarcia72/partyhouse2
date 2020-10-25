@@ -9,6 +9,7 @@ export const games = [
     minPlayers: 3,
     maxPlayers: 30,
     component: MemeGame,
+    description: "Which of your friends is the ultimate meme master? Turn your photos into dank memes you can download and share!",
     public: true
   },
   {

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { createNewRoom, joinRoom, isDevMode } from "../../../../functions/index";
 import { FacebookProvider, Share } from 'react-facebook';
+import { Link } from 'react-router-dom';
 import './style.sass';
 
 class NewGame extends Component {
@@ -85,9 +86,13 @@ class NewGame extends Component {
   render() {
     const { playerName, loading, roomUrl } = this.state;
     const { joiningExistingRoom } = this.props;
-    const { displayName, url } = this.props.game;
+    const { displayName, url, description } = this.props.game;
     return <div className="column NewGame">
+      <Link to="/">
+        <img className="logo" src="/assets/img/logo2.svg" alt="Party House Home" />
+      </Link>
       <img alt={displayName} src={`/assets/img/thumbnails/${url}.png`} className="thumbnail" />
+      <div className="description">{description}</div>
       <form onSubmit={joiningExistingRoom ? this.joinRoom : this.createRoom} className="column">
         { joiningExistingRoom ? null : (
           <FacebookProvider appId="1044229522678518">
