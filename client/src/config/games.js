@@ -18,6 +18,7 @@ export const games = [
     minPlayers: 3,
     maxPlayers: 32,
     component: StoryTime,
+    description: "There's no telling what hilarious stories will be told when all your friends have a say! Follow the prompts to tell hilarious narratives.",
     public: true
   },
   {
@@ -26,6 +27,7 @@ export const games = [
     minPlayers: 2,
     maxPlayers: 30,
     component: HonestAnswers,
+    description: "Personal questions designed to get you and your friends talking.",
     public: true
   },
   {

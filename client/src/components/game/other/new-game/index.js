@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { createNewRoom, joinRoom, isDevMode } from "../../../../functions/index";
+import { createNewRoom, joinRoom, isDevMode, getPlayCounts } from "../../../../functions/index";
 import { FacebookProvider, Share } from 'react-facebook';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
 import './style.sass';
 
 class NewGame extends Component {
@@ -21,6 +22,7 @@ class NewGame extends Component {
     if (isDevMode()) {
       this.setState({playerName: 'Jacob'});
     }
+    getPlayCounts();
   }
 
   createRoom = (event) => {
@@ -85,13 +87,21 @@ class NewGame extends Component {
 
   render() {
     const { playerName, loading, roomUrl } = this.state;
-    const { joiningExistingRoom } = this.props;
-    const { displayName, url, description } = this.props.game;
+    const { joiningExistingRoom, playCounts } = this.props;
+    const { displayName, url, description, minPlayers, maxPlayers } = this.props.game;
+    let playCount;
+    if (playCounts && (playCounts[url] || playCounts[url] === 0)) {
+      playCount = playCounts[url];
+    }
     return <div className="column NewGame">
       <Link to="/">
         <img className="logo" src="/assets/img/logo2.svg" alt="Party House Home" />
       </Link>
       <img alt={displayName} src={`/assets/img/thumbnails/${url}.png`} className="thumbnail" />
+      <div className="row game-stats">
+        <div><i className="fas fa-user-friends"></i>&nbsp;{minPlayers} - {maxPlayers} Players</div>
+        {playCount ? <div><i className="fas fa-play"></i>&nbsp;Played {(playCount || playCount===0) ? playCount : <span>&nbsp;&nbsp;</span>} {playCount === 1 ? 'Time' : 'Times'}</div> : null}
+      </div>
       <div className="description">{description}</div>
       <form onSubmit={joiningExistingRoom ? this.joinRoom : this.createRoom} className="column">
         { joiningExistingRoom ? null : (
@@ -136,4 +146,8 @@ class NewGame extends Component {
   }
 }
 
-export default NewGame;
+function mapStateToProps({ playCounts }) {
+  return { playCounts };
+}
+
+export default connect(mapStateToProps, null)(NewGame);

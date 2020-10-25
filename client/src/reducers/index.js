@@ -9,7 +9,8 @@ const initialState = {
   playerIndex: null,
   isHost: null,
   input: null,
-  chat: []
+  chat: [],
+  playCounts: {}
 } 
 
 export default (state = initialState, action) => {
@@ -32,6 +33,8 @@ export default (state = initialState, action) => {
       return setState({playerNeedsToJoinRoom: action.payload});
     case actions.SET_IS_HOST:
       return setState({isHost: action.payload});
+    case actions.SET_PLAY_COUNTS:
+      return setState({playCounts: action.payload});
     default:
       return state
   }

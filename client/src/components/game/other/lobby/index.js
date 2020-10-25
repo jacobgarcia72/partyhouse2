@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PlayerList from '../player-list';
 import {connect} from 'react-redux';
 import './style.sass';
+import { incrementGame } from '../../../../functions';
 
 class Lobby extends Component {
 
@@ -22,6 +23,7 @@ class Lobby extends Component {
     } else if (maxPlayers < players.length) {
       error = `This game has a limit of ${maxPlayers} players.`;
     } else {
+      incrementGame(game.url);
       this.props.onContinue();
       return;
     }

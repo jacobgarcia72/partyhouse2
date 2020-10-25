@@ -1,5 +1,5 @@
 import { database } from '../Firebase';
-import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost } from '../actions';
+import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost, setPlayCounts } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
@@ -164,5 +164,22 @@ export function postChat(roomCode, playerIndex, message) {
       name: player.name,
       message
     });
+  });
+}
+
+export function incrementGame(gameName) {
+  if (isDevMode()) return;
+  database.ref(`stats/play-counts/${gameName}`).once('value', snapshot => {
+    let games = snapshot.val();
+    if (!games) games = 0;
+    games ++;
+    database.ref(`stats/play-counts/${gameName}`).set(games);
+  });
+}
+
+export function getPlayCounts() {
+  database.ref(`stats/play-counts`).once('value', snapshot => {
+    const stats = snapshot.val() || {};
+    store.dispatch(setPlayCounts(stats));
   });
 }

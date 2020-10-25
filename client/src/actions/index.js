@@ -2,7 +2,8 @@ export const actions = {
   SET_ROOM: 'SET_ROOM',
   SET_PLAYER_INDEX: 'SET_PLAYER_INDEX',
   SET_PLAYER_NEEDS_TO_JOIN_ROOM: 'SET_PLAYER_NEEDS_TO_JOIN_ROOM',
-  SET_IS_HOST: 'SET_IS_HOST'
+  SET_IS_HOST: 'SET_IS_HOST',
+  SET_PLAY_COUNTS: 'SET_PLAY_COUNTS'
 }
 
 export function setRoom(room) {
@@ -19,5 +20,9 @@ export function setPlayerNeedsToJoinRoom(playerNeedsToJoinRoom) {
 
 export function setIsHost(isHost) {
   return { type: actions.SET_IS_HOST, payload: Boolean(isHost) };
+}
+
+export function setPlayCounts(playCounts) {
+  return { type: actions.SET_PLAY_COUNTS, payload: playCounts };
 }
 

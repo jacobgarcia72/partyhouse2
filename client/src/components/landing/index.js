@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './style.sass';
 
-import { joinRoom, isDevMode } from '../../functions';
+import { joinRoom, isDevMode, getPlayCounts } from '../../functions';
 import { games } from '../../config/games';
 
 class Landing extends Component {
@@ -22,7 +22,8 @@ class Landing extends Component {
     if (isDevMode()) {
       const names = ['Karen', 'Konnor', 'David', 'Emily', 'Stephen', 'Shayla', 'Jon', 'Debra', 'Brandon', 'Tasheda', 'Luis', 'Ethan', 'Fernando', 'Cliff', 'Savanna', 'Allie', 'Justin', 'Heather', 'Brett'];
       this.setState({roomCode: 'TEST', playerName: names[Math.floor(Math.random() * names.length)]});
-    } 
+    }
+    getPlayCounts();
   }
 
   handleInputChange = event => {

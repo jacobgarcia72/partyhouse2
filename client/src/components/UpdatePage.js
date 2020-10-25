@@ -9,6 +9,7 @@ class UpdatePage extends Component {
   componentDidMount() {
     this.setMetaData();
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
