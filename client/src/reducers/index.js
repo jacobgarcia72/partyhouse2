@@ -8,7 +8,8 @@ const initialState = {
   gameState: null,
   playerIndex: null,
   isHost: null,
-  input: null
+  input: null,
+  chat: []
 } 
 
 export default (state = initialState, action) => {
@@ -18,9 +19,10 @@ export default (state = initialState, action) => {
       const room = action.payload;
       if (room) {
         const players = room && room.players ? Object.values(room.players).filter(player => player.active) : [];
+        const chat = room && room.chat ? Object.values(room.chat) : [];
         const game = games.find(game => game.url === room.url);
         const { gameState, code, input } = room;
-        return setState({ code, players, game, gameState, input });
+        return setState({ code, players, game, gameState, input, chat });
       } else {
         return setState(initialState);
       }

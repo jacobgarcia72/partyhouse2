@@ -22,6 +22,12 @@
 .no-scroll
   overflow: hidden
   min-height: calc(100vh - 64px)
+.fixed-top
+  position: fixed
+  top: 0
+  left: 0
+.top-margin
+  height: 64px
 .room-banner
   height: 64px
   font-size: 75%
@@ -32,6 +38,9 @@
   img
     margin: 2px
     height: 50px
+  .left-icons, .right-icons
+    display: flex
+    align-items: center
 .cover-screen 
   z-index: 10
   position: fixed

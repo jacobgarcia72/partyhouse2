@@ -12,15 +12,22 @@ class PlayerCounter extends Component {
     };
   }
 
+  togglePlayerList = () => {
+    const showPlayerList = !this.state.showPlayerList;
+    this.setState({showPlayerList});
+    document.body.style.overflow = showPlayerList ? 'hidden' : 'auto';
+  }
+
   render() {
+    const { showPlayerList } = this.state;
     return (
       <React.Fragment>
-        {this.state.showPlayerList ? (
-        <div className="active-player-list column" onClick={() => this.setState({showPlayerList: false})}>
+        {showPlayerList ? (
+        <div className="active-player-list column" onClick={this.togglePlayerList}>
           <PlayerList title={'Online Players'}/>
         </div>
         ) : null}
-        <div className="player-counter" onClick={() => this.setState({showPlayerList: !this.state.showPlayerList})}>
+        <div className={`player-counter ${showPlayerList && 'active'}`} onClick={this.togglePlayerList}>
           <i className="fas fa-users"></i>
           <div className="counter">
             {this.props.players.length}

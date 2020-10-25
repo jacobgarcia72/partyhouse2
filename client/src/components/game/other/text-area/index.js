@@ -24,6 +24,15 @@ export default class TextArea extends Component {
     }
   }
 
+  onEnter = e => {
+    if (this.props.onEnter && e.keyCode === 13 && e.shiftKey === false) {
+      this.props.onEnter();
+      setTimeout(() => {
+        this.setState({text: ''});
+      }, 1);
+    }
+  }
+
   render() {
     const maxLength = this.props.maxLength || 120;
     const { text } = this.state;
@@ -55,6 +64,8 @@ export default class TextArea extends Component {
           rows={Math.max(2, Math.round(maxLength / 30))} 
           onChange={e=>this.onChange(e.target.value)}
           onClick={this.setFocusOutsideStartingText}
+          onKeyDown={this.onEnter}
+          placeholder={this.props.placeholder || ''}
         ></textarea>
       </div>
     )

@@ -39,7 +39,8 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
     code: roomCode,
     gameState: {
       screen: 'lobby'
-    }
+    },
+    chat: []
   };
   setLocalStorage(0, roomCode);
   store.dispatch(setPlayerIndex(0));
@@ -150,5 +151,18 @@ export function clearInput(roomCode) {
       return;
     }
     database.ref(`rooms/${roomCode}/input`).set(null);
+  });
+}
+
+export function postChat(roomCode, playerIndex, message) {
+  database.ref(`rooms/${roomCode}`).once('value', snapshot => {
+    const room = snapshot.val();
+    if (!room) return;
+    const player = room.players.find(p => p.index === playerIndex);
+    if (!player) return;
+    database.ref(`rooms/${roomCode}/chat`).push({
+      name: player.name,
+      message
+    });
   });
 }
