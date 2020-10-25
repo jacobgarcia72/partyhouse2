@@ -92,10 +92,11 @@ class MemeGame extends Component {
     const { players, code, input } = this.props;
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).map(index => Number(index));
+    const waitingFor = [];
     for (let i = 0; i < players.length; i++) {
       if (!submittedPlayers.includes(players[i].index)) {
         allPlayersIn = false;
-        break;
+        waitingFor.push({index: players[i].index, name: players[i].name});
       }
     }
     if (allPlayersIn) {
@@ -107,19 +108,21 @@ class MemeGame extends Component {
         });
       });
       memes = assignCaptionersToMemes(memes, players);
-      setGameState(code, {screen: screens.caption, memes});
+      setGameState(code, {screen: screens.caption, memes, waitingFor: []});
     }
+    setGameState(code, {waitingFor});
   }
 
   handleCaptionUpdate = () => {
     const { players, code, input, gameState } = this.props;
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).map(index => Number(index));
+    const waitingFor = [];
     for (let i = 0; i < players.length; i++) {
       const { index } = players[i];
       if (!submittedPlayers.includes(index) && gameState.memes.filter(m => m.captioner === index).length) {
         allPlayersIn = false;
-        break;
+        waitingFor.push({index: players[i].index, name: players[i].name});
       }
     }
     if (allPlayersIn) {
@@ -133,16 +136,18 @@ class MemeGame extends Component {
       const pairs = pairMemes(memes);
       setGameState(code, {screen: screens.vote, memes, pairs, round: 0, showStats: false, bonusRound: false});
     }
+    setGameState(code, {waitingFor});
   }
 
   handleVoteUpdate = () => {
     const { players, code, input, gameState } = this.props;
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).map(index => Number(index));
+    const waitingFor = [];
     for (let i = 0; i < players.length; i++) {
       if (!submittedPlayers.includes(players[i].index)) {
         allPlayersIn = false;
-        break;
+        waitingFor.push({index: players[i].index, name: players[i].name});
       }
     }
     if (allPlayersIn) {
@@ -171,6 +176,7 @@ class MemeGame extends Component {
         }, 3500);
       }
     }
+    setGameState(code, {waitingFor});
   }
 
   getDankestMemeIndex = (memes, pair) => {

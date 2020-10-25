@@ -55,12 +55,18 @@ class Caption extends Component {
 
   render() {
     const { completed, memes } = this.state;
-    if (completed === 2) {
+    if (completed === 2 || !memes.length) {
+      const caption = completed === 2 ? 'Done. Still waiting for:' : 'Waiting for players to caption memes:';
       return <div className="center-screen">
-        <h2>Done. Waiting for other players.</h2>
+        <div className="column">
+          <h2>{caption}</h2>
+          <div className="waiting-for-list">
+            {(this.props.gameState.waitingFor || [])
+              .filter(p => p.index !== this.props.playerIndex)
+              .map((p, i) => <div key={i}>{p.name}</div>)}
+          </div>
+        </div>
       </div>
-    } else if (!memes.length) {
-      return <h2>Waiting for other players.</h2>;
     }
     const image = memes[completed ? 1 : 0].image;
     return <div className="caption-screen column">

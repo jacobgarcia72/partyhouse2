@@ -89,7 +89,14 @@ class Upload extends Component {
     const { currentImg, uploads } = this.state;
     if (uploads.length === 2) {
       return <div className="center-screen upload">
-        <h2>Done. Waiting for other players.</h2>
+        <div className="column">
+          <h2>Done. Still waiting for:</h2>
+          <div className="waiting-for-list">
+            {(this.props.gameState.waitingFor || [])
+              .filter(p => p.index !== this.props.playerIndex)
+              .map((p, i) => <div key={i}>{p.name}</div>)}
+          </div>
+        </div>
       </div>
     }
     return <div>
@@ -114,8 +121,8 @@ class Upload extends Component {
   }
 }
 
-function mapStateToProps({ playerIndex, code }) {
-  return { playerIndex, code };
+function mapStateToProps({ playerIndex, code, gameState }) {
+  return { playerIndex, code, gameState };
 }
 
 export default connect(mapStateToProps, null)(Upload);

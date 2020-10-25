@@ -39,7 +39,16 @@ class Vote extends Component {
 
   renderVotingTokens = () => {
     if (this.state.voted) {
-      return <h2>Vote cast. Waiting for other players.</h2>
+      return (
+        <div className="column">
+          <h2>Vote cast. Still waiting for:</h2>
+          <div className="waiting-for-list">
+            {(this.props.gameState.waitingFor || [])
+              .filter(p => p.index !== this.props.playerIndex)
+              .map((p, i) => <div key={i}>{p.name}</div>)}
+          </div>
+        </div>
+      )
     }
     const {pairs, round} = this.props.gameState;
     return (

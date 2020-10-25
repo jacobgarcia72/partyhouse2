@@ -114,7 +114,7 @@ class NewGame extends Component {
             <input
               name="share"
               type="checkbox"
-              checked={this.state.isGoing}
+              checked={this.state.share}
               onChange={this.handleInputChange}
             />
             <span className="checkmark"></span>
