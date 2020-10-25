@@ -17,6 +17,11 @@ class NewGame extends Component {
       error: ''
     };
     const { settings } = props.game;
+    if (settings && settings.checkboxes) {
+      settings.checkboxes.forEach(checkbox => {
+        state[checkbox.name] = true;
+      });
+    }
     if (settings && settings.timers) {
       settings.timers.forEach(timer => {
         state[timer.name] = true;
@@ -39,6 +44,11 @@ class NewGame extends Component {
     const roomCode = this.getRoomCode();
     const { url, settings } = this.props.game;
     const userSettings = {};
+    if (settings && settings.checkboxes) {
+      settings.checkboxes.forEach(checkbox => {
+        userSettings[checkbox.name] = this.state[checkbox.name];
+      });
+    }
     if (settings && settings.timers) {
       settings.timers.forEach(timer => {
         userSettings[timer.name + 'Timer'] = this.state[timer.name];
@@ -110,14 +120,29 @@ class NewGame extends Component {
     if (!settings) {
       return;
     }
+    const checkboxes = settings.checkboxes || [];
     const timers = settings.timers || [];
     return (
       <div className="settings column">
-        <div>Settings</div>
-        {timers.map((timer, i) => (
+        <div className="settings-title">Settings</div>
+        {checkboxes.map((checkbox, i) => (
         <div className="row setting" key={i}>
+          <label className="checkbox-container">&nbsp;{checkbox.text}
+            <input
+              name={checkbox.name}
+              type="checkbox"
+              checked={this.state[checkbox.name]}
+              onChange={this.handleInputChange}
+            />
+            <span className="checkmark"></span>
+          </label>
+        </div>
+        ))}
+        {timers.map((timer, i) => (
+        <div className="row setting timer-setting" key={i}>
           <label className="checkbox-container">
             <input
+              id={timer.name}
               name={timer.name}
               type="checkbox"
               checked={this.state[timer.name]}
@@ -133,7 +158,8 @@ class NewGame extends Component {
             min={10}
             max={999}
           ></input>
-          <div>-Second {timer.name} Timer</div>
+          <div onClick={() => document.getElementById(timer.name).click()}
+            style={{cursor: 'pointer'}}>-Second {timer.name} Timer</div>
         </div>
         ))}
       </div>

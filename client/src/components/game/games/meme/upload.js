@@ -85,6 +85,7 @@ class Upload extends Component {
 
   render() {
     const { currentImg, uploads } = this.state;
+    const settings = this.props.gameState.settings || {};
     if (uploads.length === 2) {
       return <div className="center-screen upload">
         <div className="column">
@@ -106,12 +107,16 @@ class Upload extends Component {
       <div className="row">
         <h2>{`Image ${this.state.uploads.length + 1} / 2`}</h2>
       </div>
-      <div className="row">
-        <button type="submit" onClick={this.handleFileSelect}>Upload Image</button>
-      </div>
-      <h2>
-        Or select:
-      </h2>
+      {settings.allowUpload ? (
+        <React.Fragment>
+          <div className="row">
+            <button type="submit" onClick={this.handleFileSelect}>Upload Image</button>
+          </div>
+          <h2>
+            Or select:
+          </h2>
+        </React.Fragment>
+      ) : null}
       <div className="images">
         {this.renderImages()}
       </div>

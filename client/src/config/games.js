@@ -24,6 +24,12 @@ export const games = [
           name: 'Vote',
           default: 30
         }
+      ],
+      checkboxes: [
+        {
+          name: 'allowUpload',
+          text: 'Allow Uploads'
+        }
       ]
     },
     public: true
