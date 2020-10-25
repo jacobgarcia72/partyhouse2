@@ -23,7 +23,7 @@ class Scores extends Component {
       htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{
         download(dataUrl, `party-house-dank-u-${this.getHyphenatedShortenedCaption(meme.caption)}`);
       });
-    }, 0);
+    }, 100);
   }
 
   renderMemesToSave = (offscreen)=> {

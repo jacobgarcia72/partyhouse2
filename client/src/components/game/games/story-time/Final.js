@@ -4,12 +4,18 @@ import { numberOfBackgroundImages } from './helpers';
 
 class Final extends Component {
 
+  interval;
+
   state = {
     backgroundImages: {
       story: '',
       moral: ''
     }
   };
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
   componentDidMount() {
     this.setState({backgroundImages: {
@@ -49,11 +55,13 @@ class Final extends Component {
     event.preventDefault();
     const element = document.getElementById(`save-image-${key}`);
     if (!element) return;
-    const htmlToImage = require('html-to-image');
-    const download = require('downloadjs');
-    htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{
-      download(dataUrl, `party-house-story-${this.getHyphenatedShortenedCaption()}-${key}`);
-    });
+    this.interval = setTimeout(() => {
+      const htmlToImage = require('html-to-image');
+      const download = require('downloadjs');
+      htmlToImage.toJpeg(element, { quality: 0.9 }).then(dataUrl=>{
+        download(dataUrl, `party-house-story-${this.getHyphenatedShortenedCaption()}-${key}`);
+      });
+    }, 100);
   }
 
   renderDownloadableImage = (key, text, isForMoral, offscreenFullImage) => {
