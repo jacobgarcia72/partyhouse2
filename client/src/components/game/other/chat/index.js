@@ -12,23 +12,35 @@ class Chat extends Component {
       showChat: false,
       atBottom: true,
       text: '',
-      unreadCount: 0
+      unreadCount: 0,
+      latestMessage: null
     };
+    this.latestMessageInterval = null;
   }
 
   componentDidMount() {
     this.setState({unreadCount: (this.props.chat || []).length});
   }
 
+  componentWillUnmount() {
+    clearInterval(this.latestMessageInterval);
+  }
+
   componentDidUpdate = (prevProps) => {
     if (prevProps && prevProps.chat) {
-      const newChats = this.props.chat.length - prevProps.chat.length;
+      const { chat } = this.props;
+      const newChats = chat.length - prevProps.chat.length;
       if (newChats) {
         const { showChat, atBottom, unreadCount } = this.state;
         if (showChat && atBottom) {
             this.scrollToBottom();
         } else {
-          this.setState({unreadCount: unreadCount + newChats});
+          const latestMessage = chat[chat.length - 1];
+          this.setState({unreadCount: unreadCount + newChats, latestMessage});
+          clearInterval(this.latestMessageInterval);
+          this.latestMessageInterval = setTimeout(() => {
+            this.setState({latestMessage: null});
+          }, 2000);
         }
       }
     }
@@ -98,10 +110,10 @@ class Chat extends Component {
   }
 
   render() {
-    const { unreadCount } = this.state;
+    const { unreadCount, latestMessage, showChat } = this.state;
     return (
       <React.Fragment>
-        {this.state.showChat ? (
+        {showChat ? (
         <div className="chat-list column">
           {this.renderChat()}
         </div>
@@ -112,6 +124,10 @@ class Chat extends Component {
             {unreadCount}
           </div>
         </div>
+        {latestMessage && !showChat ? <div className="message-popup" onClick={this.toggleChat}>
+          <div className="chat-name">{latestMessage.name}</div>
+          <div className="chat-message">{latestMessage.message}</div>
+        </div> : null}
       </React.Fragment>
     )
   }
