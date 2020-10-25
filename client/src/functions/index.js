@@ -30,7 +30,7 @@ export const shuffle = arr => {
   return arr;
 }
 
-export function createNewRoom(gameUrl, roomCode, playerName, callback) {
+export function createNewRoom(gameUrl, roomCode, playerName, settings, callback) {
   roomCode = roomCode.toLowerCase();
   const newRoom = {
     players: { 0: new Player(playerName, 0) },
@@ -38,7 +38,8 @@ export function createNewRoom(gameUrl, roomCode, playerName, callback) {
     nextIndex: 1,
     code: roomCode,
     gameState: {
-      screen: 'lobby'
+      screen: 'lobby',
+      settings
     },
     chat: []
   };

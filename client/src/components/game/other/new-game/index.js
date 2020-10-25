@@ -9,13 +9,21 @@ class NewGame extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    const state = {
       playerName: '',
       loading: false,
       share: false,
       roomUrl: '',
       error: ''
+    };
+    const { settings } = props.game;
+    if (settings && settings.timers) {
+      settings.timers.forEach(timer => {
+        state[timer.name] = false;
+        state[timer.name + 'Seconds'] = timer.default;
+      });
     }
+    this.state = state;
   }
 
   componentDidMount() {
@@ -29,8 +37,17 @@ class NewGame extends Component {
     event.preventDefault();
     this.setState({loading: true, error: ''});
     const roomCode = this.getRoomCode();
-    const { url } = this.props.game;
-    createNewRoom(url, roomCode, this.state.playerName, newRoom => {
+    const { url, settings } = this.props.game;
+    const userSettings = {};
+    if (settings && settings.timers) {
+      settings.timers.forEach(timer => {
+        userSettings[timer.name] = this.state[timer.name];
+        if (userSettings[timer.name + 'Timer']) {
+          userSettings[timer.name + 'Seconds'] = Math.max(Math.min(999, this.state[timer.name + 'Seconds']), 10);
+        }
+      });
+    }
+    createNewRoom(url, roomCode, this.state.playerName, userSettings, newRoom => {
       const roomUrl = `/${url}/${roomCode.toLowerCase()}`;
       this.setState({roomUrl}, () => {
         if (this.state.share) {
@@ -79,10 +96,48 @@ class NewGame extends Component {
 
   handleInputChange = event => {
     const { name, type, value, checked } = event.target;
-    const newState = type === 'checkbox' ? checked : value;
+    let newState = type === 'checkbox' ? checked : value;
+    if (type === 'number') {
+      newState = Math.max(Math.min(999, newState), 1);
+    }
     this.setState({
       [name]: newState
     });
+  }
+
+  renderSettings = () => {
+    const { settings } = this.props.game;
+    if (!settings) {
+      return;
+    }
+    const timers = settings.timers || [];
+    return (
+      <div className="settings column">
+        <div>Settings</div>
+        {timers.map((timer, i) => (
+        <div className="row setting" key={i}>
+          <label className="checkbox-container">
+            <input
+              name={timer.name}
+              type="checkbox"
+              checked={this.state[timer.name]}
+              onChange={this.handleInputChange}
+            />
+            <span className="checkmark"></span>
+          </label>
+          <input type="number"
+            disabled={!this.state[timer.name]}
+            name={timer.name + 'Seconds'}
+            value={this.state[timer.name + 'Seconds']}
+            onChange={this.handleInputChange}
+            min={10}
+            max={999}
+          ></input>
+          <div>&nbsp;Second {timer.name} Timer</div>
+        </div>
+        ))}
+      </div>
+    )
   }
 
   render() {
@@ -125,15 +180,20 @@ class NewGame extends Component {
           value={playerName}
         ></input>
         { joiningExistingRoom ? null : (
-          <label className="checkbox-container">Share Room to Facebook
-            <input
-              name="share"
-              type="checkbox"
-              checked={this.state.share}
-              onChange={this.handleInputChange}
-            />
-            <span className="checkmark"></span>
-          </label>
+          <React.Fragment>
+            {this.renderSettings()}
+            <div className="share-option-row">
+              <label className="checkbox-container">Share Room to Facebook
+                <input
+                  name="share"
+                  type="checkbox"
+                  checked={this.state.share}
+                  onChange={this.handleInputChange}
+                />
+                <span className="checkmark"></span>
+              </label>
+            </div>
+          </React.Fragment>
         )}
         <input
           type="submit"

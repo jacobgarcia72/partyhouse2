@@ -46,10 +46,11 @@ class App extends Component {
         <UpdatePage>
           <Route exact path="/" render={props => <Landing  {...props}/> } />
           {games.map(game => {
-            const { url, displayName, description, minPlayers, maxPlayers } = game;
+            const { url, displayName, description, minPlayers, maxPlayers, settings } = game;
+            const gameProps = { url, displayName, description, minPlayers, maxPlayers, settings };
             return <Fragment key={game.url}>
               <Route exact path={`/${game.url}`}
-                render={props => <NewGame {...props} game={{ url, displayName, description, minPlayers, maxPlayers }} />}/>
+                render={props => <NewGame {...props} game={gameProps} />}/>
               <Route exact path={`/${game.url}/:roomCode`}
                 render={props => this.renderGameScreen(props, game)}/>
             </Fragment>

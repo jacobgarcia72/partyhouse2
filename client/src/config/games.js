@@ -10,6 +10,22 @@ export const games = [
     maxPlayers: 30,
     component: MemeGame,
     description: "Which of your friends is the ultimate meme master? Turn your photos into dank memes you can download and share!",
+    settings: {
+      timers: [
+        {
+          name: 'Upload',
+          default: 180
+        },
+        {
+          name: 'Caption',
+          default: 180
+        },
+        {
+          name: 'Vote',
+          default: 30
+        }
+      ]
+    },
     public: true
   },
   {
