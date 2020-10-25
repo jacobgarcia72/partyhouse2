@@ -31,7 +31,13 @@ class MemeGame extends Component {
     const { isHost, gameState } = this.props;
     // restart timer where left off in case host refreshes
     if (isHost && gameState.timer) {
-      this.startTimer(Number(gameState.timer), this.concludeUploadRound);
+      let callback = () => {};
+      if (gameState.screen === screens.upload) {
+        callback = this.concludeUploadRound;
+      } else if (gameState.screen === screens.caption) {
+        callback = this.concludeCaptionRound;
+      }
+      this.startTimer(Number(gameState.timer), callback);
     }
   }
 
@@ -122,7 +128,9 @@ class MemeGame extends Component {
   handleCaptionUpdate = () => {
     const { players, code, input, gameState } = this.props;
     let allPlayersIn = true;
-    const submittedPlayers = Object.keys(input).map(index => Number(index));
+    const submittedPlayers = Object.keys(input)
+      .map(index => Number(index))
+      .filter(index => input[index].length === 2);
     const waitingFor = [];
     for (let i = 0; i < players.length; i++) {
       const { index } = players[i];
@@ -132,15 +140,7 @@ class MemeGame extends Component {
       }
     }
     if (allPlayersIn) {
-      clearInput(code);
-      const memes = gameState.memes.filter(m => submittedPlayers.includes(m.captioner));
-      players.filter(p => submittedPlayers.includes(p.index)).forEach((player) => {
-        input[player.index].forEach(meme => {
-          memes.find(m => m.index === meme.index).caption = meme.caption;
-        });
-      });
-      const pairs = pairMemes(memes);
-      setGameState(code, {screen: screens.vote, memes, pairs, round: 0, showStats: false, bonusRound: false});
+      this.concludeCaptionRound();
     }
     setGameState(code, {waitingFor});
   }
@@ -200,7 +200,26 @@ class MemeGame extends Component {
       });
     });
     memes = assignCaptionersToMemes(memes, players);
-    setGameState(code, {screen: screens.caption, memes, waitingFor: []});
+    clearInterval(this.timerInterval);
+    setGameState(code, { memes, waitingFor: [], timer: null });
+    this.nextScreen(screens.caption);
+  }
+
+  concludeCaptionRound = () => {
+    const { players, code, input, gameState } = this.props;
+    clearInput(code);
+    const memes = gameState.memes.filter(m => players.map(p => p.index).includes(m.captioner));
+    players.forEach((player) => {
+      const playerMemes = input[player.index] || [];
+      playerMemes.forEach(meme => {
+        const memeToAddCaptionTo = memes.find(m => m.index === meme.index);
+        if (!memeToAddCaptionTo) return;
+        memeToAddCaptionTo.caption = meme.caption;
+      });
+    });
+    const pairs = pairMemes(memes);
+    clearInterval(this.timerInterval);
+    setGameState(code, {screen: screens.vote, memes, pairs, round: 0, showStats: false, bonusRound: false, timer: null});
   }
 
   getDankestMemeIndex = (memes, pair) => {
@@ -285,6 +304,8 @@ class MemeGame extends Component {
       this.startGame();
     } else if (screen === screens.upload && settings && settings.UploadTimer) {
       this.startTimer(Number(settings.UploadSeconds), this.concludeUploadRound);
+    } else if (screen === screens.caption && settings && settings.CaptionTimer) {
+      this.startTimer(Number(settings.CaptionSeconds), this.concludeCaptionRound);
     }
     setGameState(this.props.code, { screen });
   }

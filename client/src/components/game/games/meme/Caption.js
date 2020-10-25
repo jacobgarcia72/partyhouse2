@@ -43,10 +43,8 @@ class Caption extends Component {
     captionedMemes[completed] = meme;
     completed++;
     this.setState({completed, text: '', captionedMemes});
-    if (completed === 2) {
-      const {code, playerIndex} = this.props;
-      sendInput(code, playerIndex, captionedMemes);
-    }
+    const {code, playerIndex} = this.props;
+    sendInput(code, playerIndex, captionedMemes);
   }
 
   updateText = text=> {
