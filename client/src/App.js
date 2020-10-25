@@ -14,6 +14,16 @@ import './style/style.sass';
 
 class App extends Component {
 
+  getGameProps = game => {
+    const { url, displayName, description, minPlayers, maxPlayers } = game;
+    const settings = game.settings || {};
+    settings.checkboxes = settings.checkboxes || [];
+    if (!settings.checkboxes.find(c => c.name === 'enableChat')) {
+      settings.checkboxes.unshift({ name: 'enableChat', text: 'Enable Chat' });
+    }
+    return { url, displayName, description, minPlayers, maxPlayers, settings };
+  }
+
   renderGameScreen = (props, game) => {
     if (this.props.code) {
       return (
@@ -28,7 +38,7 @@ class App extends Component {
               </div>
               <div className="right-icons">
                 <PlayerCounter />
-                <Chat />
+                {this.props.gameState.settings.enableChat ? <Chat /> : null}
               </div>
             </div>
           </div>
@@ -48,8 +58,7 @@ class App extends Component {
         <UpdatePage>
           <Route exact path="/" render={props => <Landing  {...props}/> } />
           {games.map(game => {
-            const { url, displayName, description, minPlayers, maxPlayers, settings } = game;
-            const gameProps = { url, displayName, description, minPlayers, maxPlayers, settings };
+            const gameProps = this.getGameProps(game);
             return <Fragment key={game.url}>
               <Route exact path={`/${game.url}`}
                 render={props => <NewGame {...props} game={gameProps} />}/>
@@ -63,8 +72,8 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({code, playerNeedsToJoinRoom}) {
-  return { code, playerNeedsToJoinRoom };
+function mapStateToProps({code, playerNeedsToJoinRoom, gameState}) {
+  return { code, playerNeedsToJoinRoom, gameState };
 }
 
 export default connect(mapStateToProps, null)(App);
