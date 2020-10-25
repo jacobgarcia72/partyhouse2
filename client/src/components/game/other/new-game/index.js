@@ -112,12 +112,20 @@ class NewGame extends Component {
   handleInputChange = event => {
     const { name, type, value, checked } = event.target;
     let newState = type === 'checkbox' ? checked : value;
-    if (type === 'number') {
-      newState = Math.max(Math.min(999, newState), 1);
-    }
     this.setState({
       [name]: newState
     });
+  }
+
+  onDefocus = event => {
+    const { name, type, value, checked } = event.target;
+    let newState = type === 'checkbox' ? checked : value;
+    if (type === 'number') {
+      newState = Math.max(Math.min(999, newState), 10);
+      this.setState({
+        [name]: newState
+      });
+    }
   }
 
   renderSettings = () => {
@@ -160,6 +168,7 @@ class NewGame extends Component {
             name={timer.name + 'Seconds'}
             value={this.state[timer.name + 'Seconds']}
             onChange={this.handleInputChange}
+            onBlur={this.onDefocus}
             min={10}
             max={999}
           ></input>
