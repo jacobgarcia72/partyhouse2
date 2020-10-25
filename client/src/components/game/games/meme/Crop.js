@@ -83,13 +83,13 @@ class MyEditor extends React.Component {
             });
             break;
           case 6: // upside left. Rotate clockwise to fix
-            this.rotateImg(this.image, 1, (rotatatedImg, width, height) => {
+            this.rotateImg(this.image, 3, (rotatatedImg, width, height) => {
               this.image.src = rotatatedImg;
               this.setImageView(this.image, width, height);
             });
             break;
           case 8: // upside right. Rotate c-clockwise to fix
-            this.rotateImg(this.image, 3, (rotatatedImg, width, height) => {
+            this.rotateImg(this.image, 1, (rotatatedImg, width, height) => {
               this.image.src = rotatatedImg;
               this.setImageView(this.image, width, height);
             });

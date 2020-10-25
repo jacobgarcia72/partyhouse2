@@ -64,9 +64,7 @@ class Upload extends Component {
     let {uploads} = this.state;
     uploads.push(image);
     this.setState({uploads});
-    if (uploads.length===2) {
-      sendInput(code, playerIndex, uploads);
-    }
+    sendInput(code, playerIndex, uploads);
   }
 
   handleNewImage = img => {

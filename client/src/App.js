@@ -7,6 +7,7 @@ import NewGame from './components/game/other/new-game';
 import {connect} from 'react-redux';
 import Rejoin from './components/game/other/rejoin';
 import PlayerCounter from './components/game/other/player-counter';
+import TimerCountDown from './components/game/other/timer-count-down';
 import Chat from './components/game/other/chat';
 import RoomCode from './components/game/other/room-code';
 import './style/style.sass';
@@ -20,6 +21,7 @@ class App extends Component {
           <div className="top-margin"></div>
           <div className="row blue-back fixed-top">
             <div className="row room-banner">
+              <TimerCountDown />
               <div className="left-icons">
                 <img src="/assets/img/logo.png" alt="Party House Games"></img>
                 <RoomCode roomCode={this.props.code}/>

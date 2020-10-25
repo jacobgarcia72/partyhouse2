@@ -14,11 +14,11 @@ export const games = [
       timers: [
         {
           name: 'Upload',
-          default: 180
+          default: 80
         },
         {
           name: 'Caption',
-          default: 180
+          default: 120
         },
         {
           name: 'Vote',

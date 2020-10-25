@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Lobby from '../../other/lobby';
 import Intro from './intro';
 import Upload from './upload';
-import { screens, Meme, assignCaptionersToMemes, pairMemes, Score, handlePlayersGone, handlePlayersJoined } from './helpers';
+import { screens, Meme, assignCaptionersToMemes, pairMemes, Score, handlePlayersGone, handlePlayersJoined, totalImages } from './helpers';
 import { setGameState, clearInput } from '../../../../functions/index';
 import './style.sass';
 import Caption from './Caption';
@@ -18,6 +18,7 @@ let ns = new NotificationService();
 class MemeGame extends Component {
 
   interval;
+  timerInterval;
 
   startGame = () => {
     if (this.props.isHost) {
@@ -26,8 +27,18 @@ class MemeGame extends Component {
     }
   }
 
+  componentDidMount() {
+    const { isHost, gameState } = this.props;
+    // restart timer where left off in case host refreshes
+    if (isHost && gameState.timer) {
+      this.startTimer(Number(gameState.timer), this.concludeUploadRound);
+    }
+  }
+
   componentWillUnmount() {
     ns.removeObserver(this, PLAYERS_CHANGED);
+    clearInterval(this.interval);
+    clearInterval(this.timerInterval);
   }
 
   updatePlayers = update => {
@@ -38,6 +49,7 @@ class MemeGame extends Component {
     ]
     if (update.newTotal < minPlayers && !screensThatCanContinueWithLessThanMinimum.includes(gameState.screen)) {
       clearInterval(this.interval);
+      clearInterval(this.timerInterval);
       this.nextScreen(screens.lobby);
       return;
     }
@@ -91,7 +103,9 @@ class MemeGame extends Component {
   handleUploadUpdate = () => {
     const { players, code, input } = this.props;
     let allPlayersIn = true;
-    const submittedPlayers = Object.keys(input).map(index => Number(index));
+    const submittedPlayers = Object.keys(input)
+      .map(index => Number(index))
+      .filter(index => input[index].length === 2);
     const waitingFor = [];
     for (let i = 0; i < players.length; i++) {
       if (!submittedPlayers.includes(players[i].index)) {
@@ -100,15 +114,7 @@ class MemeGame extends Component {
       }
     }
     if (allPlayersIn) {
-      clearInput(code);
-      let memes = [];
-      players.forEach((player, i) => {
-        input[player.index].forEach(image => {
-          memes.push(new Meme(memes.length, player, image));
-        });
-      });
-      memes = assignCaptionersToMemes(memes, players);
-      setGameState(code, {screen: screens.caption, memes, waitingFor: []});
+      this.concludeUploadRound();
     }
     setGameState(code, {waitingFor});
   }
@@ -179,6 +185,24 @@ class MemeGame extends Component {
     setGameState(code, {waitingFor});
   }
 
+  concludeUploadRound = () => {
+    const { players, code } = this.props;
+    let input = this.props.input || {};
+    clearInput(code);
+    let memes = [];
+    players.forEach((player, i) => {
+      const images = input[player.index] || [];
+      while (images.length < 2) {
+        images.push(Math.floor(Math.random() * totalImages));
+      }
+      images.forEach(image => {
+        memes.push(new Meme(memes.length, player, image));
+      });
+    });
+    memes = assignCaptionersToMemes(memes, players);
+    setGameState(code, {screen: screens.caption, memes, waitingFor: []});
+  }
+
   getDankestMemeIndex = (memes, pair) => {
     const i = memes.find(m => m.index === pair[0]);
     const j = memes.find(m => m.index === pair[1]);
@@ -243,9 +267,24 @@ class MemeGame extends Component {
     setGameState(code, { scores });
   }
 
+  startTimer = (seconds, callback) => {
+    setGameState(this.props.code, {timer: seconds});
+    this.timerInterval = setInterval(() => {
+      seconds--;
+      setGameState(this.props.code, {timer: seconds});
+      if (seconds === 0) {
+        clearInterval(this.timerInterval);
+        callback();
+      }
+    }, 1000);
+  }
+
   nextScreen = screen => {
+    const { settings } = this.props.gameState;
     if (screen === screens.intro) {
       this.startGame();
+    } else if (screen === screens.upload && settings && settings.UploadTimer) {
+      this.startTimer(Number(settings.UploadSeconds), this.concludeUploadRound);
     }
     setGameState(this.props.code, { screen });
   }

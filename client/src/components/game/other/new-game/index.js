@@ -41,9 +41,9 @@ class NewGame extends Component {
     const userSettings = {};
     if (settings && settings.timers) {
       settings.timers.forEach(timer => {
-        userSettings[timer.name] = this.state[timer.name];
+        userSettings[timer.name + 'Timer'] = this.state[timer.name];
         if (userSettings[timer.name + 'Timer']) {
-          userSettings[timer.name + 'Seconds'] = Math.max(Math.min(999, this.state[timer.name + 'Seconds']), 10);
+          userSettings[timer.name + 'Seconds'] = Math.max(Math.min(999, this.state[timer.name + 'Seconds']), 10) + 1;
         }
       });
     }
