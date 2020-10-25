@@ -19,7 +19,7 @@ class NewGame extends Component {
     const { settings } = props.game;
     if (settings && settings.timers) {
       settings.timers.forEach(timer => {
-        state[timer.name] = false;
+        state[timer.name] = true;
         state[timer.name + 'Seconds'] = timer.default;
       });
     }
@@ -133,7 +133,7 @@ class NewGame extends Component {
             min={10}
             max={999}
           ></input>
-          <div>&nbsp;Second {timer.name} Timer</div>
+          <div>-Second {timer.name} Timer</div>
         </div>
         ))}
       </div>

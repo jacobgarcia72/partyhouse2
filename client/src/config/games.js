@@ -13,12 +13,12 @@ export const games = [
     settings: {
       timers: [
         {
-          name: 'Upload',
-          default: 80
+          name: 'Image',
+          default: 90
         },
         {
           name: 'Caption',
-          default: 120
+          default: 180
         },
         {
           name: 'Vote',

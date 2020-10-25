@@ -10,12 +10,16 @@ class TimerCountDown extends Component {
       return null;
     }
     let backgroundColor = '#13b013';
-    if (timer <= 6) {
-      backgroundColor = '#ff2020'
-    } else if (timer <= 11) {
-      backgroundColor = '#f09000'
-    } else if (timer <= 16) {
-      backgroundColor = '#f0e000'
+    if (timer <= 1) {
+      backgroundColor = '#000000';
+    } else if (timer <= 7) {
+      backgroundColor = '#aa0000';
+    } else if (timer <= 12) {
+      backgroundColor = '#ff1010';
+    } else if (timer <= 17) {
+      backgroundColor = '#f08000';
+    } else if (timer <= 22) {
+      backgroundColor = '#f0e000';
     }
     return (
       <div className="timer-count-down" style={{backgroundColor}}>

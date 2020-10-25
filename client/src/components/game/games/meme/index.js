@@ -36,6 +36,8 @@ class MemeGame extends Component {
         callback = this.concludeUploadRound;
       } else if (gameState.screen === screens.caption) {
         callback = this.concludeCaptionRound;
+      } else if (gameState.screen === screens.vote) {
+        callback = this.concludeVotingRound;
       }
       this.startTimer(Number(gameState.timer), callback);
     }
@@ -146,7 +148,7 @@ class MemeGame extends Component {
   }
 
   handleVoteUpdate = () => {
-    const { players, code, input, gameState } = this.props;
+    const { players, code, input } = this.props;
     let allPlayersIn = true;
     const submittedPlayers = Object.keys(input).map(index => Number(index));
     const waitingFor = [];
@@ -157,30 +159,7 @@ class MemeGame extends Component {
       }
     }
     if (allPlayersIn) {
-      clearInput(code);
-      const { memes, pairs } = gameState;
-      let { round, bonusRound } = gameState;
-      bonusRound = bonusRound || false;
-      players.forEach((player) => {
-        const key = bonusRound ? 'bonusVotes' : 'votes';
-        const vote = input[player.index];
-        memes.find(m => m.index === vote)[key] += 1;
-      });
-      if (bonusRound) {
-        const dankestMemeIndex = this.getDankestMemeIndex(memes, pairs[pairs.length - 1]);
-        this.tallyScores(dankestMemeIndex);
-        setGameState(code, { dankestMemeIndex, screen: screens.dankestMeme });
-      } else {
-        setGameState(code, {memes, showStats: true});
-        round += 1;
-        if (round >= pairs.length) {
-          this.addBonusRoundMemes();
-          bonusRound = true;
-        }
-        this.interval = setTimeout(() => {
-          setGameState(code, { round, showStats: false, bonusRound });
-        }, 3500);
-      }
+      this.concludeVotingRound();
     }
     setGameState(code, {waitingFor});
   }
@@ -206,7 +185,8 @@ class MemeGame extends Component {
   }
 
   concludeCaptionRound = () => {
-    const { players, code, input, gameState } = this.props;
+    const { players, code, gameState } = this.props;
+    const input = this.props.input || {};
     clearInput(code);
     const memes = gameState.memes.filter(m => players.map(p => p.index).includes(m.captioner));
     players.forEach((player) => {
@@ -219,7 +199,47 @@ class MemeGame extends Component {
     });
     const pairs = pairMemes(memes);
     clearInterval(this.timerInterval);
-    setGameState(code, {screen: screens.vote, memes, pairs, round: 0, showStats: false, bonusRound: false, timer: null});
+    setGameState(code, { memes, pairs, round: 0, showStats: false, bonusRound: false, timer: null });
+    this.nextScreen(screens.vote);
+  }
+
+  concludeVotingRound = () => {
+    const { players, code, gameState } = this.props;
+    const input = this.props.input || {};
+    clearInput(code);
+    const { memes, pairs, settings } = gameState;
+    let { round, bonusRound } = gameState;
+    bonusRound = bonusRound || false;
+    players.forEach((player) => {
+      const key = bonusRound ? 'bonusVotes' : 'votes';
+      const vote = input[player.index];
+      if (vote === undefined) {
+        return;
+      }
+      memes.find(m => m.index === vote)[key] += 1;
+    });
+    if (bonusRound) {
+      const dankestMemeIndex = this.getDankestMemeIndex(memes, pairs[pairs.length - 1]);
+      this.tallyScores(dankestMemeIndex);
+      setGameState(code, { dankestMemeIndex, screen: screens.dankestMeme, timer: null });
+    } else {
+      setGameState(code, {memes, showStats: true, timer: null});
+      round += 1;
+      if (round >= pairs.length) {
+        this.addBonusRoundMemes();
+        bonusRound = true;
+      }
+      this.interval = setTimeout(() => {
+        setGameState(code, { round, showStats: false, bonusRound });
+        if (bonusRound) {
+          this.interval = setTimeout(() => {
+            this.startTimer(Number(settings.VoteSeconds), this.concludeVotingRound);
+          }, 1800); // allow time for animation before starting timer
+        } else {
+          this.startTimer(Number(settings.VoteSeconds), this.concludeVotingRound);
+        }
+      }, 3500);
+    }
   }
 
   getDankestMemeIndex = (memes, pair) => {
@@ -302,10 +322,14 @@ class MemeGame extends Component {
     const { settings } = this.props.gameState;
     if (screen === screens.intro) {
       this.startGame();
-    } else if (screen === screens.upload && settings && settings.UploadTimer) {
-      this.startTimer(Number(settings.UploadSeconds), this.concludeUploadRound);
+    } else if (screen === screens.upload && settings && settings.ImageTimer) {
+      this.startTimer(Number(settings.ImageSeconds), this.concludeUploadRound);
     } else if (screen === screens.caption && settings && settings.CaptionTimer) {
       this.startTimer(Number(settings.CaptionSeconds), this.concludeCaptionRound);
+    } else if (screen === screens.vote && settings && settings.VoteTimer) {
+      this.interval = setTimeout(() => {
+        this.startTimer(Number(settings.VoteSeconds), this.concludeVotingRound);
+      }, 1800); // allow time for animation before starting timer
     }
     setGameState(this.props.code, { screen });
   }

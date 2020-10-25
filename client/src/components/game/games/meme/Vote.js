@@ -78,7 +78,7 @@ class Vote extends Component {
     const {gameState} = this.props;
     const {memes, pairs, round} = gameState;
     const totalVotes = memes.find(m => m.index === pairs[round][0]).votes + memes.find(m => m.index === pairs[round][1]).votes;
-    const percent = Math.round(meme.votes / totalVotes * 100);
+    const percent = totalVotes ? Math.round(meme.votes / totalVotes * 100) : 0;
     return <div className="stat">
       <div className="impact large-font percent">{`${percent}%`}</div>
       <div className="credit">{`Image: ${meme.uploaderName}`}</div>
