@@ -221,8 +221,10 @@ class MemeGame extends Component {
     if (bonusRound) {
       const dankestMemeIndex = this.getDankestMemeIndex(memes, pairs[pairs.length - 1]);
       this.tallyScores(dankestMemeIndex);
+      clearInterval(this.timerInterval);
       setGameState(code, { dankestMemeIndex, screen: screens.dankestMeme, timer: null });
     } else {
+      clearInterval(this.timerInterval);
       setGameState(code, {memes, showStats: true, timer: null});
       round += 1;
       if (round >= pairs.length) {
