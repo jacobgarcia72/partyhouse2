@@ -4,6 +4,8 @@ import './style.sass';
 
 import { joinRoom, isDevMode, getPlayCounts } from '../../functions';
 import { games } from '../../config/games';
+import GameCard from '../game/other/game-card';
+import {connect} from 'react-redux';
 
 class Landing extends Component {
 
@@ -105,7 +107,7 @@ class Landing extends Component {
         <div className="thumbnails row">
           {this.games.map(game => <div key={game.url}>
             <Link to={game.url}>
-              <img alt={game.displayName} src={`assets/img/thumbnails/${game.url}.png`} />
+              <GameCard game={game} playCounts={this.props.playCounts} abbreviated={true} />
             </Link>
           </div>)}
         </div>
@@ -114,4 +116,8 @@ class Landing extends Component {
   }
 };
 
-export default Landing;
+function mapStateToProps({ playCounts }) {
+  return { playCounts };
+}
+
+export default connect(mapStateToProps, null)(Landing);

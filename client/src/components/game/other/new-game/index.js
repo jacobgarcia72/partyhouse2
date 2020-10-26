@@ -4,6 +4,7 @@ import { FacebookProvider, Share } from 'react-facebook';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import './style.sass';
+import GameCard from '../game-card';
 
 class NewGame extends Component {
 
@@ -182,22 +183,13 @@ class NewGame extends Component {
 
   render() {
     const { playerName, loading, roomUrl } = this.state;
-    const { joiningExistingRoom, playCounts } = this.props;
-    const { displayName, url, description, minPlayers, maxPlayers } = this.props.game;
-    let playCount;
-    if (playCounts && (playCounts[url] || playCounts[url] === 0)) {
-      playCount = playCounts[url];
-    }
+    const { joiningExistingRoom, playCounts, game } = this.props;
+    const { url } = game;
     return <div className="column NewGame">
       <Link to="/">
         <img className="logo" src="/assets/img/logo2.svg" alt="Party House Home" />
       </Link>
-      <img alt={displayName} src={`/assets/img/thumbnails/${url}.png`} className="thumbnail" />
-      <div className="row game-stats">
-        <div><i className="fas fa-user-friends"></i>&nbsp;{minPlayers} - {maxPlayers} Players</div>
-        {playCount ? <div><i className="fas fa-play"></i>&nbsp;Played {(playCount || playCount===0) ? playCount : <span>&nbsp;&nbsp;</span>} {playCount === 1 ? 'Time' : 'Times'}</div> : null}
-      </div>
-      <div className="description">{description}</div>
+      <GameCard game={game} playCounts={playCounts} />
       <form onSubmit={joiningExistingRoom ? this.joinRoom : this.createRoom} className="column">
         { joiningExistingRoom ? null : (
           <FacebookProvider appId="1044229522678518">
