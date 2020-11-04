@@ -184,7 +184,6 @@ class NewGame extends Component {
   render() {
     const { playerName, loading, roomUrl } = this.state;
     const { joiningExistingRoom, playCounts, game } = this.props;
-    const { url } = game;
     return <div className="column NewGame">
       <Link to="/">
         <img className="logo" src="/assets/img/logo2.svg" alt="Party House Home" />

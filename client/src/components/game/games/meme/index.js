@@ -287,8 +287,9 @@ class MemeGame extends Component {
     }
     const addPoints = (memeIndex, pointsToAdd) => ['uploader', 'captioner'].forEach(role => {
       const pIndex = memes.find(m => m.index === memeIndex)[role];
-      if (players[pIndex]) {
-        const score = scores.find(s => s.playerIndex === pIndex) || new Score(players[pIndex]);
+      const player = players.find(p => p.index === pIndex);
+      if (player) {
+        const score = scores.find(s => s.playerIndex === pIndex) || new Score(player);
         score.points += pointsToAdd;
       }
     });
@@ -310,6 +311,7 @@ class MemeGame extends Component {
 
   startTimer = (seconds, callback) => {
     setGameState(this.props.code, {timer: seconds});
+    clearInterval(this.timerInterval);
     this.timerInterval = setInterval(() => {
       seconds--;
       setGameState(this.props.code, {timer: seconds});

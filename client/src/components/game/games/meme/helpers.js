@@ -89,6 +89,8 @@ export const assignCaptionersToMemes = (memes, players) => {
   memes.forEach(meme=>{
     meme.captioner = selectCaptioner(meme.uploader);
     meme.captionerName = players.find(p => p.index === meme.captioner).name;
+    console.log('meme', meme);
+    console.log('captioner', players.find(p => p.index === meme.captioner));
   });
 
   return memes;
