@@ -1,7 +1,7 @@
 import React from 'react';
 import { setGameState } from '../../../../functions';
 
-export const totalImages = 106;
+export const totalImages = 124;
 
 export const screens = {
   lobby: 'lobby',
