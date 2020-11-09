@@ -15,15 +15,15 @@ export const games = [
       timers: [
         {
           name: 'Image',
-          default: 90
+          default: 100
         },
         {
           name: 'Caption',
-          default: 180
+          default: 200
         },
         {
           name: 'Vote',
-          default: 30
+          default: 50
         }
       ],
       checkboxes: [
