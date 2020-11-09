@@ -1,6 +1,7 @@
 import MemeGame from '../components/game/games/meme';
 import HonestAnswers from '../components/game/games/answers';
 import StoryTime from '../components/game/games/story-time';
+import speakeasy from '../components/game/games/speakeasy';
 
 export const games = [
   {
@@ -71,7 +72,7 @@ export const games = [
     url: 'speakeasy',
     minPlayers: 3,
     maxPlayers: 30,
-    component: null
+    component: speakeasy
   }
 ];
 

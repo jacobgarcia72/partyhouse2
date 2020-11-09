@@ -61,15 +61,15 @@ export const assignCaptionersToMemes = (memes, players) => {
       if (lastPlayer===uploader) {
         
         //swap with a random meme that's already been assigned
-        let meme;
+        let replacementMeme;
         while(true) {
           const rndX = Math.floor(Math.random()*(memes.length-1));
-          meme = memes[rndX];
-          if (meme.captioner && meme.captioner !== uploader && meme.uploader !== uploader) break;
+          replacementMeme = memes[rndX];
+          if (replacementMeme.captioner && replacementMeme.captioner !== uploader && replacementMeme.uploader !== uploader) break;
         }
-        captioner = meme.captioner;
-        meme.captioner = uploader;
-        
+        captioner = replacementMeme.captioner;
+        replacementMeme.captioner = uploader;
+        replacementMeme.captionerName = players.find(p => p.index === uploader).name;
       } else {
         captioner = lastPlayer;
       }
@@ -89,8 +89,6 @@ export const assignCaptionersToMemes = (memes, players) => {
   memes.forEach(meme=>{
     meme.captioner = selectCaptioner(meme.uploader);
     meme.captionerName = players.find(p => p.index === meme.captioner).name;
-    console.log('meme', meme);
-    console.log('captioner', players.find(p => p.index === meme.captioner));
   });
 
   return memes;
