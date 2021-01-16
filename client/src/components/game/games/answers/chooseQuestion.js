@@ -13,10 +13,11 @@ class ChooseQuestion extends Component {
   }
 
   componentDidMount() {
-    const { playerIndex, gameState } = this.props;
+    const { playerIndex, gameState, players } = this.props;
     const { round, rounds, category } = gameState;
     if (rounds[round].askingIndex === playerIndex) {
-      this.setState({questions: getQuestions(category)});
+      const questions = getQuestions(category).map(question => formatText(question, rounds[round], players));
+      this.setState({questions});
     }
   }
 
@@ -40,7 +41,7 @@ class ChooseQuestion extends Component {
       return <div className="column">
           <h2>Choose a question for {answeringPlayer}:</h2>
           <form onSubmit={e => e.preventDefault()} className="column options">
-            {questions.map((question, i) => <button type="submit" key={i} onClick={() => this.submitQuestionChoice(question)}>{formatText(question, rounds[round], players)}</button>)}
+            {questions.map((question, i) => <button type="submit" key={i} onClick={() => this.submitQuestionChoice(question)}>{question}</button>)}
           </form>
         </div>
     } else {
