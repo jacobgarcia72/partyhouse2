@@ -8,7 +8,7 @@
     "exif-js": "^2.3.0",
     "firebase": "^5.8.3",
     "html-to-image": "^0.1.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.8.2",
     "react-avatar-editor": "^11.0.9",
     "react-canvas-draw": "^1.0.1-hotfix.4",
