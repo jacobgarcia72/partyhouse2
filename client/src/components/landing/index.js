@@ -68,7 +68,7 @@ class Landing extends Component {
         <div className="row top-banner blue-back">
           <div className="column">
             <img src="assets/img/logo.png" alt="Party House Games"></img>
-            <h1>Connect!</h1>
+            <h1>Connect !</h1>
             <form onSubmit={this.connectRoom} className="row">
               <input
                 className="input-name"
