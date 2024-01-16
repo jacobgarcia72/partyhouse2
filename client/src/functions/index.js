@@ -1,5 +1,5 @@
 import { database } from '../Firebase';
-import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost, setPlayCounts } from '../actions';
+import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost, setPlayCounts, setCurrentVideo, setCurrentMusic } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
@@ -30,12 +30,12 @@ export const shuffle = arr => {
   return arr;
 }
 
-export function createNewRoom(gameUrl, roomCode, playerName, settings, callback) {
+export function createNewRoom(gameUrl, roomCode, settings, callback) {
   roomCode = roomCode.toLowerCase();
   const newRoom = {
-    players: { 0: new Player(playerName, 0) },
+    players: null,
     url: gameUrl,
-    nextIndex: 1,
+    nextIndex: 0,
     code: roomCode,
     gameState: {
       screen: 'lobby',
@@ -44,10 +44,7 @@ export function createNewRoom(gameUrl, roomCode, playerName, settings, callback)
     chat: []
   };
   setLocalStorage(0, roomCode);
-  store.dispatch(setPlayerIndex(0));
-  setRoomListener(roomCode, 0);
   database.ref(`rooms/${roomCode}`).set(newRoom).then(() => callback(newRoom));
-  database.ref(`rooms/${roomCode}/players/${0}/active`).onDisconnect().remove();
 }
 
 export function joinRoom(roomCode, name, callback) {
@@ -56,7 +53,9 @@ export function joinRoom(roomCode, name, callback) {
     const room = snapshot.val();
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
-    if (room && !Array.isArray(room.players)) room.players = Object.values(room.players);
+    if (room && !Array.isArray(room.players)) {
+      room.players = room.players ? Object.values(room.players) : [];
+    }
     const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     let playerIndex = null;
     if (roomExists && !roomIsFull) {
@@ -70,7 +69,7 @@ export function joinRoom(roomCode, name, callback) {
       database.ref(`rooms/${roomCode}`).update(room);
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
     }
-    callback(roomExists, roomIsFull, room);
+    if (callback) callback(roomExists, roomIsFull, room);
   });     
 };
 
@@ -80,7 +79,9 @@ export function rejoinRoom(roomCode, callback) {
     let success = false;
     const roomExists = room !== null;
     const game = roomExists ? getGameByUrl(room.url) : null;
-    if (room && !Array.isArray(room.players)) room.players = Object.values(room.players);
+    if (room && !Array.isArray(room.players)) {
+      room.players = room.players ? Object.values(room.players) : [];
+    }
     const roomIsFull = roomExists && game && room.players.filter(player => player.active).length === game.maxPlayers;
     if (roomExists && !roomIsFull) {
       let playerIndex = localStorage.getItem('player-index');
@@ -108,16 +109,14 @@ export function removePlayerFromRoom(roomCode, playerIndex, banned) {
   database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: false, kicked: true, banned});
 };
 
-function setRoomListener(roomCode, playerIndex) {
+export function setRoomListener(roomCode, playerIndex = null) { // null if it's the display
   database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
     const players = snapshot.val();
+    console.log(players)
     
     const prevPlayers = store.getState().players;
     const newPlayers = players ? players.filter(p => p.active && !p.kicked && !p.banned) : [];
-    if (!newPlayers.length) {
-      database.ref(`rooms/${roomCode}/`).remove();
-      return;
-    }
+
     const playerIndices = players => players.map(player => player.index);
     if (newPlayers.length !== prevPlayers.length) {
       const playersJoined = playerIndices(newPlayers)
@@ -125,11 +124,12 @@ function setRoomListener(roomCode, playerIndex) {
       const playersGone = playerIndices(prevPlayers)
         .filter(index => !playerIndices(newPlayers).includes(index));
       const firstActivePlayer = playerIndices(players.filter(p => p.active).sort())[0];
-      if (Number(firstActivePlayer) === Number(playerIndex)) {
+      if (playerIndex !== null && (Number(firstActivePlayer) === Number(playerIndex))) {
         store.dispatch(setIsHost(true));
       }
       ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length, newPlayers });
     }
+    if (playerIndex === null) return;
     const currentPlayer = players.find(p => Number(p.index) === Number(playerIndex));
     if (currentPlayer && currentPlayer.kicked) {
       if (currentPlayer.banned) localStorage.setItem('banned', roomCode);
@@ -138,6 +138,7 @@ function setRoomListener(roomCode, playerIndex) {
   });
   database.ref(`rooms/${roomCode}`).on('value', snapshot => {
     const room = snapshot.val();
+    console.log(room)
     store.dispatch(setRoom(room));
   });
 };
@@ -198,4 +199,12 @@ export function getPlayCounts() {
     const stats = snapshot.val() || {};
     store.dispatch(setPlayCounts(stats));
   });
+}
+
+export function playVideo(video) {
+  store.dispatch(setCurrentVideo(video));
+}
+
+export function playMusic(music) {
+  store.dispatch(setCurrentMusic(music));
 }

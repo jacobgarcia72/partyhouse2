@@ -12,6 +12,7 @@ import DankestMeme from './DankestMeme';
 import Scores from './Scores';
 import NotificationService, { PLAYERS_CHANGED } from '../../../../services/notif-service';
 import { getGameByUrl } from '../../../../config/games';
+import Display from './display';
 
 let ns = new NotificationService();
 
@@ -360,12 +361,17 @@ class MemeGame extends Component {
   }
 
   render() {
-    return <div className="DankU">{this.renderContent()}</div>
+    return (
+      <div className={`DankU ${this.props.isDisplay ? 'display' : 'device'}`}>
+        {this.props.isDisplay && <Display />}
+        {this.renderContent()}
+      </div>
+    )
   }
 }
 
-function mapStateToProps({ gameState, players, code, isHost, input }) {
-  return { gameState, players, code, isHost, input };
+function mapStateToProps({ gameState, players, code, isHost, input, isDisplay }) {
+  return { gameState, players, code, isHost, input, isDisplay };
 }
 
 export default connect(mapStateToProps, null)(MemeGame);

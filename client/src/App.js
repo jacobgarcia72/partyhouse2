@@ -15,13 +15,13 @@ import './style/style.sass';
 class App extends Component {
 
   getGameProps = game => {
-    const { url, displayName, description, minPlayers, maxPlayers } = game;
+    const { url, displayName, description, minPlayers, maxPlayers, partyMode, remoteMode } = game;
     const settings = game.settings || {};
     settings.checkboxes = settings.checkboxes || [];
     if (!settings.checkboxes.find(c => c.name === 'enableChat')) {
       settings.checkboxes.unshift({ name: 'enableChat', text: 'Enable Chat' });
     }
-    return { url, displayName, description, minPlayers, maxPlayers, settings };
+    return { url, displayName, description, minPlayers, maxPlayers, partyMode, remoteMode, settings };
   }
 
   renderGameScreen = (props, game) => {

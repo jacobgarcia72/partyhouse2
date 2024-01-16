@@ -7,10 +7,14 @@ const initialState = {
   game: {},
   gameState: null,
   playerIndex: null,
+  isDisplay: false,
   isHost: null,
   input: null,
   chat: [],
-  playCounts: {}
+  playCounts: {},
+  curMusic: null,
+  curVideo: null,
+  volume: 9
 } 
 
 export default (state = initialState, action) => {
@@ -31,10 +35,16 @@ export default (state = initialState, action) => {
       return setState({playerIndex: action.payload, isHost: action.payload === 0});
     case actions.SET_PLAYER_NEEDS_TO_JOIN_ROOM:
       return setState({playerNeedsToJoinRoom: action.payload});
+    case actions.SET_IS_DISPLAY:
+      return setState({isDisplay: true});
     case actions.SET_IS_HOST:
       return setState({isHost: action.payload});
     case actions.SET_PLAY_COUNTS:
       return setState({playCounts: action.payload});
+    case actions.SET_CURRENT_MUSIC:
+      return setState({curMusic: action.payload});
+    case actions.SET_CURRENT_VIDEO:
+      return setState({curVideo: action.payload});
     default:
       return state
   }

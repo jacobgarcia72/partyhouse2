@@ -43,7 +43,7 @@ class Lobby extends Component {
           value="Start Game!"
         ></input>
         <div className="error">{this.state.error}</div>
-      </form> : <p style={{margin: '1.5em'}}>Waiting on host to start the game.</p>}
+      </form> : <p style={{margin: '1.5em'}}>{ this.props.players.length >= this.props.game.minPlayers ? 'Waiting on host to start the game.' : 'Go to partyhouse.tv on your device to join the game!' }</p>}
     </div>;
   }
 }

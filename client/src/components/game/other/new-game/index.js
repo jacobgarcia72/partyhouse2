@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import { createNewRoom, joinRoom, isDevMode, getPlayCounts } from "../../../../functions/index";
+import { createNewRoom, joinRoom, isDevMode, getPlayCounts, setRoomListener } from "../../../../functions/index";
 import { FacebookProvider, Share } from 'react-facebook';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import './style.sass';
 import GameCard from '../game-card';
+import store from '../../../../config/store';
+import { setIsDisplay } from '../../../../actions';
 
 class NewGame extends Component {
 
@@ -15,7 +17,9 @@ class NewGame extends Component {
       loading: false,
       share: false,
       roomUrl: '',
-      error: ''
+      error: '',
+      partyModeSelected: !props.joiningExistingRoom && props.game.partyMode,
+      remoteModeSelected: props.game.remoteMode && !props.game.partyMode
     };
     const { settings } = props.game;
     if (settings && settings.checkboxes) {
@@ -58,7 +62,7 @@ class NewGame extends Component {
         }
       });
     }
-    createNewRoom(url, roomCode, this.state.playerName, userSettings, newRoom => {
+    createNewRoom(url, roomCode, userSettings, newRoom => {
       const roomUrl = `/${url}/${roomCode.toLowerCase()}`;
       this.setState({roomUrl}, () => {
         if (this.state.share) {
@@ -66,6 +70,12 @@ class NewGame extends Component {
         }
         this.props.history.push(roomUrl);
       });
+      if (this.state.partyModeSelected) {
+        store.dispatch(setIsDisplay());
+        setRoomListener(roomCode);
+      } else {
+        joinRoom(roomCode, this.state.playerName);
+      }
     });
   }
 
@@ -98,7 +108,7 @@ class NewGame extends Component {
     }
     let code = "";
     const possible = "abcdefghijklmnpqrstuvwxyz123456789";
-    const censored = ['test','fuck','shit','dick','d1ck','cock','cunt','boob','slut','twat','nigg'];
+    const censored = ['test','fuck','shit','dick','d1ck','cock','cunt','boob','slut','twat','nigg','nggr','s1ut'];
   
     while (true) {
       code = "";
@@ -127,6 +137,30 @@ class NewGame extends Component {
         [name]: newState
       });
     }
+  }
+
+  renderModeOptions = () => {
+    const { partyMode, remoteMode } = this.props.game;
+    return (
+      <div className="row">
+        {partyMode && (
+          <div onClick={() => {
+            this.setState({ partyModeSelected: true, remoteModeSelected: false })
+          }} className={`mode-option ${this.state.partyModeSelected && 'mode-option-selected'}`}>
+            <h1>Party Mode</h1>
+            <p>This device will be used as a shared screen.</p>
+          </div>
+        )}
+        {remoteMode && (
+          <div onClick={() => {
+            this.setState({ partyModeSelected: false, remoteModeSelected: true })
+          }} className={`mode-option ${this.state.remoteModeSelected && 'mode-option-selected'}`}>
+            <h1>Remote Mode</h1>
+            <p>Players connect remotely with no need for a shared screen.</p>
+          </div>
+        )}
+      </div>
+    )
   }
 
   renderSettings = () => {
@@ -182,7 +216,7 @@ class NewGame extends Component {
   }
 
   render() {
-    const { playerName, loading, roomUrl } = this.state;
+    const { playerName, loading, roomUrl, partyModeSelected } = this.state;
     const { joiningExistingRoom, playCounts, game } = this.props;
     return <div className="column NewGame">
       <Link to="/">
@@ -199,17 +233,20 @@ class NewGame extends Component {
             </Share>
           </FacebookProvider>
         )}
-        <input
-          className="input-name"
-          placeholder="Name"
-          type="text"
-          maxLength="10"
-          onChange={this.handleInputChange}
-          autoComplete="off"
-          spellCheck={false}
-          name="playerName"
-          value={playerName}
-        ></input>
+        { !joiningExistingRoom && this.renderModeOptions()}
+        { !partyModeSelected && (
+          <input
+            className="input-name"
+            placeholder="Name"
+            type="text"
+            maxLength="10"
+            onChange={this.handleInputChange}
+            autoComplete="off"
+            spellCheck={false}
+            name="playerName"
+            value={playerName}
+          ></input>
+        )}
         { joiningExistingRoom ? null : (
           <React.Fragment>
             {this.renderSettings()}
@@ -229,7 +266,7 @@ class NewGame extends Component {
         <input
           type="submit"
           value={joiningExistingRoom ? 'Join Game' : 'Create Room'}
-          disabled={playerName === '' || loading}
+          disabled={(playerName === '' && !partyModeSelected) || loading}
         ></input>
         <div className="error">{this.state.error}</div>
       </form>

@@ -22,7 +22,7 @@ class Landing extends Component {
 
   componentDidMount() {
     if (isDevMode()) {
-      const names = ['Karen', 'Konnor', 'David', 'Emily', 'Stephen', 'Shayla', 'Jon', 'Debra', 'Brandon', 'Tasheda', 'Luis', 'Ethan', 'Fernando', 'Cliff', 'Savanna', 'Allie', 'Justin', 'Heather', 'Brett'];
+      const names = [ 'Jacob', 'Christine', 'Popcorn', 'Fishy', 'Nick', 'Justin', 'Whitney', 'Micky', 'Mitchell', 'Iara' ];
       this.setState({roomCode: 'TEST', playerName: names[Math.floor(Math.random() * names.length)]});
     }
     getPlayCounts();
@@ -68,7 +68,7 @@ class Landing extends Component {
         <div className="row top-banner blue-back">
           <div className="column">
             <img src="assets/img/logo.png" alt="Party House Games"></img>
-            <h1>Connect !</h1>
+            <h1>Connect!</h1>
             <form onSubmit={this.connectRoom} className="row">
               <input
                 className="input-name"
