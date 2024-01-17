@@ -21,7 +21,7 @@ class DankestMeme extends Component {
     this.interval = setTimeout(() => {
       this.setState({ memeAnimation: 'cross-zoom-out' });
       this.animateElements('bonus-points', 2, 3000);
-      if (this.props.isHost) {
+      if (this.props.isController) {
         this.interval = setTimeout(() => {
           this.props.nextScreen();
         }, 4000);
@@ -80,8 +80,8 @@ class DankestMeme extends Component {
   }
 }
 
-function mapStateToProps({ gameState, code, isHost, players }) {
-  return { gameState, code, isHost, players };
+function mapStateToProps({ gameState, code, isController, players }) {
+  return { gameState, code, isController, players };
 }
 
 export default connect(mapStateToProps, null)(DankestMeme);

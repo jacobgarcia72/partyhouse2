@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './style.sass';
 
-import { joinRoom, isDevMode, getPlayCounts } from '../../functions';
+import { joinRoom, isDevMode, getPlayCounts, removePlayerFromRoom } from '../../functions';
 import { games } from '../../config/games';
 import GameCard from '../game/other/game-card';
 import {connect} from 'react-redux';
@@ -26,6 +26,17 @@ class Landing extends Component {
       this.setState({roomCode: 'TEST', playerName: names[Math.floor(Math.random() * names.length)]});
     }
     getPlayCounts();
+    const playerIndex = localStorage.getItem('player-index');
+    const savedRoomCode = localStorage.getItem('room-code');
+    if (playerIndex !== null && savedRoomCode !== null) {
+      removePlayerFromRoom(savedRoomCode, playerIndex);
+      localStorage.removeItem('player-index');
+      localStorage.removeItem('room-code');
+    }
+    console.log(playerIndex)
+    console.log(
+      savedRoomCode
+    )
   }
 
   handleInputChange = event => {

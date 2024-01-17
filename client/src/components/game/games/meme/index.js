@@ -22,16 +22,16 @@ class MemeGame extends Component {
   timerInterval;
 
   startGame = () => {
-    if (this.props.isHost) {
+    if (this.props.isController) {
       ns.addObserver(PLAYERS_CHANGED, this, this.updatePlayers);
       this.newRound();
     }
   }
 
   componentDidMount() {
-    const { isHost, gameState } = this.props;
+    const { isController, gameState } = this.props;
     // restart timer where left off in case host refreshes
-    if (isHost && gameState.timer) {
+    if (isController && gameState.timer) {
       let callback = () => {};
       if (gameState.screen === screens.upload) {
         callback = this.concludeUploadRound;
@@ -74,8 +74,8 @@ class MemeGame extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { isHost, input, players } = this.props;
-    if ((players.length < prevProps.players.length || input !== prevProps.input) && isHost && input) {
+    const { isController, input, players } = this.props;
+    if ((players.length < prevProps.players.length || input !== prevProps.input) && isController && input) {
       this.updatePlayerInput();
     }
   }
@@ -370,8 +370,8 @@ class MemeGame extends Component {
   }
 }
 
-function mapStateToProps({ gameState, players, code, isHost, input, isDisplay }) {
-  return { gameState, players, code, isHost, input, isDisplay };
+function mapStateToProps({ gameState, players, code, isController, input, isDisplay }) {
+  return { gameState, players, code, isController, input, isDisplay };
 }
 
 export default connect(mapStateToProps, null)(MemeGame);

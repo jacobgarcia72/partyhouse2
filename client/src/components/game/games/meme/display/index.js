@@ -7,7 +7,7 @@ import Player from '../../../../media/Player';
 const MemeGame = () => {
 
   useEffect(() => {
-    playMusic('0');
+    playMusic('lobby');
     playVideo('intro');
   }, []);
 

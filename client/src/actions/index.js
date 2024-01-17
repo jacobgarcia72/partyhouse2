@@ -4,6 +4,7 @@ export const actions = {
   SET_PLAYER_NEEDS_TO_JOIN_ROOM: 'SET_PLAYER_NEEDS_TO_JOIN_ROOM',
   SET_IS_DISPLAY: 'SET_IS_DISPLAY',
   SET_IS_HOST: 'SET_IS_HOST',
+  SET_IS_CONTROLLER: 'SET_IS_CONTROLLER',
   SET_PLAY_COUNTS: 'SET_PLAY_COUNTS',
   SET_CURRENT_MUSIC: 'SET_CURRENT_MUSIC',
   SET_CURRENT_VIDEO: 'SET_CURRENT_VIDEO'
@@ -27,6 +28,10 @@ export function setPlayerNeedsToJoinRoom(playerNeedsToJoinRoom) {
 
 export function setIsHost(isHost) {
   return { type: actions.SET_IS_HOST, payload: Boolean(isHost) };
+}
+
+export function setIsController(isController) {
+  return { type: actions.SET_IS_CONTROLLER, payload: Boolean(isController) };
 }
 
 export function setPlayCounts(playCounts) {

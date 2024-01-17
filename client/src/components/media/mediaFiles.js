@@ -25,7 +25,7 @@ const getAudio = (game) => {
 export const gameMediaFiles = {
     meme: {
       video: ['intro','upload','caption','vote'],
-      music: ['0','1','2'],
+      music: ['lobby','main','upload', 'caption'],
       audio: getAudio('meme')
     }
 }

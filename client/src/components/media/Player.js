@@ -31,7 +31,8 @@ const Player = (props) => {
 
   useEffect(() => {
     if (Boolean(musicPlayers) && Boolean(props.curMusic)) {
-      // musicPlayers.forEach((mp) => console.log(mp));
+      const players = document.querySelectorAll('.music-player');
+      players.forEach((p) => p.pause());
       let player = document.getElementById(`music-${props.game.url}-${props.curMusic}`);
       if (player) {
         player.volume = props.volume / 20;

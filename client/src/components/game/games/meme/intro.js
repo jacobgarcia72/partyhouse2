@@ -1,22 +1,24 @@
-import React, {Component} from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { playMusic } from '../../../../functions';
 import Title from './Title';
 
-class Intro extends Component {
+const Intro = (props) => {
 
-  onAnimationFinish = () => {
-    if (this.props.isHost) {
-        this.props.nextScreen();
+  useEffect(() => {
+    playMusic('main');
+  }, []);
+
+  const onAnimationFinish = () => {
+    if (props.isController) {
+        props.nextScreen();
     }
   }
-
-  render() {
-    return <Title lines={['Welcome to', 'Dank U']} callback={this.onAnimationFinish} />
-  }
+  return <Title lines={['Welcome to', 'Dank U']} callback={onAnimationFinish} />
 }
 
-function mapStateToProps({ isHost }) {
-  return { isHost };
+function mapStateToProps({ isController }) {
+  return { isController };
 }
 
 export default connect(mapStateToProps, null)(Intro);

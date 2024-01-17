@@ -1,5 +1,5 @@
 import { database } from '../Firebase';
-import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost, setPlayCounts, setCurrentVideo, setCurrentMusic } from '../actions';
+import { setRoom, setPlayerIndex, setPlayerNeedsToJoinRoom, setIsHost, setPlayCounts, setCurrentVideo, setCurrentMusic, setIsController } from '../actions';
 import store from '../config/store';
 import { getGameByUrl } from '../config/games';
 
@@ -30,20 +30,23 @@ export const shuffle = arr => {
   return arr;
 }
 
-export function createNewRoom(gameUrl, roomCode, settings, callback) {
+export function createNewRoom(gameUrl, roomCode, settings, isPartyMode, callback) {
   roomCode = roomCode.toLowerCase();
   const newRoom = {
     players: null,
     url: gameUrl,
     nextIndex: 0,
     code: roomCode,
+    isPartyMode,
     gameState: {
       screen: 'lobby',
       settings
     },
     chat: []
   };
-  setLocalStorage(0, roomCode);
+  if (isPartyMode) {
+    store.dispatch(setIsController(true));
+  }
   database.ref(`rooms/${roomCode}`).set(newRoom).then(() => callback(newRoom));
 }
 
@@ -65,7 +68,15 @@ export function joinRoom(roomCode, name, callback) {
       room.players[playerIndex] = newPlayer;
       setLocalStorage(playerIndex, roomCode);
       store.dispatch(setPlayerIndex(playerIndex));
-      setRoomListener(roomCode, playerIndex)
+      console.log('room', room)
+      setRoomListener(roomCode, playerIndex);
+      if (playerIndex === 0) {
+        store.dispatch(setIsHost(true));
+        console.log('setting host on join')
+        if (!room.isPartyMode) {
+          store.dispatch(setIsController(true));
+        }
+      }
       database.ref(`rooms/${roomCode}`).update(room);
       database.ref(`rooms/${roomCode}/players/${playerIndex}/active`).onDisconnect().remove();
     }
@@ -105,11 +116,24 @@ export function rejoinRoom(roomCode, callback) {
   });    
 };
 
-export function removePlayerFromRoom(roomCode, playerIndex, banned) {
-  database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: false, kicked: true, banned});
+export function removePlayerFromRoom(roomCode, playerIndex, banned = false) {
+  database.ref(`rooms/${roomCode}`).once('value', snapshot => {
+    const room = snapshot.val();
+    if (room) {
+      if (!room.players) {
+        database.ref(`rooms/${roomCode}/`).remove();
+      } else if (room.players[playerIndex]) {
+        database.ref(`rooms/${roomCode}/players/${playerIndex}`).update({active: false, kicked: true, banned});
+      }
+    }
+  });
 };
 
 export function setRoomListener(roomCode, playerIndex = null) { // null if it's the display
+  database.ref(`rooms/${roomCode}`).on('value', snapshot => {
+    const room = snapshot.val();
+    store.dispatch(setRoom(room));
+  });
   database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
     const players = snapshot.val();
     console.log(players)
@@ -126,6 +150,7 @@ export function setRoomListener(roomCode, playerIndex = null) { // null if it's 
       const firstActivePlayer = playerIndices(players.filter(p => p.active).sort())[0];
       if (playerIndex !== null && (Number(firstActivePlayer) === Number(playerIndex))) {
         store.dispatch(setIsHost(true));
+        console.log('setting host')
       }
       ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length, newPlayers });
     }
@@ -135,11 +160,6 @@ export function setRoomListener(roomCode, playerIndex = null) { // null if it's 
       if (currentPlayer.banned) localStorage.setItem('banned', roomCode);
       window.location.replace(window.location.origin);
     }
-  });
-  database.ref(`rooms/${roomCode}`).on('value', snapshot => {
-    const room = snapshot.val();
-    console.log(room)
-    store.dispatch(setRoom(room));
   });
 };
 

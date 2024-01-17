@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {connect} from 'react-redux';
 import './style.sass';
 import { removePlayerFromRoom } from '../../../../functions';
@@ -6,11 +6,6 @@ import { removePlayerFromRoom } from '../../../../functions';
 const PlayerList = (props) => {
 
   const [bootPlayer, setBootPlayer] = useState(null);
-
-  useEffect(() => {
-    console.log(props.players)
-  }, [props.players])
-
 
   const selectBootOption = (remove, ban) => {
     if (remove) {

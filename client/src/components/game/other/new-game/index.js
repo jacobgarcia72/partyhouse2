@@ -62,7 +62,8 @@ class NewGame extends Component {
         }
       });
     }
-    createNewRoom(url, roomCode, userSettings, newRoom => {
+    const { partyModeSelected } = this.state;
+    createNewRoom(url, roomCode, userSettings, partyModeSelected, newRoom => {
       const roomUrl = `/${url}/${roomCode.toLowerCase()}`;
       this.setState({roomUrl}, () => {
         if (this.state.share) {
@@ -70,7 +71,7 @@ class NewGame extends Component {
         }
         this.props.history.push(roomUrl);
       });
-      if (this.state.partyModeSelected) {
+      if (partyModeSelected) {
         store.dispatch(setIsDisplay());
         setRoomListener(roomCode);
       } else {
