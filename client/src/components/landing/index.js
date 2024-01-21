@@ -33,10 +33,6 @@ class Landing extends Component {
       localStorage.removeItem('player-index');
       localStorage.removeItem('room-code');
     }
-    console.log(playerIndex)
-    console.log(
-      savedRoomCode
-    )
   }
 
   handleInputChange = event => {

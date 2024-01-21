@@ -68,11 +68,9 @@ export function joinRoom(roomCode, name, callback) {
       room.players[playerIndex] = newPlayer;
       setLocalStorage(playerIndex, roomCode);
       store.dispatch(setPlayerIndex(playerIndex));
-      console.log('room', room)
       setRoomListener(roomCode, playerIndex);
       if (playerIndex === 0) {
         store.dispatch(setIsHost(true));
-        console.log('setting host on join')
         if (!room.isPartyMode) {
           store.dispatch(setIsController(true));
         }
@@ -136,7 +134,6 @@ export function setRoomListener(roomCode, playerIndex = null) { // null if it's 
   });
   database.ref(`rooms/${roomCode}/players`).on('value', snapshot => {
     const players = snapshot.val();
-    console.log(players)
     
     const prevPlayers = store.getState().players;
     const newPlayers = players ? players.filter(p => p.active && !p.kicked && !p.banned) : [];
@@ -150,7 +147,6 @@ export function setRoomListener(roomCode, playerIndex = null) { // null if it's 
       const firstActivePlayer = playerIndices(players.filter(p => p.active).sort())[0];
       if (playerIndex !== null && (Number(firstActivePlayer) === Number(playerIndex))) {
         store.dispatch(setIsHost(true));
-        console.log('setting host')
       }
       ns.postNotification(PLAYERS_CHANGED, { playersJoined, playersGone, newTotal: newPlayers.length, newPlayers });
     }
@@ -227,4 +223,12 @@ export function playVideo(video) {
 
 export function playMusic(music) {
   store.dispatch(setCurrentMusic(music));
+}
+
+export function isNewInput(prevInput, newInput) {
+  if (!newInput) return false;
+  if (typeof prevInput !== typeof newInput) return true;
+  if (prevInput?.length !== newInput?.length) return true;
+  if (Array.isArray(prevInput) && Array.isArray(newInput)) return newInput.some((item, i) => this.isNewInput(item, prevInput[i]));
+  return false;
 }

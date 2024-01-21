@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { playMusic } from '../../../../functions';
 import Title from './Title';
 
 const Intro = (props) => {
-
-  useEffect(() => {
-    playMusic('main');
-  }, []);
 
   const onAnimationFinish = () => {
     if (props.isController) {

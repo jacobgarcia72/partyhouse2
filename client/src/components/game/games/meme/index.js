@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Lobby from '../../other/lobby';
 import Intro from './intro';
-import Upload from './upload';
+import Upload from './Upload';
 import { screens, Meme, assignCaptionersToMemes, pairMemes, Score, handlePlayersGone, handlePlayersJoined, totalImages } from './helpers';
-import { setGameState, clearInput } from '../../../../functions/index';
+import { setGameState, clearInput, playVideo, playMusic, isNewInput } from '../../../../functions/index';
 import './style.sass';
 import Caption from './Caption';
 import Vote from './Vote';
@@ -12,7 +12,7 @@ import DankestMeme from './DankestMeme';
 import Scores from './Scores';
 import NotificationService, { PLAYERS_CHANGED } from '../../../../services/notif-service';
 import { getGameByUrl } from '../../../../config/games';
-import Display from './display';
+import Player from '../../../media/Player';
 
 let ns = new NotificationService();
 
@@ -29,7 +29,13 @@ class MemeGame extends Component {
   }
 
   componentDidMount() {
-    const { isController, gameState } = this.props;
+    const { isController, gameState, isDisplay } = this.props;
+
+    if (isDisplay) {
+      playMusic('lobby');
+      playVideo('intro');
+    }
+
     // restart timer where left off in case host refreshes
     if (isController && gameState.timer) {
       let callback = () => {};
@@ -50,7 +56,16 @@ class MemeGame extends Component {
     clearInterval(this.timerInterval);
   }
 
-  updatePlayers = update => {
+  resetWaitingForList = () => {
+    setGameState(this.props.code, {
+      waitingFor: this.props.players.map((p) => {
+        const { index, name } = p;
+        return { index, name };
+      })
+    });
+  }
+
+  updatePlayers = (update) => {
     const { gameUrl, gameState } = this.props;
     const minPlayers = getGameByUrl(gameUrl).minPlayers;
     const screensThatCanContinueWithLessThanMinimum = [
@@ -74,9 +89,31 @@ class MemeGame extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { isController, input, players } = this.props;
-    if ((players.length < prevProps.players.length || input !== prevProps.input) && isController && input) {
+    if (!this.props.isController) return;
+    const { input, players, gameState } = this.props;
+    if (prevProps.gameState.screen !== gameState.screen) {
+      this.handleNewScreen(gameState.screen);
+    }
+    if ((players.length < prevProps.players.length || isNewInput(prevProps.input, input))) {
       this.updatePlayerInput();
+    }
+  }
+
+  handleNewScreen = (screen) => {
+    const { gameState } = this.props;
+    const { settings } = gameState;
+    if (screen === screens.intro) {
+      playMusic('main');
+      playVideo('intro');
+      this.startGame();
+    } else if (screen === screens.upload && settings && settings.ImageTimer) {
+      this.startTimer(Number(settings.ImageSeconds), this.concludeUploadRound);
+    } else if (screen === screens.caption && settings && settings.CaptionTimer) {
+      this.startTimer(Number(settings.CaptionSeconds), this.concludeCaptionRound);
+    } else if (screen === screens.vote && settings && settings.VoteTimer) {
+      this.interval = setTimeout(() => {
+        this.startTimer(Number(settings.VoteSeconds), this.concludeVotingRound);
+      }, 1800); // allow time for animation before starting timer
     }
   }
 
@@ -107,6 +144,7 @@ class MemeGame extends Component {
       dankestMemeIndex: null,
       bonusRound: false
     });
+    this.resetWaitingForList();
   }
 
   handleUploadUpdate = () => {
@@ -323,19 +361,7 @@ class MemeGame extends Component {
     }, 1000);
   }
 
-  nextScreen = screen => {
-    const { settings } = this.props.gameState;
-    if (screen === screens.intro) {
-      this.startGame();
-    } else if (screen === screens.upload && settings && settings.ImageTimer) {
-      this.startTimer(Number(settings.ImageSeconds), this.concludeUploadRound);
-    } else if (screen === screens.caption && settings && settings.CaptionTimer) {
-      this.startTimer(Number(settings.CaptionSeconds), this.concludeCaptionRound);
-    } else if (screen === screens.vote && settings && settings.VoteTimer) {
-      this.interval = setTimeout(() => {
-        this.startTimer(Number(settings.VoteSeconds), this.concludeVotingRound);
-      }, 1800); // allow time for animation before starting timer
-    }
+  nextScreen = (screen) => {
     setGameState(this.props.code, { screen });
   }
 
@@ -363,7 +389,7 @@ class MemeGame extends Component {
   render() {
     return (
       <div className={`DankU ${this.props.isDisplay ? 'display' : 'device'}`}>
-        {this.props.isDisplay && <Display />}
+        {this.props.isDisplay && <Player />}
         {this.renderContent()}
       </div>
     )
