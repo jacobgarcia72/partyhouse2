@@ -229,6 +229,6 @@ export function isNewInput(prevInput, newInput) {
   if (!newInput) return false;
   if (typeof prevInput !== typeof newInput) return true;
   if (prevInput?.length !== newInput?.length) return true;
-  if (Array.isArray(prevInput) && Array.isArray(newInput)) return newInput.some((item, i) => this.isNewInput(item, prevInput[i]));
+  if (Array.isArray(prevInput) && Array.isArray(newInput)) return newInput.some((item, i) => isNewInput(item, prevInput[i]));
   return false;
 }
